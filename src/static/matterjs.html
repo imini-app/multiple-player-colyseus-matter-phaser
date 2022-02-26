@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+
+    <style>
+        body {
+            font-family: Tahoma, Geneva, sans-serif;
+        }
+    </style>
+    <!-- colyseus.js client -->
+    <script type="text/javascript" src="https://unpkg.com/colyseus.js@^0.14.0/dist/colyseus.js"></script>
+    <script type="text/javascript" src="/matter.js"></script>
+</head>
+
+<body>
+    <script type="text/javascript">
+        var Engine = Matter.Engine,
+            Render = Matter.Render,
+            Runner = Matter.Runner,
+            Body = Matter.Body,
+            Events = Matter.Events,
+            MouseConstraint = Matter.MouseConstraint,
+            Mouse = Matter.Mouse,
+            Composite = Matter.Composite,
+            Bodies = Matter.Bodies;
+
+        // create engine
+        var engine = Engine.create(),
+            world = engine.world;
+        this.engine.gravity.y = 0;
+
+        // create renderer
+        var render = Render.create({
+            element: document.body,
+            engine: engine,
+            options: {
+                wireframes: false, // This is needed to show sprite
+                width: 800,
+                height: 600,
+                showAxes: false, //
+                showCollisions: false,
+                showConvexHulls: false,
+                showAngleIndicator: false,
+                background: 'green',
+                showIds: false,
+            }
+        });
+
+        Render.run(render);
+
+        // create runner
+        var runner = Runner.create();
+        Runner.run(runner, engine);
+
+        // add mouse control
+        var mouse = Mouse.create(render.canvas),
+            mouseConstraint = MouseConstraint.create(engine, {
+                mouse: mouse,
+                constraint: {
+                    stiffness: 0.2,
+                    render: {
+                        visible: false
+                    }
+                }
+            });
+
+        Composite.add(world, mouseConstraint);
+
+        // Left target, x, y, width, height
+        const leftTarget = Bodies.rectangle(30, 600 / 2, 20, 100, { isStatic: true, render: { fillStyle: 'red' } });
+        // Left target
+        const rightTarget = Bodies.rectangle(800 - 30, 600 / 2, 20, 100, { isStatic: true, render: { fillStyle: 'blue' } });
+        Composite.add(this.world, [leftTarget, rightTarget]);
+
+        // keep the mouse in sync with rendering
+        render.mouse = mouse;
+
+        // fit the render viewport to the scene
+        Render.lookAt(render, {
+            min: { x: 0, y: 0 },
+            max: { x: 800, y: 600 }
+        });
+
+        Events.on(render, 'afterRender', function () {
+            ctx = render.context;
+            //Render.startViewTransform(render);
+            // Render.endViewTransform(render);
+            for (const bodyId in worldBodies) {
+                const state = worldBodies[bodyId];
+                const worldObject = players[state.name];
+                if (!worldObject) continue;
+                // console.log('render name', stateObject.name);
+                ctx.font = '15px serif';
+                ctx.fillStyle = state.name === myPlayerId ? 'green' : 'red';
+                let name = state.name === myPlayerId ? 'ME' : state.name;
+                name += ' (' + state.score + ')';
+                const text = ctx.measureText(name);
+                ctx.fillText(name, worldObject.position.x - text.width / 2, worldObject.position.y);
+            }
+
+            // Draw my target
+            const x = myTarget === 'left' ? 30 : 800 - 40;
+            ctx.beginPath();
+            ctx.moveTo(x, 230);
+            ctx.lineTo(x + 10, 230);
+            ctx.lineTo(x + 10 / 2, 230 + 10);
+            ctx.fillStyle = 'purple';
+            ctx.fill();
+        });
+    </script>
+
+
+    <script>
+        const updateChanges = (stateObject, worldObject, log = false) => (changes) => {
+            // console.log(changes, 'change in ball', worldObject.x, worldObject.y)
+            if (log) {
+                console.log('changes', changes);
+                console.log('original', worldObject.velocity.x, worldObject.velocity.y);
+            }
+            changes.forEach(({ field, value }) => {
+                switch (field) {
+                    case 'x':
+                        Body.setPosition(worldObject, { x: value, y: worldObject.position.y });
+                        break;
+                    case 'y':
+                        Body.setPosition(worldObject, { x: worldObject.position.x, y: value });
+                        break;
+                    case 'vx':
+                        Body.setVelocity(worldObject, { x: value, y: worldObject.velocity.y });
+                        break;
+                    case 'vy':
+                        Body.setVelocity(worldObject, { x: worldObject.velocity.x, y: value });
+                        break;
+                    case 'angle':
+                        Body.setAngle(worldObject, value);
+                        break;
+                    default:
+                        break;
+                }
+            });
+        }
+        const urlParams = new URLSearchParams(window.location.search);
+        let gamePIN = urlParams.get('pin');
+        if (!gamePIN) {
+            gamePIN = 'ad333';
+        }
+        var host = window.document.location.host.replace(/:.*/, '');
+
+        var client = new Colyseus.Client(location.protocol.replace("http", "ws") + "//" + host + (location.port ? ':' + location.port : ''));
+        var room;
+        var players = {};
+        var worldBodies = {};
+        var myPlayerId = null;
+        var myTarget = 'left';
+
+        client.joinOrCreate("matterjs", { gamePIN }).then(room_instance => {
+            room = room_instance
+            myPlayerId = room.sessionId;
+
+            // Objects list
+            room.state.balls.onAdd = function (ball) {
+                console.log('add a new ball')
+                console.log(ball, 'ball', ball.x, ball.y)
+                const worldBall = Bodies.circle(2000, 2000, 30, { isStatic: false, isSensor: true, friction: 0.02, restitution: 1.0, });
+
+                // Seems matter.js will randomly place an object on the world. So add a delay to avoid initial randomness
+                setTimeout(() => Composite.add(world, [worldBall]), 200);
+                ball.onChange = updateChanges(ball, worldBall, false);
+            }
+
+            // Players list
+            room.state.players.onAdd = function (player, sessionId) {
+                console.log('new player added')
+                if (sessionId === myPlayerId) {
+                    myTarget = player.target;
+                    console.log('My target is ', myTarget);
+                }
+                const worldPlayer = Bodies.circle(2000, 2000, 25.6, {
+                    isStatic: false, isSensor: true, friction: 0.04, render: {
+                        sprite: {
+                            texture: '/ball.png',
+                            xScale: 0.2,
+                            yScale: 0.2,
+                        }
+                    }
+                });
+                player.onChange = updateChanges(player, worldPlayer, false);
+                players[sessionId] = worldPlayer;
+                worldBodies[worldPlayer.id] = player;
+
+                // Seems matter.js will randomly place an object on the world. So add a delay to avoid initial randomness
+                setTimeout(() => {
+                    Composite.add(world, [worldPlayer]);
+                }, 200);
+            }
+
+            room.state.players.onRemove = function (player, sessionId) {
+                console.log('session id remove', sessionId)
+                console.log(players[sessionId]);
+                Composite.remove(world, players[sessionId]);
+                delete players[sessionId];
+            }
+            room.onMessage("hello", (message) => {
+                console.log(message);
+            });
+
+            /**
+             * Detect player action and only send in a loop to avoid jitter
+             */
+            let keys = {};
+            const keyDown = e => {
+                keys[e.key] = true;
+            };
+            const keyUp = e => {
+                keys[e.key] = false;
+            };
+            document.addEventListener('keydown', keyDown);
+            document.addEventListener('keyup', keyUp);
+            let loop = () => {
+                if (keys["ArrowLeft"]) {
+                    left();
+                }
+                else if (keys["ArrowRight"]) {
+                    right();
+                }
+                if (keys["ArrowUp"]) {
+                    up();
+                }
+                else if (keys["ArrowDown"]) {
+                    down();
+                }
+                // next iteration
+                requestAnimationFrame(() => {
+                    setTimeout(loop, 200);
+                });
+            }
+            // start loop
+            setTimeout(loop, 200);
+
+            // Click event
+            window.addEventListener("click", function (e) {
+                console.log(e.clientX, e.clientY);
+                // addBall(e.clientX, e.clientY);
+            });
+
+        });
+
+        function addBall(x, y) {
+            room.send("addBall", { x: x, y: y })
+        }
+
+        function up() {
+            room.send("move", { vy: -1 });
+        }
+
+        function right() {
+            room.send("move", { vx: 1 });
+        }
+
+        function down() {
+            room.send("move", { vy: 1 })
+        }
+
+        function left() {
+            room.send("move", { vx: -1 })
+        }
+
+
+    </script>
+</body>
+
+</html>
