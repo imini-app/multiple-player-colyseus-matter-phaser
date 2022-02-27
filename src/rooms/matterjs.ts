@@ -45,6 +45,7 @@ export class GameEngine {
         },
         isStatic: false,
         restitution: 1,
+        density: 0.001,
       }
     );
     this.balls.push(bodyA);
@@ -230,7 +231,7 @@ export class GameEngine {
   }
 
   processPlayerAction(sessionId, data) {
-    const limit = 5;
+    const limit = 10;
     const worldPlayer = this.players[sessionId];
     if (!worldPlayer) {
       return;
@@ -240,14 +241,14 @@ export class GameEngine {
     let newVx = currentVelocity.x;
     let newVy = currentVelocity.y;
     if (data.vx) {
-      if (Math.abs(data.vx / 2 + newVx) < limit) {
-        newVx += data.vx / 2;
+      if (Math.abs(data.vx + newVx) < limit) {
+        newVx += data.vx;
       }
     }
 
     if (data.vy) {
-      if (Math.abs(data.vy / 2 + newVy) < limit) {
-        newVy += data.vy / 2;
+      if (Math.abs(data.vy + newVy) < limit) {
+        newVy += data.vy;
       }
     }
 
