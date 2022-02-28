@@ -2,16 +2,6 @@ import { Room, Client } from "colyseus";
 import { Schema, type, MapSchema, ArraySchema } from "@colyseus/schema";
 import Matter from "matter-js";
 
-var Engine = Matter.Engine,
-  Render = Matter.Render,
-  Runner = Matter.Runner,
-  Body = Matter.Body,
-  Events = Matter.Events,
-  MouseConstraint = Matter.MouseConstraint,
-  Mouse = Matter.Mouse,
-  Composite = Matter.Composite,
-  Bodies = Matter.Bodies;
-
 export class GameEngine {
   engine = null;
   world = null;
@@ -23,7 +13,7 @@ export class GameEngine {
 
   constructor(state) {
     // Set up matter.js stuffs
-    this.engine = Engine.create();
+    this.engine = Matter.Engine.create();
     this.world = this.engine.world;
     /*this.runner = Runner.create({
       delta: 1000 / 60,
@@ -38,7 +28,7 @@ export class GameEngine {
   init() {
     // Runner.run(this.runner, this.engine);
 
-    const bodyA = Bodies.circle(400, 400, 30,
+    const bodyA = Matter.Bodies.circle(400, 400, 30,
       {
         render: {
           fillStyle: '#ffffff'
@@ -62,21 +52,21 @@ export class GameEngine {
     Body.setVelocity(bodyD, { x: -10, y:0 });
     this.balls.push(bodyD);*/
 
-    Composite.add(this.world, [bodyA]);
+    Matter.Composite.add(this.world, [bodyA]);
 
-    Composite.add(this.world, [
+    Matter.Composite.add(this.world, [
       // walls
-      Bodies.rectangle(400, 0, 800, 50, { isStatic: true }),
-      Bodies.rectangle(400, 600, 800, 50, { isStatic: true }),
-      Bodies.rectangle(800, 300, 50, 600, { isStatic: true }),
-      Bodies.rectangle(0, 300, 50, 600, { isStatic: true })
+      Matter.Bodies.rectangle(400, 0, 800, 50, { isStatic: true }),
+      Matter.Bodies.rectangle(400, 600, 800, 50, { isStatic: true }),
+      Matter.Bodies.rectangle(800, 300, 50, 600, { isStatic: true }),
+      Matter.Bodies.rectangle(0, 300, 50, 600, { isStatic: true })
     ]);
 
     // Left target, x, y, width, height
-    const leftTarget = Bodies.rectangle(30, 600 / 2, 20, 100, { isStatic: true, restitution: 1.0, render: { fillStyle: 'red' } });
+    const leftTarget = Matter.Bodies.rectangle(30, 600 / 2, 20, 100, { isStatic: true, restitution: 1.0, render: { fillStyle: 'red' } });
     // Left target
-    const rightTarget = Bodies.rectangle(800 - 30, 600 / 2, 20, 100, { isStatic: true, render: { fillStyle: 'blue' } });
-    Composite.add(this.world, [leftTarget, rightTarget]);
+    const rightTarget = Matter.Bodies.rectangle(800 - 30, 600 / 2, 20, 100, { isStatic: true, render: { fillStyle: 'blue' } });
+    Matter.Composite.add(this.world, [leftTarget, rightTarget]);
 
     this.targets['left'] = leftTarget;
     this.targets['right'] = rightTarget;
@@ -108,8 +98,13 @@ export class GameEngine {
       }
     })*/
 
+    this.initUpdateEvents()
+    this.initCollisionEvents()
+  }
+
+  initUpdateEvents() {
     // Register events
-    Events.on(this.engine, "afterUpdate", () => {
+    Matter.Events.on(this.engine, "afterUpdate", () => {
       // Update the state
       // console.log(bodyA.position.x, bodyA.position.y, 'bodyA position');
       // apply the x position of the physics ball object back to the colyseus ball object
@@ -137,8 +132,10 @@ export class GameEngine {
         this.state.players.get(key).vy = this.players[key].velocity.y;
       }
     });
+  }
 
-    Events.on(this.engine, "collisionStart", (event) => {
+  initCollisionEvents() {
+    Matter.Events.on(this.engine, "collisionStart", (event) => {
       // console.log("Evento: ", event)
       const pairs = event.pairs;
       let target = null;
@@ -194,8 +191,8 @@ export class GameEngine {
     const startY = 100 + parseInt((Math.random() * 500).toFixed());
 
     for (const ball of this.balls) {
-      Body.setPosition(ball, { x: startX, y: startY });
-      Body.setVelocity(ball, { x: 0, y: 0 });
+      Matter.Body.setPosition(ball, { x: startX, y: startY });
+      Matter.Body.setVelocity(ball, { x: 0, y: 0 });
     }
   }
 
@@ -203,7 +200,7 @@ export class GameEngine {
     const startX = 100 + parseInt((Math.random() * 500).toFixed());
     const startY = 100 + parseInt((Math.random() * 500).toFixed());
     console.log('Add a player', startX, startY)
-    const newPlayer = Bodies.circle(startX, startY, 25.6, { isStatic: false, friction: 0.01, restitution: 1.0, density: 2, render: { fillStyle: '#ffffff' } });
+    const newPlayer = Matter.Bodies.circle(startX, startY, 25.6, { isStatic: false, friction: 0.01, restitution: 1.0, density: 2, render: { fillStyle: '#ffffff' } });
 
     // Find the proper target
     let leftTeamCount = 0;
@@ -220,14 +217,14 @@ export class GameEngine {
 
     this.players[sessionId] = newPlayer;
     this.state.createPlayer(sessionId, target)
-    Composite.add(this.world, [newPlayer]);
+    Matter.Composite.add(this.world, [newPlayer]);
   }
 
   removePlayer(sessionId) {
     const player = this.players[sessionId]
     this.state.removePlayer(sessionId)
     console.log('remove player', sessionId)
-    Composite.remove(this.world, [player]);
+    Matter.Composite.remove(this.world, [player]);
   }
 
   processPlayerAction(sessionId, data) {
@@ -254,7 +251,7 @@ export class GameEngine {
 
     // console.log('set velocity', newVx, newVy);
 
-    Body.setVelocity(worldPlayer, { x: newVx, y: newVy });
+    Matter.Body.setVelocity(worldPlayer, { x: newVx, y: newVy });
     this.state.players.get(sessionId).vx = newVx;
     this.state.players.get(sessionId).vy = newVy;
   }
@@ -263,13 +260,13 @@ export class GameEngine {
     const startX = data.x;
     const startY = data.y;
     console.log('Add a ball from client click', startX, startY)
-    const newBall = Bodies.circle(startX, startY, 25.6 / 2, { isStatic: false, restitution: 1, friction: 0.02, render: { fillStyle: '#ffffff' } });
+    const newBall = Matter.Bodies.circle(startX, startY, 25.6 / 2, { isStatic: false, restitution: 1, friction: 0.02, render: { fillStyle: '#ffffff' } });
     this.balls.push(newBall);
 
     this.state.addBall(new Player());
-    Composite.add(this.world, [newBall]);
+    Matter.Composite.add(this.world, [newBall]);
     setTimeout(() => {
-      Body.setVelocity(newBall, { x: -6, y: 0 });
+      Matter.Body.setVelocity(newBall, { x: -6, y: 0 });
     }, 1000);
   }
 }
@@ -306,8 +303,6 @@ export class State extends Schema {
 
   @type([Player])
   balls = new ArraySchema<Player>();
-
-  engine = Engine.create()
 
   setBalls(balls) {
     this.balls = balls;
@@ -370,7 +365,7 @@ export class MatterjsRoom extends Room<State> {
 
   update(deltaTime) {
     // console.log(new Date().getTime())
-    Engine.update(this.engine.engine, deltaTime)
+    Matter.Engine.update(this.engine.engine, deltaTime)
   }
 
   onAuth(client, options, req) {
