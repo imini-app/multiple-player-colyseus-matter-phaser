@@ -69,7 +69,7 @@
             this.load.setBaseURL('https://labs.phaser.io');
             this.load.tilemapTiledJSON('map', 'assets/tilemaps/maps/matter-platformer.json');
             this.load.image('kenney_redux_64x64', 'assets/tilemaps/tiles/kenney_redux_64x64.png');
-            this.load.spritesheet('player', 'assets/sprites/dude-cropped.png', { frameWidth: 32, frameHeight: 42 });
+            this.load.spritesheet('ball', 'assets/sprites/dude-cropped.png', { frameWidth: 32, frameHeight: 42 });
             this.load.image('box', 'assets/sprites/box-item-boxed.png');
         }
 
@@ -77,9 +77,6 @@
             var map = this.make.tilemap({ key: 'map' });
             var tileset = map.addTilesetImage('kenney_redux_64x64');
             var layer = map.createLayer(0, tileset, 0, 0);
-            map.setCollisionByProperty({ collides: true });
-            this.matter.world.convertTilemapLayer(layer);
-            this.matter.world.setBounds(map.widthInPixels, map.heightInPixels);
 
             self = this;
             client.joinOrCreate("phaserjs", { gamePIN }).then(room_instance => {

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width" />
+
+  <style>
+    body {
+      font-family: Tahoma, Geneva, sans-serif;
+    }
+  </style>
+  <script type="text/javascript" src="/matter.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.js"></script>
+</head>
+
+<body>
+  <script type="text/javascript">
+    var mapData = null
+    function readTextFile(file, callback) {
+      var rawFile = new XMLHttpRequest();
+      rawFile.overrideMimeType("application/json");
+      rawFile.open("GET", file, true);
+      rawFile.onreadystatechange = function () {
+        if (rawFile.readyState === 4 && rawFile.status == "200") {
+          callback(rawFile.responseText);
+        }
+      }
+      rawFile.send(null);
+    }
+
+    //usage:
+    readTextFile("/asset/matter-platformer.json", function (text) {
+      const data = JSON.parse(text);
+      mapData = data;
+      startGame();
+    });
+
+    function startGame() {
+      var Engine = Matter.Engine,
+        Render = Matter.Render,
+        Runner = Matter.Runner,
+        Body = Matter.Body,
+        Events = Matter.Events,
+        MouseConstraint = Matter.MouseConstraint,
+        Mouse = Matter.Mouse,
+        Composite = Matter.Composite,
+        Bodies = Matter.Bodies;
+
+      // create engine
+      var engine = Engine.create(),
+      world = engine.world;
+      engine.gravity.y = 2;
+
+      // Create static layers from map
+      const tileMap = Phaser.Tilemaps.Parsers.Tiled.ParseJSONTiled('abc', mapData);
+      const tiles = tileMap.layers[0].data;
+      console.log(tileMap, tiles, tiles[0][0].getCenterX(), tiles[0][0].getCenterY(), tiles[0][0].width, tiles[0][0].height)
+      for (const row of tiles) {
+        for (const tile of row) {
+          console.log(tile.getCenterX(), tile.getCenterY(), tile.width, tile.height, tile.properties.collides)
+          if (tile.properties.collides) {
+            console.log('Add rec')
+            const tileBody = Bodies.rectangle(tile.getCenterX(), tile.getCenterY(), tile.width, tile.height, { isStatic: true, render: { fillStyle: 'red' } });
+            Composite.add(world, [tileBody]);
+          }
+        }
+      }
+
+      const worldBall1 = Bodies.circle(100, 20, 30, { isStatic: false, isSensor: false, friction: 0.02, restitution: 1.0, });
+      const worldBall2 = Bodies.circle(200, 20, 30, { isStatic: false, isSensor: false, friction: 0.02, restitution: 1.0, });
+      const worldBall3 = Bodies.circle(300, 20, 30, { isStatic: false, isSensor: false, friction: 0.02, restitution: 1.0, });
+      const worldBall4 = Bodies.circle(400, 20, 30, { isStatic: false, isSensor: false, friction: 0.02, restitution: 1.0, });
+      Composite.add(world, [worldBall1, worldBall2, worldBall3, worldBall4]);
+
+      // create renderer
+      var render = Render.create({
+        element: document.body,
+        engine: engine,
+        options: {
+          wireframes: true, // This is needed to show sprite
+          width: tileMap.widthInPixels,
+          height: tileMap.heightInPixels,
+          showAxes: true, //
+          showCollisions: true,
+          showConvexHulls: true,
+          showAngleIndicator: true,
+          background: 'green',
+          showIds: true,
+        }
+      });
+
+      Render.run(render);
+
+      // create runner
+      var runner = Runner.create();
+      Runner.run(runner, engine);
+
+      // fit the render viewport to the scene
+      Render.lookAt(render, {
+        min: { x: 0, y: 0 },
+        max: { x: 1280, y: 1280 }
+      });
+    }
+  </script>
+</body>
+
+</html>
