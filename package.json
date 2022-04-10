@@ -7,7 +7,8 @@
     "start": "ts-node-dev --respawn --transpile-only src/index.ts",
     "build": "npm run clean && tsc && node node_modules/copyfiles/copyfiles package.json ./lib && node node_modules/copyfiles/copyfiles arena.env ./lib && node node_modules/copyfiles/copyfiles -u 1 src/static/* ./lib && node node_modules/copyfiles/copyfiles -u 2 src/static/asset/* ./lib/static",
     "clean": "node node_modules/rimraf/bin lib",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": "node lib/index.js"
   },
   "engines": {
     "node": ">=14.x"
@@ -28,10 +29,14 @@
   "dependencies": {
     "@colyseus/arena": "^0.14.24",
     "@colyseus/monitor": "^0.14.22",
+    "@geckos.io/phaser-on-nodejs": "^1.2.7",
+    "canvas": "^2.9.1",
     "colyseus": "^0.14.23",
     "cors": "^2.8.5",
     "express": "^4.16.4",
+    "jsdom": "^19.0.0",
     "matter-js": "^0.18.0",
+    "phaser": "^3.55.2",
     "serve-index": "^1.8.0",
     "superagent": "^3.8.1"
   }
