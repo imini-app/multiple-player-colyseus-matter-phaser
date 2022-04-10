@@ -22,7 +22,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
     this.prevNoMovement = true
 
-    this.setCollideWorldBounds(true)
+    // this.setCollideWorldBounds(true)
 
     scene.events.on('update', this.update, this)
   }

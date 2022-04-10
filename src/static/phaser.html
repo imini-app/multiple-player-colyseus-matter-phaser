@@ -31,6 +31,7 @@
         var myPlayerId = null;
         var myTarget = 'left';
 
+
         var config = {
             type: Phaser.AUTO,
             width: 1200,
@@ -39,6 +40,10 @@
             parent: 'phaser-example',
             physics: {
                 default: 'arcade',
+                arcade: {
+                    gravity: { y: 1200 },
+                    debug: true
+                }
             },
             scene: {
                 preload: preload,
@@ -62,21 +67,16 @@
             // this.load.image('goal', 'asset/goal.png');
             // this.load.image('arrow', 'asset/arrow.png');
             this.load.setBaseURL('https://labs.phaser.io');
-            this.load.spritesheet('ball', 'assets/sprites/dude-cropped.png', { frameWidth: 32, frameHeight: 42 });
+            this.load.tilemapTiledJSON('map', 'assets/tilemaps/maps/matter-platformer.json');
+            this.load.image('kenney_redux_64x64', 'assets/tilemaps/tiles/kenney_redux_64x64.png');
+            this.load.spritesheet('player', 'assets/sprites/dude-cropped.png', { frameWidth: 32, frameHeight: 42 });
             this.load.image('box', 'assets/sprites/box-item-boxed.png');
-            this.load.image('ship', 'assets/sprites/fmship.png');
-            this.load.tilemapTiledJSON('map', 'assets/tilemaps/maps/super-mario.json');
-            this.load.image('tiles1', 'assets/tilemaps/tiles/super-mario.png');
         }
 
         function create() {
-            this.cameras.main.setBounds(0, 0, 3392, 100);
-            this.physics.world.setBounds(0, 0, 3392, 240);
             var map = this.make.tilemap({ key: 'map' });
-            var tileset = map.addTilesetImage('SuperMarioBros-World1-1', 'tiles1');
-            var layer = map.createLayer('World1', tileset, 0, 0);
-
-            this.cameras.main.setZoom(2);
+            var tileset = map.addTilesetImage('kenney_redux_64x64');
+            var layer = map.createLayer(0, tileset, 0, 0);
 
             self = this;
             client.joinOrCreate("phaserjs", { gamePIN }).then(room_instance => {

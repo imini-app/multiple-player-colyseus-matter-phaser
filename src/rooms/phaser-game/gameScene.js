@@ -1,6 +1,7 @@
 import { Scene } from 'phaser'
 import { Player } from './components/player.js'
-import map_json from '../../static/asset/super-mario.json'
+import map_json from '../../static/asset/matter-platformer.json'
+import fs from 'fs'
 
 export class GameScene extends Scene {
   constructor() {
@@ -10,17 +11,15 @@ export class GameScene extends Scene {
   preload() {
     this.load.tilemapTiledJSON('map', map_json);
     // HOW TO LOAD IMAGE HERE???
-    //this.load.image('tiles1', __dirname + '/../../static/asset/super-mario.png');
+    this.textures.addBase64('kenney_redux_64x64', fs.readFileSync(__dirname + '/../../static/asset/kenney_redux_64x64.png', { encoding: 'base64' }));
   }
 
   create() {
     console.log('it works!')
     this.playersGroup = this.add.group()
-
-    //this.physics.world.setBounds(0, 0, 3392, 240);
-    //const map = this.make.tilemap({ key: 'map' });
-    // const tileset = map.addTilesetImage('SuperMarioBros-World1-1', 'tiles1');
-    //this.groundLayer = map.createLayer('World1', tileset, 0, 0);
+    const map = this.make.tilemap({ key: 'map' });
+    const tileset = map.addTilesetImage('kenney_redux_64x64');
+    this.groundLayer = map.createLayer(0, tileset, 0, 0);
   }
 
   update() {
@@ -36,7 +35,7 @@ export class GameScene extends Scene {
     this.playersGroup.add(newPlayer)
     state.createPlayer(sessionId)
 
-    // this.physics.add.collider(newPlayer, this.groundLayer);
+    this.physics.add.collider(newPlayer, this.groundLayer);
   }
 
   removePlayer(sessionId, state) {
