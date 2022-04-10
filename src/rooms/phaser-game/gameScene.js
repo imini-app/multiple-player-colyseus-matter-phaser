@@ -1,5 +1,5 @@
 import { Scene } from 'phaser'
-import { Player } from './components/player'
+import { Player } from './components/player.js'
 import map_json from '../../static/asset/super-mario.json'
 
 export class GameScene extends Scene {
@@ -9,7 +9,8 @@ export class GameScene extends Scene {
 
   preload() {
     this.load.tilemapTiledJSON('map', map_json);
-    this.load.image('tiles1', __dirname + '/../../static/asset/super-mario.png');
+    // HOW TO LOAD IMAGE HERE???
+    //this.load.image('tiles1', __dirname + '/../../static/asset/super-mario.png');
   }
 
   create() {
@@ -35,7 +36,7 @@ export class GameScene extends Scene {
     this.playersGroup.add(newPlayer)
     state.createPlayer(sessionId)
 
-    this.physics.add.collider(newPlayer, this.groundLayer);
+    // this.physics.add.collider(newPlayer, this.groundLayer);
   }
 
   removePlayer(sessionId, state) {

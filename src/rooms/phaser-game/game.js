@@ -1,4 +1,4 @@
-import { config } from './config'
+import { config } from './config.js'
 
 export class PhaserGame extends Phaser.Game {
   constructor(state) {
