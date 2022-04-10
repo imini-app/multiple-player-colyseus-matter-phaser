@@ -77,6 +77,9 @@
             var map = this.make.tilemap({ key: 'map' });
             var tileset = map.addTilesetImage('kenney_redux_64x64');
             var layer = map.createLayer(0, tileset, 0, 0);
+            map.setCollisionByProperty({ collides: true });
+            this.matter.world.convertTilemapLayer(layer);
+            this.matter.world.setBounds(map.widthInPixels, map.heightInPixels);
 
             self = this;
             client.joinOrCreate("phaserjs", { gamePIN }).then(room_instance => {
