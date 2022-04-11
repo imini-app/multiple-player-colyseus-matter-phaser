@@ -15,6 +15,7 @@ import { ReconnectionRoom } from './rooms/04-reconnection';
 import { CustomLobbyRoom } from './rooms/07-custom-lobby-room';
 import { MatterjsRoom } from './rooms/matterjs';
 import { PhaserRoom } from "./rooms/phaser";
+import { MatterjsPlatformRoom } from "./rooms/matterjs-platform";
 
 export default Arena({
     getId: () => "Your Colyseus App",
@@ -56,7 +57,9 @@ export default Arena({
 
         gameServer.define("matterjs", MatterjsRoom).filterBy(['gamePIN']);
 
-        gameServer.define("phaserjs", PhaserRoom).filterBy(['gamePIN']);
+        // gameServer.define("phaserjs", PhaserRoom).filterBy(['gamePIN']);
+
+        gameServer.define("matterjsplatform", MatterjsPlatformRoom).filterBy(['gamePIN']);
 
         gameServer.onShutdown(function(){
             console.log(`game server is going down.`);

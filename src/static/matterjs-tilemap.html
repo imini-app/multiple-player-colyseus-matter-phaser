@@ -29,7 +29,7 @@
     }
 
     //usage:
-    readTextFile("/asset/matter-platformer.json", function (text) {
+    readTextFile("/asset/bd.json", function (text) {
       const data = JSON.parse(text);
       mapData = data;
       startGame();
@@ -48,11 +48,63 @@
 
       // create engine
       var engine = Engine.create(),
-      world = engine.world;
+        world = engine.world;
       engine.gravity.y = 2;
+
+      var config = {
+        type: Phaser.AUTO,
+        width: 800,
+        height: 600,
+        backgroundColor: '#000000',
+        parent: 'phaser-example',
+        physics: {
+          default: 'matter',
+          matter: {
+            gravity: { y: 1 },
+            enableSleep: false,
+            debug: true
+          }
+        },
+        scene: {
+          preload: preload,
+          create: create,
+        }
+      };
+
+      var tilesFromGame = [];
+
+      var game = new Phaser.Game(config);
+
+      function preload() {
+        this.load.tilemapTiledJSON('map', '/asset/large.json');
+        this.load.image('tuxmon-sample-32px-extruded', '/asset/tuxmon-sample-32px-extruded.png');
+      }
+
+      function create() {
+        var map = this.make.tilemap({ key: 'map' });
+        var tileset = map.addTilesetImage('tuxmon-sample-32px-extruded');
+        var layer = map.createLayer(0, tileset, 0, 0);
+
+        // Set up the layer to have matter bodies. Any colliding tiles will be given a Matter body.
+        map.setCollisionByProperty({ collides: true });
+        const world = this.matter.world.convertTilemapLayer(layer);
+        // tilesFromGame = world.localWorld.bodies.slice(0)
+        tilesFromGame = world.localWorld.bodies.map(function(a) {
+          return a.vertices
+        });
+        console.log(tilesFromGame, 'a')
+        addToMatter(tilesFromGame)
+        // Another way
+        game.destroy(true, true)
+      }
+
+      function addToMatter(tiles) {
+        console.log(tiles, 'b')
+      }
 
       // Create static layers from map
       const tileMap = Phaser.Tilemaps.Parsers.Tiled.ParseJSONTiled('abc', mapData);
+      /*
       const tiles = tileMap.layers[0].data;
       console.log(tileMap, tiles, tiles[0][0].getCenterX(), tiles[0][0].getCenterY(), tiles[0][0].width, tiles[0][0].height)
       for (const row of tiles) {
@@ -64,7 +116,44 @@
             Composite.add(world, [tileBody]);
           }
         }
+      }*/
+      function findTilePropertyById(tiles, id)
+      {
+        for (const tile of tiles) {
+          if (tile.id === id - 1) {
+            return tile
+          }
+        }
       }
+      console.log(mapData)
+      for (const layer of mapData.layers) {
+        let i = 0;
+        for (const tileId of layer.data) {
+          const params = findTilePropertyById(mapData.tilesets[0].tiles, tileId);
+          const width = mapData.tilewidth;
+          const height = mapData.tileheight;
+          const rowNumber = parseInt( i / mapData.width );
+          const columnNumber = i - rowNumber * mapData.width;
+          const centerX = columnNumber * width + width / 2;
+          const centerY = rowNumber * height + height / 2;
+          let shouldCollide = false;
+          if (params && params.properties) {
+            for (const property of params.properties) {
+              if (property.name === 'collides' && property.value) {
+                shouldCollide = true;
+              }
+            }
+          }
+          if (shouldCollide) {
+            console.log(rowNumber, columnNumber, centerX, centerY, params);
+            // TODO: improve to read polygons
+            const tileBody = Bodies.rectangle(centerX, centerY, width, height, { isStatic: true, render: { fillStyle: 'red' } });
+            Composite.add(world, [tileBody]);
+          }
+          i++;
+        }
+      }
+
 
       const worldBall1 = Bodies.circle(100, 20, 30, { isStatic: false, isSensor: false, friction: 0.02, restitution: 1.0, });
       const worldBall2 = Bodies.circle(200, 20, 30, { isStatic: false, isSensor: false, friction: 0.02, restitution: 1.0, });

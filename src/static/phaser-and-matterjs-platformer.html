@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width" />
+
+  <style>
+    body {
+      font-family: Tahoma, Geneva, sans-serif;
+    }
+  </style>
+
+  <!-- colyseus.js client -->
+  <script type="text/javascript" src="https://unpkg.com/colyseus.js@^0.14.0/dist/colyseus.js"></script>
+  <script type="text/javascript" src="/matter.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.js"></script>
+</head>
+
+<body>
+  <div id="phaser-example"></div>
+  <script type="text/javascript">
+    var config = {
+      type: Phaser.AUTO,
+      width: 800,
+      height: 600,
+      backgroundColor: '#c4dedf',
+      parent: 'phaser-example',
+      physics: {
+        default: 'matter',
+        matter: {
+          debug: true,
+          gravity: {
+            y: 0,
+          },
+          enableSleeping: true
+        }
+      },
+      scene: {
+        preload: preload,
+        create: create,
+        update: () => { },
+      }
+    };
+
+    var game = new Phaser.Game(config);
+    var matter;
+    var playerLabels = {};
+
+    function preload() {
+      this.load.tilemapTiledJSON('map', 'asset/large.json');
+      this.load.image('tuxmon-sample-32px-extruded', 'asset/tuxmon-sample-32px-extruded.png');
+      this.load.spritesheet('player', 'asset/dude-cropped.png', { frameWidth: 32, frameHeight: 42 });
+    }
+
+    function create() {
+      var map = this.make.tilemap({ key: 'map' });
+      var tileset = map.addTilesetImage('tuxmon-sample-32px-extruded');
+      var layer = map.createLayer(0, tileset, 0, 0);
+
+      // Set up the layer to have matter bodies. Any colliding tiles will be given a Matter body.
+      map.setCollisionByProperty({ abc: true }); // use a random value, since we don't want to enable physics on the client side
+      this.matter.world.convertTilemapLayer(layer);
+
+      this.matter.world.setBounds(map.widthInPixels, map.heightInPixels);
+      this.matter.world.createDebugGraphic();
+      this.matter.world.drawDebug = false;
+
+      matter = this.matter;
+      self = this;
+
+      client.joinOrCreate("matterjsplatform", { gamePIN }).then(room_instance => {
+        room = room_instance
+        myPlayerId = room.sessionId;
+
+        // Players list
+        room.state.players.onAdd = function (player, sessionId) {
+          const worldPlayer = matter.add.image(10000, 10000, 'player', null, { isStatic: false, isSensor: true, friction: 0.01, restitution: 1.0, density: 2, });
+          worldPlayer.setRectangle();
+          worldPlayer.setFixedRotation();
+          worldPlayer.setBounce(1);
+          if (sessionId === myPlayerId) {
+            self.cameras.main.startFollow(worldPlayer);
+          }
+          const labelText = self.add.text(10, 10, sessionId, { font: '15px Arial', fill: '#000000', align: 'center', });
+          labelText.setFixedSize(200, 25);
+          playerLabels[sessionId] = labelText;
+          console.log('new player added', worldPlayer)
+          player.onChange = updateChanges(player, worldPlayer, true, self.tweens);
+          players[sessionId] = worldPlayer;
+          worldBodies[worldPlayer.body.id] = player;
+        }
+
+        room.state.players.onRemove = function (player, sessionId) {
+          console.log('session id remove', sessionId)
+          console.log(players[sessionId]);
+          players[sessionId].destroy();
+          playerLabels[sessionId].destroy();
+          delete players[sessionId];
+        }
+        room.onMessage("hello", (message) => {
+          console.log(message);
+        });
+
+        /**
+         * Detect player action and only send in a loop to avoid jitter
+         */
+        let keys = {};
+        const keyDown = e => {
+          keys[e.key] = true;
+        };
+        const keyUp = e => {
+          keys[e.key] = false;
+        };
+        document.addEventListener('keydown', keyDown);
+        document.addEventListener('keyup', keyUp);
+        let loop = () => {
+          if (keys["ArrowLeft"]) {
+            left();
+          }
+          if (keys["ArrowRight"]) {
+            right();
+          }
+          if (keys["ArrowUp"]) {
+            up();
+          }
+          if (keys["ArrowDown"]) {
+            down();
+          }
+          // next iteration
+          requestAnimationFrame(() => {
+            setTimeout(loop, 200);
+          });
+        }
+        // start loop
+        setTimeout(loop, 200);
+
+        // Click event
+        window.addEventListener("click", function (e) {
+          console.log(e.clientX, e.clientY);
+          // addBall(e.clientX, e.clientY);
+        });
+
+      });
+    }
+  </script>
+  <script>
+    const updateChanges = (stateObject, worldObject, log = false, tweens) => (changes) => {
+      // console.log(changes, 'change in ball', worldObject.x, worldObject.y)
+      if (log) {
+        // console.log('changes', changes);
+        // console.log('original', worldObject.velocity.x, worldObject.velocity.y);
+      }
+      let targetX = worldObject.body.position.x
+      let targetY = worldObject.body.position.y
+      changes.forEach(({ field, value }) => {
+        switch (field) {
+          case 'x':
+            targetX = value
+            break;
+          case 'y':
+            targetY = value
+            break;
+          /*case 'vx':
+            Matter.Body.setVelocity(worldObject, { x: value, y: worldObject.velocity.y });
+            break;
+          case 'vy':
+            Matter.Body.setVelocity(worldObject, { x: worldObject.velocity.x, y: value });
+            break;*/
+          case 'angle':
+            Matter.Body.setAngle(worldObject.body, value);
+            break;
+          default:
+            break;
+        }
+      });
+
+      tweens.add({
+        targets: worldObject,
+        x: targetX,
+        y: targetY,
+        duration: 200,
+        ease: 'Power2'
+      });
+
+      if (stateObject.name !== 'playername') {
+        const label = playerLabels[stateObject.name];
+        let name = stateObject.name === myPlayerId ? 'ME' : stateObject.name;
+        name += ' (' + stateObject.score + ')';
+        label.setText(name);
+        tweens.add({
+          targets: label,
+          x: stateObject.x - 100,
+          y: stateObject.y - 40,
+          duration: 200,
+          ease: 'Power2'
+        });
+        // playerLabels[stateObject.name].setPosition(stateObject.x - 100, stateObject.y - 40);
+      }
+    }
+    const urlParams = new URLSearchParams(window.location.search);
+    let gamePIN = urlParams.get('pin');
+    if (!gamePIN) {
+      gamePIN = 'ad333';
+    }
+    var host = window.document.location.host.replace(/:.*/, '');
+
+    var client = new Colyseus.Client(location.protocol.replace("http", "ws") + "//" + host + (location.port ? ':' + location.port : ''));
+    var room;
+    var players = {};
+    var worldBodies = {};
+    var myPlayerId = null;
+    var myTarget = 'left';
+
+    function addBall(x, y) {
+      room.send("addBall", { x: x, y: y })
+    }
+
+    function up() {
+      room.send("move", { vy: -1 });
+    }
+
+    function right() {
+      room.send("move", { vx: 1 });
+    }
+
+    function down() {
+      room.send("move", { vy: 1 })
+    }
+
+    function left() {
+      room.send("move", { vx: -1 })
+    }
+
+  </script>
+</body>
+
+</html>
