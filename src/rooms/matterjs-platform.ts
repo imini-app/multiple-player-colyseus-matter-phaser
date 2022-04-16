@@ -14,6 +14,7 @@ export class MatterPlatformGameEngine {
   balls = [];
   players = {};
   targets = {};
+  tileProperties = {};
 
   constructor(state, mapJsonFilePath) {
     // Set up matter.js stuffs
@@ -62,6 +63,9 @@ export class MatterPlatformGameEngine {
           // console.log(rowNumber, columnNumber, centerX, centerY, params);
           // TODO: improve to read polygons
           const tileBody = Matter.Bodies.rectangle(centerX, centerY, width, height, { isStatic: true, render: { fillStyle: 'red' } });
+          tileBody.label = 'tile';
+          // tileBody.tileProperties = params.properties;
+          this.tileProperties[tileBody.id] = params.properties;
           //console.log('Add static rectangle');
           Matter.Composite.add(this.world, [tileBody]);
         }
@@ -107,7 +111,13 @@ export class MatterPlatformGameEngine {
   initCollisionEvents() {
     Matter.Events.on(this.engine, "collisionStart", (event) => {
       // console.log("Evento: ", event)
-      const pairs = event.pairs;
+      const pairs = event.pairs[0];
+      if (pairs.bodyA.label === 'player') {
+        console.log(this.tileProperties[pairs.bodyB.id]);
+      }
+      if (pairs.bodyB.label === 'player') {
+        console.log(this.tileProperties[pairs.bodyA.id]);
+      }
     });
   }
 
@@ -116,6 +126,7 @@ export class MatterPlatformGameEngine {
     const startY = 100;
     console.log('Add a player', startX, startY)
     const newPlayer = Matter.Bodies.rectangle(startX, startY, 32, 32, { inertia: Infinity, friction: 0, isStatic: false, render: { fillStyle: '#ffffff' } });
+    newPlayer.label = 'player';
     this.players[sessionId] = newPlayer;
     this.state.createPlayer(sessionId)
     Matter.Composite.add(this.world, [newPlayer]);
