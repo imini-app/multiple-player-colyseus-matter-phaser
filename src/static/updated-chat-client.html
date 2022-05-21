@@ -32,24 +32,41 @@
     </form>
 
     <div id="messages"></div>
+    <h3> Clients </h3>
+    <div id="clients"></div>
 
     <script>
         var host = window.document.location.host.replace(/:.*/, '');
-        console.log(host)
         const serverAdress = location.protocol.replace("http", "ws") + "//" + host + (location.port ? ':' + location.port : '')
-        console.log(serverAdress)
         let myId = null
         const name = prompt('Enter Name')
+        let players = {}
 
         var client = new Colyseus.Client(serverAdress);
+
+        function listClients() {
+            const clientsContainer = document.querySelector("#clients");
+            clientsContainer.innerHTML = '';
+            for (const key in players) {
+                const player = players[key]
+                const playerHTML = document.createElement("div")
+                playerHTML.innerText = player.name
+                clientsContainer.appendChild(playerHTML)
+            }
+        }
         client.joinOrCreate("updatedChat", { name: name }).then(room => {
+            room.state.clients.onAdd = function (player, sessionId) {
+                players[sessionId] = player
+                listClients()
+            }
 
-            console.log("joined");
+            room.state.clients.onRemove = function (player, sessionId) {
+                delete players[sessionId]
+                listClients()
+            }
 
-            console.log(room)
             myId = room.sessionId
             room.onStateChange.once(function (state) {
-                console.log("initial room state:", state);
             });
 
             // new room state
@@ -59,10 +76,10 @@
 
             // listen to patches coming from the server
             room.onMessage("messages", function (message) {
+                console.log(message)
                 var p = document.createElement("p");
                 const modifiedMessage = message.replace(myId, 'Me')
                 p.innerText = modifiedMessage;
-                console.log(message)
                 document.querySelector("#messages").appendChild(p);
             });
 
@@ -71,8 +88,6 @@
                 e.preventDefault();
 
                 var input = document.querySelector("#input");
-
-                console.log("input:", input.value);
 
                 // send data to room
                 room.send("message", input.value);

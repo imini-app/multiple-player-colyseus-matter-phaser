@@ -21,7 +21,7 @@ export class StateSchema extends Schema {
 }
 
 export class UpdatedChatRoom extends Room {
-    maxClients = 10;
+    maxClients = 5;
 
     onCreate(options) {
         this.setState(new StateSchema())
@@ -32,10 +32,12 @@ export class UpdatedChatRoom extends Room {
         });
     }
     onJoin(client, options) {
-        console.log('Option', options)
         this.state.createPlayer(client.sessionId, options?.name)
+        this.broadcast("messages", `(${options?.name}) joined.`)
     }
     onLeave(client) {
+        let player = this.state.clients.get(client.sessionId)
         this.state.removePlayer(client.sessionId)
+        this.broadcast("messages", `(${player?.name}) left.`)
     }
 }
