@@ -2,9 +2,9 @@ import { Room } from "colyseus";
 
 export class ChatRoom extends Room {
     // this room supports only 4 clients connected
-    maxClients = 4;
+    maxClients = 5;
 
-    onCreate (options) {
+    onCreate(options) {
         console.log("ChatRoom created!", options);
 
         this.onMessage("message", (client, message) => {
@@ -13,15 +13,15 @@ export class ChatRoom extends Room {
         });
     }
 
-    onJoin (client) {
-        this.broadcast("messages", `${ client.sessionId } joined.`);
+    onJoin(client) {
+        this.broadcast("messages", `${client.sessionId} joined.`);
     }
 
-    onLeave (client) {
-        this.broadcast("messages", `${ client.sessionId } left.`);
+    onLeave(client) {
+        this.broadcast("messages", `${client.sessionId} left.`);
     }
 
-    onDispose () {
+    onDispose() {
         console.log("Dispose ChatRoom");
     }
 

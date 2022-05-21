@@ -9,6 +9,7 @@ import express from 'express';
 // Import demo room handlers
 import { LobbyRoom, RelayRoom } from 'colyseus';
 import { ChatRoom } from "./rooms/01-chat-room";
+import { UpdatedChatRoom } from "./rooms/updated-chat-room";
 import { StateHandlerRoom } from "./rooms/02-state-handler";
 import { AuthRoom } from "./rooms/03-auth";
 import { ReconnectionRoom } from './rooms/04-reconnection';
@@ -32,6 +33,9 @@ export default Arena({
 
         // Define "chat" room
         gameServer.define("chat", ChatRoom)
+            .enableRealtimeListing();
+
+        gameServer.define("updatedChat", UpdatedChatRoom)
             .enableRealtimeListing();
 
         // Register ChatRoom with initial options, as "chat_with_options"
@@ -61,15 +65,15 @@ export default Arena({
 
         gameServer.define("matterjsplatform", MatterjsPlatformRoom).filterBy(['gamePIN']);
 
-        gameServer.onShutdown(function(){
+        gameServer.onShutdown(function () {
             console.log(`game server is going down.`);
-          });
+        });
 
 
     },
 
     initializeExpress: (app) => {
-        app.use('/', serveIndex(path.join(__dirname, "static"), {'icons': true}))
+        app.use('/', serveIndex(path.join(__dirname, "static"), { 'icons': true }))
         app.use('/', express.static(path.join(__dirname, "static")));
 
         // app.use(serveIndex(path.join(__dirname, "static"), {'icons': true}))
