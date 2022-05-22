@@ -4,6 +4,10 @@ import { Schema, type, MapSchema, ArraySchema } from "@colyseus/schema";
 export class UserSchema extends Schema {
     @type("string")
     name = "Guest"
+    @type("number")
+    x = 0
+    @type("number")
+    y = 0
 }
 
 export class StateSchema extends Schema {

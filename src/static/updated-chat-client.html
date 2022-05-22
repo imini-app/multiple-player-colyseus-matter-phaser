@@ -12,7 +12,6 @@
 
     <!-- colyseus.js client -->
     <script type="text/javascript" src="https://unpkg.com/colyseus.js@^0.14.0/dist/colyseus.js"></script>
-
 </head>
 
 <body>
@@ -34,6 +33,14 @@
     <div id="messages"></div>
     <h3> Clients </h3>
     <div id="clients"></div>
+
+
+    <br />
+    <button onclick="up()">up</button>
+    <button onclick="down()">down</button>
+    <br />
+    <button onclick="left()">left</button>
+    <button onclick="right()">right</button>
 
     <script>
         var host = window.document.location.host.replace(/:.*/, '');
@@ -97,7 +104,36 @@
             }
         });
 
+        function local_move(sessionId, movement) {
+            var dom = players[sessionId];
+            if (movement.x) {
+                dom.style.left = parseInt(dom.style.left) + movement.x + "px";
+            }
+            if (movement.y) {
+                dom.style.top = parseInt(dom.style.top) + movement.y + "px";
+
+            }
+        }
+
+        function up() {
+            var movement = { y: -10 }
+        }
+
+        function down() {
+            var movement = { y: 10 }
+        }
+
+        function right() {
+            var movement = { x: 10 }
+        }
+
+        function left() {
+            var movement = { x: -10 }
+        }
+
     </script>
+
+    <script type="text/javascript" src="test.js"></script>
 </body>
 
 </html>
