@@ -8,6 +8,16 @@
         body {
             font-family: Tahoma, Geneva, sans-serif;
         }
+
+        .player {
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            padding-top: 24px;
+            box-sizing: border-box;
+            left: 0;
+            top: 0;
+        }
     </style>
 
     <!-- colyseus.js client -->
@@ -47,7 +57,12 @@
         const serverAdress = location.protocol.replace("http", "ws") + "//" + host + (location.port ? ':' + location.port : '')
         let myId = null
         const name = prompt('Enter Name')
+        var colors = ['red', 'green', 'yellow', 'blue', 'cyan', 'magenta'];
         let players = {}
+
+        var boxes = {}
+
+        let room;
 
         var client = new Colyseus.Client(serverAdress);
 
@@ -61,10 +76,21 @@
                 clientsContainer.appendChild(playerHTML)
             }
         }
-        client.joinOrCreate("updatedChat", { name: name }).then(room => {
+        client.joinOrCreate("updatedChat", { name: name }).then(room_instance => {
+            room = room_instance
             room.state.clients.onAdd = function (player, sessionId) {
                 players[sessionId] = player
+                var box = document.createElement("div");
+                box.className = "player";
+                box.style.left = "0px";
+                box.style.top = "0px";
+                box.style.background = colors[Math.floor(Math.random() * colors.length)];
+                box.innerText = `${player.name || "Guest"}`;
+                document.body.appendChild(box);
+                boxes[sessionId] = box
+                console.log('boxes', boxes)
                 listClients()
+                player.onChange = updateChanges(player, sessionId);
             }
 
             room.state.clients.onRemove = function (player, sessionId) {
@@ -104,50 +130,49 @@
             }
         });
 
-        function local_move(sessionId, movement) {
-            var object = players[sessionId];
-            if (movement.x) {
-                object.style.left = parseInt(object.style.left) + movement.x + "px";
-            }
-            if (movement.y) {
-                object.style.top = parseInt(object.style.top) + movement.y + "px";
-
-            }
-        }
-
         function up() {
             var movement = { y: -10 }
-
-            // move locally instantly
-            local_move(room.sessionId, movement);
 
             room.send("move", movement);
         }
 
         function down() {
             var movement = { y: 10 }
-            // move locally instantly
-            local_move(room.sessionId, movement);
 
             room.send("move", movement);
         }
 
         function right() {
             var movement = { x: 10 }
-            // move locally instantly
-            local_move(room.sessionId, movement);
 
             room.send("move", movement);
         }
 
         function left() {
             var movement = { x: -10 }
-            // move locally instantly
-            local_move(room.sessionId, movement);
 
             room.send("move", movement);
         }
 
+    </script>
+    <script>
+        const updateChanges = (stateObject, sessionId) => (changes) => {
+            console.log(boxes, stateObject, sessionId, changes)
+            let box = boxes[sessionId]
+            console.log(boxes, sessionId, box, 'box')
+            if (!box) return
+
+            changes.forEach(({ field, value }) => {
+                switch (field) {
+                    case 'x':
+                        box.style.left = parseInt(value) + "px";
+                        break;
+                    case 'y':
+                        box.style.top = parseInt(value) + "px";
+                        break;
+                }
+            });
+        }
     </script>
 
     <script type="text/javascript" src="test.js"></script>

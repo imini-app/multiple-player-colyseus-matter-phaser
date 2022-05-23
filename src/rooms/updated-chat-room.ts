@@ -34,6 +34,19 @@ export class UpdatedChatRoom extends Room {
             const player = this.state.clients.get(client.sessionId)
             this.broadcast("messages", `(${player.name}) ${message}`)
         });
+
+        this.onMessage("move", (client, message) => {
+            const player = this.state.clients.get(client.sessionId)
+            if (message.x) {
+                player.x += parseInt(message.x)
+            }
+            if (message.y) {
+                player.y += parseInt(message.y)
+            }
+
+            console.log('x', player.x)
+            console.log('y', player.y)
+        });
     }
     onJoin(client, options) {
         this.state.createPlayer(client.sessionId, options?.name)
