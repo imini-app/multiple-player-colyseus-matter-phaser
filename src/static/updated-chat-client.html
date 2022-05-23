@@ -105,30 +105,47 @@
         });
 
         function local_move(sessionId, movement) {
-            var dom = players[sessionId];
+            var object = players[sessionId];
             if (movement.x) {
-                dom.style.left = parseInt(dom.style.left) + movement.x + "px";
+                object.style.left = parseInt(object.style.left) + movement.x + "px";
             }
             if (movement.y) {
-                dom.style.top = parseInt(dom.style.top) + movement.y + "px";
+                object.style.top = parseInt(object.style.top) + movement.y + "px";
 
             }
         }
 
         function up() {
             var movement = { y: -10 }
+
+            // move locally instantly
+            local_move(room.sessionId, movement);
+
+            room.send("move", movement);
         }
 
         function down() {
             var movement = { y: 10 }
+            // move locally instantly
+            local_move(room.sessionId, movement);
+
+            room.send("move", movement);
         }
 
         function right() {
             var movement = { x: 10 }
+            // move locally instantly
+            local_move(room.sessionId, movement);
+
+            room.send("move", movement);
         }
 
         function left() {
             var movement = { x: -10 }
+            // move locally instantly
+            local_move(room.sessionId, movement);
+
+            room.send("move", movement);
         }
 
     </script>
