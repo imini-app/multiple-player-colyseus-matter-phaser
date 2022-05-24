@@ -18,6 +18,13 @@
             left: 0;
             top: 0;
         }
+
+        .orb {
+            width: 24px;
+            height: 24px;
+            border-radius: 12px;
+            position: absolute;
+        }
     </style>
 
     <!-- colyseus.js client -->
@@ -57,10 +64,12 @@
         const serverAdress = location.protocol.replace("http", "ws") + "//" + host + (location.port ? ':' + location.port : '')
         let myId = null
         const name = prompt('Enter Name')
-        var colors = ['red', 'green', 'yellow', 'blue', 'cyan', 'magenta'];
+        var colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple'];
         let players = {}
 
-        var boxes = {}
+        let boxes = {}
+
+        let ball = []
 
         let room;
 
@@ -78,6 +87,18 @@
         }
         client.joinOrCreate("updatedChat", { name: name }).then(room_instance => {
             room = room_instance
+
+            room.state.balls.onAdd = function (ball) {
+                console.log(ball)
+                let sprite = document.createElement("div")
+                sprite.className = "orb"
+                sprite.style.left = `${ball.x}px`
+                sprite.style.top = `${ball.y}px`
+                sprite.style.background = "lightgreen"
+                document.body.appendChild(sprite)
+
+            }
+
             room.state.clients.onAdd = function (player, sessionId) {
                 players[sessionId] = player
                 var box = document.createElement("div");
@@ -88,7 +109,6 @@
                 box.innerText = `${player.name || "Guest"}`;
                 document.body.appendChild(box);
                 boxes[sessionId] = box
-                console.log('boxes', boxes)
                 listClients()
                 player.onChange = updateChanges(player, sessionId);
             }
@@ -128,6 +148,21 @@
                 // clear input
                 input.value = "";
             }
+
+            window.addEventListener("keydown", function (e) {
+                if (e.which === 38) {
+                    up();
+
+                } else if (e.which === 39) {
+                    right();
+
+                } else if (e.which === 40) {
+                    down();
+
+                } else if (e.which === 37) {
+                    left();
+                }
+            });
         });
 
         function up() {
@@ -157,9 +192,7 @@
     </script>
     <script>
         const updateChanges = (stateObject, sessionId) => (changes) => {
-            console.log(boxes, stateObject, sessionId, changes)
             let box = boxes[sessionId]
-            console.log(boxes, sessionId, box, 'box')
             if (!box) return
 
             changes.forEach(({ field, value }) => {

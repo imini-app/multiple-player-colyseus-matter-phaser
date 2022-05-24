@@ -10,9 +10,26 @@ export class UserSchema extends Schema {
     y = 0
 }
 
+export class BallSchema extends Schema {
+    @type("number")
+    x = 0
+    @type("number")
+    y = 0
+}
+
 export class StateSchema extends Schema {
     @type({ map: UserSchema })
     clients = new MapSchema<UserSchema>();
+    @type([BallSchema])
+    balls = new ArraySchema<BallSchema>();
+
+    createBall() {
+        const newBall = new BallSchema();
+        newBall.x = Math.random() * 1200
+        newBall.y = Math.random() * 800
+        this.balls.push(newBall);
+    }
+
     createPlayer(sessionId: string, name: string) {
         const newUser = new UserSchema();
         newUser.name = name;
@@ -22,6 +39,7 @@ export class StateSchema extends Schema {
     removePlayer(sessionId: string) {
         this.clients.delete(sessionId);
     }
+
 }
 
 export class UpdatedChatRoom extends Room {
@@ -47,6 +65,13 @@ export class UpdatedChatRoom extends Room {
             console.log('x', player.x)
             console.log('y', player.y)
         });
+        for (let x = 0; x < 10; x++) {
+            this.state.createBall()
+        }
+
+        for (let i = 100; i < 110; i++) {
+            this.state.createBall()
+        }
     }
     onJoin(client, options) {
         this.state.createPlayer(client.sessionId, options?.name)
