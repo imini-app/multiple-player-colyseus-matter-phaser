@@ -13,10 +13,10 @@
             width: 100px;
             height: 100px;
             position: absolute;
-            padding-top: 24px;
-            box-sizing: border-box;
-            left: 0;
-            top: 0;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 90px;
+            color: whitesmoke;
         }
 
         .orb {
@@ -64,7 +64,7 @@
         const serverAdress = location.protocol.replace("http", "ws") + "//" + host + (location.port ? ':' + location.port : '')
         let myId = null
         const name = prompt('Enter Name')
-        var colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple'];
+        var colors = ['red', 'orange', 'silver', 'magenta', 'turquoise', 'green', 'blue', 'purple'];
         let players = {}
 
         let boxes = {}
