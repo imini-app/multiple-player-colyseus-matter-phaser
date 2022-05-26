@@ -17,6 +17,7 @@ import { CustomLobbyRoom } from './rooms/07-custom-lobby-room';
 import { MatterjsRoom } from './rooms/matterjs';
 import { PhaserRoom } from "./rooms/phaser";
 import { MatterjsPlatformRoom } from "./rooms/matterjs-platform";
+import { GameRoom } from "./rooms/circle-io";
 
 export default Arena({
     getId: () => "Your Colyseus App",
@@ -36,6 +37,9 @@ export default Arena({
             .enableRealtimeListing();
 
         gameServer.define("updatedChat", UpdatedChatRoom)
+            .enableRealtimeListing();
+
+        gameServer.define("circle_io", GameRoom)
             .enableRealtimeListing();
 
         // Register ChatRoom with initial options, as "chat_with_options"

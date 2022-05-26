@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+
+    <style>
+        body {
+            font-family: Tahoma, Geneva, sans-serif;
+        }
+
+        .player {
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 90px;
+            color: whitesmoke;
+        }
+
+        .orb {
+            width: 24px;
+            height: 24px;
+            border-radius: 12px;
+            position: absolute;
+        }
+    </style>
+
+    <!-- colyseus.js client -->
+    <script type="text/javascript" src="https://unpkg.com/colyseus.js@^0.14.0/dist/colyseus.js"></script>
+</head>
+
+<body>
+    <h1>
+        <a href="https://github.com/colyseus/colyseus-examples"><img
+                src="https://cdn.jsdelivr.net/gh/colyseus/colyseus@master/media/header.png" height="100"
+                alt="colyseus" /></a>
+    </h1>
+
+    <p>The New And Updated CHAT ROOM!</p>
+
+    <strong>Messages</strong><br>
+
+    <form id="form">
+        <input type="text" id="input" value="" autofocus />
+        <input type="submit" value="send" />
+    </form>
+
+    <div id="messages"></div>
+    <h3> Clients </h3>
+    <div id="clients"></div>
+
+
+    <br />
+    <button onclick="up()">up</button>
+    <button onclick="down()">down</button>
+    <br />
+    <button onclick="left()">left</button>
+    <button onclick="right()">right</button>
+
+    <script>
+        var host = window.document.location.host.replace(/:.*/, '');
+        const serverAdress = location.protocol.replace("http", "ws") + "//" + host + (location.port ? ':' + location.port : '')
+        let myId = null
+        const name = prompt('Enter Name')
+        var colors = ['red', 'orange', 'silver', 'magenta', 'turquoise', 'green', 'blue', 'purple'];
+        let players = {}
+
+        let boxes = {}
+
+        let ball = []
+
+        let room;
+
+        var client = new Colyseus.Client(serverAdress);
+
+        function listClients() {
+            const clientsContainer = document.querySelector("#clients");
+            clientsContainer.innerHTML = '';
+            for (const key in players) {
+                const player = players[key]
+                const playerHTML = document.createElement("div")
+                playerHTML.innerText = player.name
+                clientsContainer.appendChild(playerHTML)
+            }
+        }
+        client.joinOrCreate("circle_io", { name: name }).then(room_instance => {
+            room = room_instance
+
+
+            room.state.clients.onAdd = function (player, sessionId) {
+                players[sessionId] = player
+                var box = document.createElement("div");
+                box.className = "player";
+                box.style.left = `${player.x}px`;
+                box.style.top = `${player.y}px`;
+                console.log('X', player.x)
+                box.style.background = colors[Math.floor(Math.random() * colors.length)];
+                box.innerText = `${player.name || "Guest"}`;
+                document.body.appendChild(box);
+                boxes[sessionId] = box
+                listClients()
+                player.onChange = updateChanges(player, sessionId);
+            }
+
+            room.state.clients.onRemove = function (player, sessionId) {
+                delete players[sessionId]
+                listClients()
+            }
+
+            myId = room.sessionId
+            room.onStateChange.once(function (state) {
+            });
+
+            // new room state
+            room.onStateChange(function (state) {
+                // this signal is triggered on each patch
+            });
+
+            // listen to patches coming from the server
+            room.onMessage("messages", function (message) {
+                console.log(message)
+                var p = document.createElement("p");
+                const modifiedMessage = message.replace(myId, 'Me')
+                p.innerText = modifiedMessage;
+                document.querySelector("#messages").appendChild(p);
+            });
+
+            // send message to room on submit
+            document.querySelector("#form").onsubmit = function (e) {
+                e.preventDefault();
+
+                var input = document.querySelector("#input");
+
+                // send data to room
+                room.send("message", input.value);
+
+                // clear input
+                input.value = "";
+            }
+
+            window.addEventListener("keydown", function (e) {
+                if (e.which === 38) {
+                    up();
+
+                } else if (e.which === 39) {
+                    right();
+
+                } else if (e.which === 40) {
+                    down();
+
+                } else if (e.which === 37) {
+                    left();
+                }
+            });
+        });
+
+        function up() {
+            var movement = { y: -10 }
+
+            room.send("move", movement);
+        }
+
+        function down() {
+            var movement = { y: 10 }
+
+            room.send("move", movement);
+        }
+
+        function right() {
+            var movement = { x: 10 }
+
+            room.send("move", movement);
+        }
+
+        function left() {
+            var movement = { x: -10 }
+
+            room.send("move", movement);
+        }
+
+    </script>
+    <script>
+        const updateChanges = (stateObject, sessionId) => (changes) => {
+            let box = boxes[sessionId]
+            if (!box) return
+
+            changes.forEach(({ field, value }) => {
+                switch (field) {
+                    case 'x':
+                        box.style.left = parseInt(value) + "px";
+                        break;
+                    case 'y':
+                        box.style.top = parseInt(value) + "px";
+                        break;
+                }
+            });
+        }
+    </script>
+
+    <script type="text/javascript" src="test.js"></script>
+</body>
+
+</html>
