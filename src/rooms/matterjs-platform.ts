@@ -46,7 +46,7 @@ export class MatterPlatformGameEngine {
         const params = this.findTilePropertyById(mapData.tilesets[0].tiles, tileId);
         const width = mapData.tilewidth;
         const height = mapData.tileheight;
-        const rowNumber = parseInt(i / mapData.width);
+        const rowNumber = parseInt(String(i / mapData.width));
         const columnNumber = i - rowNumber * mapData.width;
         const centerX = columnNumber * width + width / 2;
         const centerY = rowNumber * height + height / 2;
