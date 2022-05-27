@@ -2,7 +2,6 @@ version: "2"
 services:
   app:
     container_name: colyseus
-    restart: false
     build: ./
     ports:
       - "2567:2567"
