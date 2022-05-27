@@ -1,0 +1,12 @@
+version: "2"
+services:
+  app:
+    container_name: colyseus
+    restart: always
+    build: ./
+    ports:
+      - "2567:2567"
+    volumes:
+      - .:/app
+    environment:
+      - NODE_ENV=production
