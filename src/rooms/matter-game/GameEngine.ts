@@ -45,11 +45,11 @@ export class GameEngine {
             // loop over all physics players and apply their properties back to colyseus players objects
 
             for (const key in this.players) {
-                if (!this.state.players.get(key) || !this.players[key]) {
+                if (!this.state.clients.get(key) || !this.players[key]) {
                     continue;
                 }
-                this.state.players.get(key).x = this.players[key].position.x;
-                this.state.players.get(key).y = this.players[key].position.y;
+                this.state.clients.get(key).x = this.players[key].position.x;
+                this.state.clients.get(key).y = this.players[key].position.y;
             }
         });
     }
@@ -78,5 +78,29 @@ export class GameEngine {
     processPlayerAction(sessionId, data) {
         // TODO: Change Velocity
         console.log("Session Id", sessionId, "Data", data)
+        let vy = data?.y
+        let vx = data?.x
+
+        let player = this.players[sessionId]
+        if (!player) {
+            return
+        }
+
+        const currentVelocity = player.velocity
+
+        if (data.x) {
+            vx = data.x
+        } else {
+            vx = currentVelocity.x
+        }
+
+        if (data.y) {
+            vy = data.y
+        } else {
+            vy = currentVelocity.y
+        }
+        // I am trying to change the x and y of the player.
+
+        Matter.Body.setVelocity(player, { x: vx, y: vy })
     }
 }

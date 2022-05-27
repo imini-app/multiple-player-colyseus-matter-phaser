@@ -1,6 +1,7 @@
 import { Room, Client } from "colyseus";
 import { Schema, type, MapSchema, ArraySchema } from "@colyseus/schema";
 import { GameEngine } from "./matter-game/GameEngine";
+import Matter from 'matter-js'
 
 export class UserSchema extends Schema {
     @type("string")
@@ -44,7 +45,18 @@ export class GameRoom extends Room {
             const player = this.state.clients.get(client.sessionId)
             this.broadcast("messages", `(${player.name}) ${message}`)
         });
+
+        this.onMessage("move", (client, message) => {
+            this.engine.processPlayerAction(client.sessionId, message)
+        })
+        this.setSimulationInterval((deltaTime) => this.update(deltaTime));
     }
+
+    update(deltaTime) {
+        // console.log(new Date().getTime())
+        Matter.Engine.update(this.engine.engine, deltaTime)
+    }
+
     onJoin(client, options) {
         this.engine.addPlayer(client.sessionId, options?.name)
         this.broadcast("messages", `(${options?.name}) joined.`)

@@ -91,21 +91,23 @@
 
             room.state.clients.onAdd = function (player, sessionId) {
                 players[sessionId] = player
-                var box = document.createElement("div");
-                box.className = "player";
-                box.style.left = `${player.x}px`;
-                box.style.top = `${player.y}px`;
+                var circle = document.createElement("div");
+                circle.className = "player";
+                circle.style.left = `${player.x}px`;
+                circle.style.top = `${player.y}px`;
                 console.log('X', player.x)
-                box.style.background = colors[Math.floor(Math.random() * colors.length)];
-                box.innerText = `${player.name || "Guest"}`;
-                document.body.appendChild(box);
-                boxes[sessionId] = box
+                circle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                circle.innerText = `${player.name || "Guest"}`;
+                document.body.appendChild(circle);
+                boxes[sessionId] = circle
                 listClients()
                 player.onChange = updateChanges(player, sessionId);
             }
 
             room.state.clients.onRemove = function (player, sessionId) {
+                let circle = boxes[sessionId]
                 delete players[sessionId]
+                document.body.removeChild(circle)
                 listClients()
             }
 
@@ -157,25 +159,25 @@
         });
 
         function up() {
-            var movement = { y: -10 }
+            var movement = { y: -7 }
 
             room.send("move", movement);
         }
 
         function down() {
-            var movement = { y: 10 }
+            var movement = { y: 7 }
 
             room.send("move", movement);
         }
 
         function right() {
-            var movement = { x: 10 }
+            var movement = { x: 7 }
 
             room.send("move", movement);
         }
 
         function left() {
-            var movement = { x: -10 }
+            var movement = { x: -7 }
 
             room.send("move", movement);
         }
@@ -183,16 +185,17 @@
     </script>
     <script>
         const updateChanges = (stateObject, sessionId) => (changes) => {
-            let box = boxes[sessionId]
-            if (!box) return
+            console.log("stateObject", stateObject, "sessionId", sessionId, "changes", changes)
+            let circle = boxes[sessionId]
+            if (!circle) return
 
             changes.forEach(({ field, value }) => {
                 switch (field) {
                     case 'x':
-                        box.style.left = parseInt(value) + "px";
+                        circle.style.left = parseInt(value) + "px";
                         break;
                     case 'y':
-                        box.style.top = parseInt(value) + "px";
+                        circle.style.top = parseInt(value) + "px";
                         break;
                 }
             });
