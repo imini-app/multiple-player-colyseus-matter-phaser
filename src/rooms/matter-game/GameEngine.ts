@@ -5,8 +5,8 @@ export class GameEngine {
     state = null
     engine = null
     players = {}
-    screenWidth = 1920 * 1
-    screenHeight = 1080 * 1
+    screenWidth = 1920 / 1.32
+    screenHeight = 1080 / 1.5
 
     constructor(roomState) {
         this.engine = Matter.Engine.create()
@@ -23,13 +23,13 @@ export class GameEngine {
 
         let walls = [
             // Top wall
-            Matter.Bodies.rectangle(this.screenWidth / 2, 0, this.screenWidth, 20),
+            Matter.Bodies.rectangle(this.screenWidth / 2, 0, this.screenWidth, 5, { isStatic: true }),
             // Bottom wall
-            Matter.Bodies.rectangle(this.screenWidth / 2, this.screenHeight, this.screenWidth, 20),
+            Matter.Bodies.rectangle(this.screenWidth / 2, this.screenHeight, this.screenWidth, 5, { isStatic: true }),
             // Right wall
-            Matter.Bodies.rectangle(this.screenWidth, this.screenHeight / 2, 20, this.screenHeight),
+            Matter.Bodies.rectangle(this.screenWidth, this.screenHeight / 2, 5, this.screenHeight, { isStatic: true }),
             // Left wall
-            Matter.Bodies.rectangle(0, this.screenHeight / 2, 20, this.screenHeight)
+            Matter.Bodies.rectangle(0, this.screenHeight / 2, 5, this.screenHeight, { isStatic: true })
         ]
 
         Matter.Composite.add(this.world, walls)
