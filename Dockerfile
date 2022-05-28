@@ -7,4 +7,4 @@ RUN npm install
 RUN npm install pm2 -g
 RUN npm run build
 EXPOSE 2567
-CMD pm2-runtime start /usr/app/lib/index.js -i -1
+CMD pm2-runtime start ./lib/index.js -i -1

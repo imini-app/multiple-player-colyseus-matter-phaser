@@ -93,9 +93,12 @@
         room.state.players.onRemove = function (player, sessionId) {
           console.log('session id remove', sessionId)
           console.log(players[sessionId]);
-          players[sessionId].destroy();
-          playerLabels[sessionId].destroy();
-          delete players[sessionId];
+          // To allow tween to finish to avoid js error in phaser timestep
+          setTimeout(() => {
+            players[sessionId].destroy();
+            playerLabels[sessionId].destroy();
+            delete players[sessionId];
+          }, 500)
         }
         room.onMessage("hello", (message) => {
           console.log(message);
@@ -150,6 +153,10 @@
         // console.log('changes', changes);
         // console.log('original', worldObject.velocity.x, worldObject.velocity.y);
       }
+      if (!worldObject || !worldObject.body) {
+        return;
+      }
+
       let targetX = worldObject.body.position.x
       let targetY = worldObject.body.position.y
       changes.forEach(({ field, value }) => {
@@ -202,9 +209,13 @@
     if (!gamePIN) {
       gamePIN = 'ad333';
     }
-    var host = window.document.location.host.replace(/:.*/, '');
 
-    var client = new Colyseus.Client(location.protocol.replace("http", "ws") + "//" + host + (location.port ? ':' + location.port : ''));
+    // Use a remote server
+    const userRemoteHost = true;
+    var removeServer = 'wss://ws.imini.app';
+    var localHost = window.document.location.host.replace(/:.*/, '');
+    var localServer = location.protocol.replace("http", "ws") + "//" + localHost + (location.port ? ':' + location.port : '');
+    var client = new Colyseus.Client(userRemoteHost ? removeServer : localServer);
     var room;
     var players = {};
     var worldBodies = {};
