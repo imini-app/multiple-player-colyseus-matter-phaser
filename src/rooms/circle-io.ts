@@ -12,10 +12,18 @@ export class UserSchema extends Schema {
     y = 0
 }
 
-
+export class BallSchema extends Schema {
+    @type("number")
+    x = 0
+    @type("number")
+    y = 0
+}
 export class StateSchema extends Schema {
     @type({ map: UserSchema })
     clients = new MapSchema<UserSchema>();
+
+    @type({ map: BallSchema })
+    orbs = new MapSchema<BallSchema>();
 
 
     createPlayer(sessionId: string, name: string, x: number, y: number) {
@@ -28,6 +36,17 @@ export class StateSchema extends Schema {
 
     removePlayer(sessionId: string) {
         this.clients.delete(sessionId);
+    }
+
+    createBall(id: number, x: number, y: number) {
+        const newBall = new BallSchema();
+        newBall.x = x;
+        newBall.y = y;
+        this.orbs.set(String(id), newBall);
+    }
+
+    removeBall(id: number) {
+        this.orbs.delete(String(id));
     }
 
 }

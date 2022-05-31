@@ -5,8 +5,9 @@ export class GameEngine {
     state = null
     engine = null
     players = {}
-    screenWidth = 1920 / 1.32
-    screenHeight = 1080 / 1.5
+    orbs = {}
+    screenWidth = 1920 / 1.32 * 5
+    screenHeight = 1080 / 1.5 * 5
 
     constructor(roomState) {
         this.engine = Matter.Engine.create()
@@ -34,6 +35,9 @@ export class GameEngine {
 
         Matter.Composite.add(this.world, walls)
 
+        for (let x = 0; x < 100 * this.screenWidth / 1454.54545455; x++) {
+            this.generateOrb()
+        }
         this.setupUpdateEvents()
     }
 
@@ -52,6 +56,17 @@ export class GameEngine {
                 this.state.clients.get(key).y = this.players[key].position.y;
             }
         });
+    }
+
+    generateOrb() {
+        let x = Math.random() * this.screenWidth
+        let y = Math.random() * this.screenHeight
+
+        let orb = Matter.Bodies.circle(x, y, 20, { label: 'orb' })
+        this.orbs[orb.id] = orb
+        console.log(orb.id, 'id')
+        this.state.createBall(orb.id, x, y)
+        Matter.Composite.add(this.world, [orb])
     }
 
     addPlayer(sessionId, name) {
