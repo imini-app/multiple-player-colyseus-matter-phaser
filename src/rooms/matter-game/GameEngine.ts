@@ -6,6 +6,7 @@ export class GameEngine {
     engine = null
     players = {}
     orbs = {}
+    playerIds = {}
     screenWidth = 1920 / 1.32 * 5
     screenHeight = 1080 / 1.5 * 5
 
@@ -39,6 +40,7 @@ export class GameEngine {
             this.generateOrb()
         }
         this.setupUpdateEvents()
+        this.collision()
     }
 
     setupUpdateEvents() {
@@ -58,6 +60,38 @@ export class GameEngine {
         });
     }
 
+    collision() {
+        Matter.Events.on(this.engine, "collisionStart", (event) => {
+            const pairs = event.pairs;
+            for (const pair of pairs) {
+                let bodyA = pair.bodyA
+                let bodyB = pair.bodyB
+                if (bodyA.label == "player" && bodyB.label == "orb") {
+                    this.playEatOrb(bodyA, bodyB)
+                }
+
+                if (bodyA.label == "orb" && bodyB.label == "player") {
+                    this.playEatOrb(bodyB, bodyA)
+                }
+            }
+
+        })
+    }
+
+    playEatOrb(player, orb) {
+        const id = this.playerIds[player.id]
+        const statePlayer = this.state.clients.get(id)
+        const currentSize = statePlayer.size
+        const newSize = currentSize + 1
+        statePlayer.size = newSize
+        const scaleUp = newSize / currentSize
+        Matter.Body.scale(player, scaleUp, scaleUp)
+
+        this.state.removeBall(orb.id)
+        Matter.Composite.remove(this.world, [orb])
+        this.generateOrb()
+    }
+
     generateOrb() {
         let x = Math.random() * this.screenWidth
         let y = Math.random() * this.screenHeight
@@ -73,14 +107,17 @@ export class GameEngine {
         const startX = Math.random() * this.screenWidth
         const startY = Math.random() * this.screenHeight
 
+        const initialSize = 50
+
         /*
         Create a player then asign to `this.players[sessionId]`.
         Also create player and add it to the world.
         Plus create a client/player in the state.
         */
-        const player = Matter.Bodies.circle(startX, startY, 50)
+        const player = Matter.Bodies.circle(startX, startY, initialSize, { label: "player" })
         this.players[sessionId] = player
-        this.state.createPlayer(sessionId, name, startX, startY)
+        this.playerIds[player.id] = sessionId
+        this.state.createPlayer(sessionId, name, startX, startY, initialSize)
         Matter.Composite.add(this.world, [player])
     }
 

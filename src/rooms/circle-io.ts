@@ -4,6 +4,8 @@ import { GameEngine } from "./matter-game/GameEngine";
 import Matter from 'matter-js'
 
 export class UserSchema extends Schema {
+    @type("number")
+    size = 100
     @type("string")
     name = "Guest"
     @type("number")
@@ -26,11 +28,12 @@ export class StateSchema extends Schema {
     orbs = new MapSchema<BallSchema>();
 
 
-    createPlayer(sessionId: string, name: string, x: number, y: number) {
+    createPlayer(sessionId: string, name: string, x: number, y: number, size: number) {
         const newUser = new UserSchema();
         newUser.name = name;
         newUser.x = x;
         newUser.y = y;
+        newUser.size = size
         this.clients.set(sessionId, newUser);
     }
 
