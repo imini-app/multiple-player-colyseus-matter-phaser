@@ -7,8 +7,8 @@ export class GameEngine {
     players = {}
     orbs = {}
     playerIds = {}
-    screenWidth = 1920 / 1.32 * 5
-    screenHeight = 1080 / 1.5 * 5
+    screenWidth = 1920 / 1.32 * 10
+    screenHeight = 1920 / 1.32 * 10
 
     constructor(roomState) {
         this.engine = Matter.Engine.create()
@@ -36,7 +36,7 @@ export class GameEngine {
 
         Matter.Composite.add(this.world, walls)
 
-        for (let x = 0; x < 100 * this.screenWidth / 1454.54545455; x++) {
+        for (let x = 0; x < 200 * this.screenWidth / 1454.54545455; x++) {
             this.generateOrb()
         }
         this.setupUpdateEvents()
@@ -107,7 +107,7 @@ export class GameEngine {
         const startX = Math.random() * this.screenWidth
         const startY = Math.random() * this.screenHeight
 
-        const initialSize = 50
+        const initialSize = 25
 
         /*
         Create a player then asign to `this.players[sessionId]`.

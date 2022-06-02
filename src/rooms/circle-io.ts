@@ -5,7 +5,7 @@ import Matter from 'matter-js'
 
 export class UserSchema extends Schema {
     @type("number")
-    size = 100
+    size = 0
     @type("string")
     name = "Guest"
     @type("number")
