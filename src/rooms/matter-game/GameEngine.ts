@@ -82,10 +82,12 @@ export class GameEngine {
         const id = this.playerIds[player.id]
         const statePlayer = this.state.clients.get(id)
         const currentSize = statePlayer.size
-        const newSize = currentSize + 1
-        statePlayer.size = newSize
-        const scaleUp = newSize / currentSize
-        Matter.Body.scale(player, scaleUp, scaleUp)
+        if (currentSize < this.screenWidth / 20) {
+            const newSize = currentSize + 1
+            statePlayer.size = newSize
+            const scaleUp = newSize / currentSize
+            Matter.Body.scale(player, scaleUp, scaleUp)
+        }
 
         this.state.removeBall(orb.id)
         Matter.Composite.remove(this.world, [orb])
