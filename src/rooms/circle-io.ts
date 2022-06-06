@@ -75,7 +75,6 @@ export class GameRoom extends Room {
     }
 
     update(deltaTime) {
-        // console.log(new Date().getTime())
         Matter.Engine.update(this.engine.engine, deltaTime)
     }
 

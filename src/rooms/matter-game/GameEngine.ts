@@ -73,16 +73,79 @@ export class GameEngine {
                 if (bodyA.label == "orb" && bodyB.label == "player") {
                     this.playEatOrb(bodyB, bodyA)
                 }
+
+                if (bodyA.label == "player" && bodyB.label == "player") {
+                    this.playerEatPlayer(bodyA, bodyB)
+
+                }
             }
 
         })
+    }
+
+    resetPlayer(statePlayer, oldBody) {
+        const oldBodyId = oldBody.id
+        const sessionId = this.playerIds[oldBodyId]
+        // 1. remove the old body
+        Matter.Composite.remove(this.world, [oldBody])
+        // 2. add a new body
+        const startX = Math.random() * this.screenWidth
+        const startY = Math.random() * this.screenHeight
+
+        const initialSize = 25
+        const player = Matter.Bodies.circle(startX, startY, initialSize, { label: "player" })
+        // 3. update state with the body
+        this.players[sessionId] = player
+        this.playerIds[player.id] = sessionId
+        delete this.playerIds[oldBodyId]
+
+        Matter.Composite.add(this.world, [player])
+
+        statePlayer.size = initialSize
+        statePlayer.x = startX
+        statePlayer.y = startY
+    }
+
+    playerEatPlayer(playerA, playerB) {
+        const playerAId = this.playerIds[playerA.id]
+        const playerAStatePlayer = this.state.clients.get(playerAId)
+
+        const playerBId = this.playerIds[playerB.id]
+        const playerBStatePlayer = this.state.clients.get(playerBId)
+
+        let smallerPlayer = playerA
+        let smallerBody = playerA
+
+        if (playerAStatePlayer.size > playerBStatePlayer.size) {
+            const currentASize = playerAStatePlayer.size
+            if (currentASize < this.screenWidth / 5) {
+                playerAStatePlayer.size += playerBStatePlayer.size
+                const scaleUp = playerAStatePlayer.size / currentASize
+                Matter.Body.scale(playerA, scaleUp, scaleUp)
+            }
+            smallerPlayer = playerBStatePlayer
+            smallerBody = playerB
+        }
+
+        if (playerAStatePlayer.size < playerBStatePlayer.size) {
+            const currentBSize = playerBStatePlayer.size
+            if (currentBSize < this.screenWidth / 5) {
+                playerBStatePlayer.size += playerAStatePlayer.size
+                const scaleUp = playerBStatePlayer.size / currentBSize
+                Matter.Body.scale(playerB, scaleUp, scaleUp)
+            }
+            smallerPlayer = playerAStatePlayer
+            smallerBody = playerA
+        }
+
+        this.resetPlayer(smallerPlayer, smallerBody)
     }
 
     playEatOrb(player, orb) {
         const id = this.playerIds[player.id]
         const statePlayer = this.state.clients.get(id)
         const currentSize = statePlayer.size
-        if (currentSize < this.screenWidth / 20) {
+        if (currentSize < this.screenWidth / 5) {
             const newSize = currentSize + 1
             statePlayer.size = newSize
             const scaleUp = newSize / currentSize
@@ -100,7 +163,6 @@ export class GameEngine {
 
         let orb = Matter.Bodies.circle(x, y, 20, { label: 'orb' })
         this.orbs[orb.id] = orb
-        console.log(orb.id, 'id')
         this.state.createBall(orb.id, x, y)
         Matter.Composite.add(this.world, [orb])
     }
@@ -130,8 +192,6 @@ export class GameEngine {
     }
 
     processPlayerAction(sessionId, data) {
-        // TODO: Change Velocity
-        console.log("Session Id", sessionId, "Data", data)
         let vy = data?.y
         let vx = data?.x
 
