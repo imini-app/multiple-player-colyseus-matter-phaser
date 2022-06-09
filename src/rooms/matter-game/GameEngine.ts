@@ -4,6 +4,7 @@ export class GameEngine {
     world = null
     state = null
     engine = null
+    maxPlayerSize = 7
     players = {}
     orbs = {}
     playerIds = {}
@@ -118,7 +119,7 @@ export class GameEngine {
 
         if (playerAStatePlayer.size > playerBStatePlayer.size) {
             const currentASize = playerAStatePlayer.size
-            if (currentASize < this.screenWidth / 5) {
+            if (currentASize < this.screenWidth / this.maxPlayerSize) {
                 playerAStatePlayer.size += playerBStatePlayer.size
                 const scaleUp = playerAStatePlayer.size / currentASize
                 Matter.Body.scale(playerA, scaleUp, scaleUp)
@@ -129,7 +130,7 @@ export class GameEngine {
 
         if (playerAStatePlayer.size < playerBStatePlayer.size) {
             const currentBSize = playerBStatePlayer.size
-            if (currentBSize < this.screenWidth / 5) {
+            if (currentBSize < this.screenWidth / this.maxPlayerSize) {
                 playerBStatePlayer.size += playerAStatePlayer.size
                 const scaleUp = playerBStatePlayer.size / currentBSize
                 Matter.Body.scale(playerB, scaleUp, scaleUp)
@@ -145,7 +146,7 @@ export class GameEngine {
         const id = this.playerIds[player.id]
         const statePlayer = this.state.clients.get(id)
         const currentSize = statePlayer.size
-        if (currentSize < this.screenWidth / 5) {
+        if (currentSize < this.screenWidth / this.maxPlayerSize) {
             const newSize = currentSize + 1
             statePlayer.size = newSize
             const scaleUp = newSize / currentSize
