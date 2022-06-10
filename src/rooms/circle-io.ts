@@ -12,6 +12,8 @@ export class UserSchema extends Schema {
     x = 0
     @type("number")
     y = 0
+    @type('number')
+    score = 0
 }
 
 export class BallSchema extends Schema {
@@ -28,11 +30,12 @@ export class StateSchema extends Schema {
     orbs = new MapSchema<BallSchema>();
 
 
-    createPlayer(sessionId: string, name: string, x: number, y: number, size: number) {
+    createPlayer(sessionId: string, name: string, x: number, y: number, size: number, score: number) {
         const newUser = new UserSchema();
         newUser.name = name;
         newUser.x = x;
         newUser.y = y;
+        newUser.score = score;
         newUser.size = size
         this.clients.set(sessionId, newUser);
     }

@@ -8,8 +8,8 @@ export class GameEngine {
     players = {}
     orbs = {}
     playerIds = {}
-    screenWidth = 1920 / 1.32 * 10
-    screenHeight = 1920 / 1.32 * 10
+    screenWidth = 1920 / 1.32 * 1
+    screenHeight = 1920 / 1.32 * 1
 
     constructor(roomState) {
         this.engine = Matter.Engine.create()
@@ -94,6 +94,8 @@ export class GameEngine {
         const startY = Math.random() * this.screenHeight
 
         const initialSize = 25
+        const initialScore = 400
+
         const player = Matter.Bodies.circle(startX, startY, initialSize, { label: "player" })
         // 3. update state with the body
         this.players[sessionId] = player
@@ -105,6 +107,8 @@ export class GameEngine {
         statePlayer.size = initialSize
         statePlayer.x = startX
         statePlayer.y = startY
+        statePlayer.score = initialScore
+        console.log('initialSize', statePlayer.size)
     }
 
     playerEatPlayer(playerA, playerB) {
@@ -119,6 +123,9 @@ export class GameEngine {
 
         if (playerAStatePlayer.size > playerBStatePlayer.size) {
             const currentASize = playerAStatePlayer.size
+            const scoreUp = playerBStatePlayer.score
+            playerAStatePlayer.score += scoreUp
+            console.log('newScore', playerAStatePlayer.score)
             if (currentASize < this.screenWidth / this.maxPlayerSize) {
                 playerAStatePlayer.size += playerBStatePlayer.size
                 const scaleUp = playerAStatePlayer.size / currentASize
@@ -130,6 +137,9 @@ export class GameEngine {
 
         if (playerAStatePlayer.size < playerBStatePlayer.size) {
             const currentBSize = playerBStatePlayer.size
+            const scoreUp = playerAStatePlayer.score
+            playerBStatePlayer.score += scoreUp
+            console.log('newScore', playerBStatePlayer.score)
             if (currentBSize < this.screenWidth / this.maxPlayerSize) {
                 playerBStatePlayer.size += playerAStatePlayer.size
                 const scaleUp = playerBStatePlayer.size / currentBSize
@@ -146,6 +156,11 @@ export class GameEngine {
         const id = this.playerIds[player.id]
         const statePlayer = this.state.clients.get(id)
         const currentSize = statePlayer.size
+        const currentScore = statePlayer.score
+        const newScore = currentScore + 10
+        statePlayer.score = newScore
+        console.log('currentScore', currentScore)
+        console.log('newScore', newScore)
         if (currentSize < this.screenWidth / this.maxPlayerSize) {
             const newSize = currentSize + 1
             statePlayer.size = newSize
@@ -173,6 +188,7 @@ export class GameEngine {
         const startY = Math.random() * this.screenHeight
 
         const initialSize = 25
+        const initialScore = 400
 
         /*
         Create a player then asign to `this.players[sessionId]`.
@@ -182,8 +198,9 @@ export class GameEngine {
         const player = Matter.Bodies.circle(startX, startY, initialSize, { label: "player" })
         this.players[sessionId] = player
         this.playerIds[player.id] = sessionId
-        this.state.createPlayer(sessionId, name, startX, startY, initialSize)
+        this.state.createPlayer(sessionId, name, startX, startY, initialSize, initialScore)
         Matter.Composite.add(this.world, [player])
+        console.log('initialSize', player.radius)
     }
 
     removePlayer(sessionId) {
