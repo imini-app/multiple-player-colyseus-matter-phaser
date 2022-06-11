@@ -22,6 +22,18 @@ export class BallSchema extends Schema {
     @type("number")
     y = 0
 }
+
+export class PlayerDuplicateSchema extends Schema {
+    @type("number")
+    size = 0
+    @type("number")
+    x = 0
+    @type("number")
+    y = 0
+    @type('string')
+    target = "Guest"
+}
+
 export class StateSchema extends Schema {
     @type({ map: UserSchema })
     clients = new MapSchema<UserSchema>();
@@ -29,6 +41,8 @@ export class StateSchema extends Schema {
     @type({ map: BallSchema })
     orbs = new MapSchema<BallSchema>();
 
+    @type({ map: PlayerDuplicateSchema })
+    playerDuplicates = new MapSchema<PlayerDuplicateSchema>();
 
     createPlayer(sessionId: string, name: string, x: number, y: number, size: number, score: number) {
         const newUser = new UserSchema();
@@ -40,8 +54,22 @@ export class StateSchema extends Schema {
         this.clients.set(sessionId, newUser);
     }
 
+
     removePlayer(sessionId: string) {
         this.clients.delete(sessionId);
+    }
+
+    createPlayerDuplicate(id: string, x: number, y: number, size: number, target: string) {
+        const newUser = new PlayerDuplicateSchema();
+        newUser.x = x;
+        newUser.y = y;
+        newUser.size = size
+        newUser.target = target
+        this.playerDuplicates.set(id, newUser);
+    }
+
+    removePlayerDuplicate(id: string) {
+        this.clients.delete(id);
     }
 
     createBall(id: number, x: number, y: number) {
@@ -73,6 +101,10 @@ export class GameRoom extends Room {
 
         this.onMessage("move", (client, message) => {
             this.engine.processPlayerAction(client.sessionId, message)
+        })
+
+        this.onMessage("split", (client, message) => {
+            this.engine.processPlayerSplit(client.sessionId, message)
         })
         this.setSimulationInterval((deltaTime) => this.update(deltaTime));
     }
