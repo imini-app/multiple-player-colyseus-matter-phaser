@@ -1,11 +1,12 @@
 import Matter from 'matter-js'
+import { UserCircleSchema } from '../circle-io'
 
 export class GameEngine {
     world = null
     state = null
     engine = null
     maxPlayerSize = 7
-    players = {}
+    circles = {}
     orbs = {}
     playerIds = {}
     screenWidth = 1920 / 1.32 * 10
@@ -98,7 +99,7 @@ export class GameEngine {
 
         const player = Matter.Bodies.circle(startX, startY, initialSize, { label: "player" })
         // 3. update state with the body
-        this.players[sessionId] = player
+        this.circles[sessionId] = player
         this.playerIds[player.id] = sessionId
         delete this.playerIds[oldBodyId]
 
@@ -190,17 +191,29 @@ export class GameEngine {
         Also create player and add it to the world.
         Plus create a client/player in the state.
         */
-        const player = Matter.Bodies.circle(startX, startY, initialSize, { label: "player" })
-        this.players[sessionId] = player
-        this.playerIds[player.id] = sessionId
-        this.state.createPlayer(sessionId, name, startX, startY, initialSize, initialScore)
-        Matter.Composite.add(this.world, [player])
+        const circle = Matter.Bodies.circle(startX, startY, initialSize, { label: "player" })
+        this.circles[circle.id] = circle
+        this.playerIds[circle.id] = sessionId
+        this.state.createPlayer(sessionId, name, initialScore)
+        let stateCircleList = this.state.clients.get(sessionId).circles
+        const newCircle = new UserCircleSchema()
+        newCircle.x = startX
+        newCircle.y = startY
+        newCircle.size = initialSize
+        stateCircleList.set(circle.id, newCircle)
+        Matter.Composite.add(this.world, [circle])
     }
 
     removePlayer(sessionId) {
-        const player = this.players[sessionId]
+        let stateCircleList = this.state.clients.get(sessionId).circles
+        stateCircleList.forEach((value, key) => {
+            // Key is the matter body id and value is the `UserCircleSchema`
+            const circle = this.circles[key]
+            Matter.Composite.remove(this.world, [circle]);
+        });
+
         this.state.removePlayer(sessionId)
-        Matter.Composite.remove(this.world, [player]);
+
     }
 
     processPlayerAction(sessionId, data) {

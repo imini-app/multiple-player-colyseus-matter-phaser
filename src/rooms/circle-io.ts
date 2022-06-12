@@ -3,17 +3,22 @@ import { Schema, type, MapSchema, ArraySchema } from "@colyseus/schema";
 import { GameEngine } from "./matter-game/GameEngine";
 import Matter from 'matter-js'
 
-export class UserSchema extends Schema {
+export class UserCircleSchema extends Schema {
     @type("number")
     size = 0
-    @type("string")
-    name = "Guest"
     @type("number")
     x = 0
     @type("number")
     y = 0
+}
+
+export class UserSchema extends Schema {
+    @type("string")
+    name = "Guest"
     @type('number')
     score = 0
+    @type({ map: UserCircleSchema })
+    circles = new MapSchema<UserCircleSchema>();
 }
 
 export class BallSchema extends Schema {
@@ -23,16 +28,6 @@ export class BallSchema extends Schema {
     y = 0
 }
 
-export class PlayerDuplicateSchema extends Schema {
-    @type("number")
-    size = 0
-    @type("number")
-    x = 0
-    @type("number")
-    y = 0
-    @type('string')
-    target = "Guest"
-}
 
 export class StateSchema extends Schema {
     @type({ map: UserSchema })
@@ -41,35 +36,16 @@ export class StateSchema extends Schema {
     @type({ map: BallSchema })
     orbs = new MapSchema<BallSchema>();
 
-    @type({ map: PlayerDuplicateSchema })
-    playerDuplicates = new MapSchema<PlayerDuplicateSchema>();
-
-    createPlayer(sessionId: string, name: string, x: number, y: number, size: number, score: number) {
+    createPlayer(sessionId: string, name: string, score: number) {
         const newUser = new UserSchema();
         newUser.name = name;
-        newUser.x = x;
-        newUser.y = y;
         newUser.score = score;
-        newUser.size = size
+        newUser.circles = new MapSchema<UserCircleSchema>();
         this.clients.set(sessionId, newUser);
     }
 
-
     removePlayer(sessionId: string) {
         this.clients.delete(sessionId);
-    }
-
-    createPlayerDuplicate(id: string, x: number, y: number, size: number, target: string) {
-        const newUser = new PlayerDuplicateSchema();
-        newUser.x = x;
-        newUser.y = y;
-        newUser.size = size
-        newUser.target = target
-        this.playerDuplicates.set(id, newUser);
-    }
-
-    removePlayerDuplicate(id: string) {
-        this.clients.delete(id);
     }
 
     createBall(id: number, x: number, y: number) {
