@@ -6,6 +6,7 @@ export class GameEngine {
     state = null
     engine = null
     maxPlayerSize = 7
+    players = {}
     circles = {}
     orbs = {}
     playerIds = {}
