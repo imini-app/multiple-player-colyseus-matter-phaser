@@ -1,24 +1,19 @@
 import { Room, Client } from "colyseus";
 import { Schema, type, MapSchema, ArraySchema } from "@colyseus/schema";
-import { GameEngine } from "./matter-game/GameEngine";
+import { GameEngine } from "./matter-game-v1/GameEngine";
 import Matter from 'matter-js'
 
-export class UserCircleSchema extends Schema {
+export class UserSchema extends Schema {
     @type("number")
     size = 0
+    @type("string")
+    name = "Guest"
     @type("number")
     x = 0
     @type("number")
     y = 0
-}
-
-export class UserSchema extends Schema {
-    @type("string")
-    name = "Guest"
     @type('number')
     score = 0
-    @type({ map: UserCircleSchema })
-    circles = new MapSchema<UserCircleSchema>();
 }
 
 export class BallSchema extends Schema {
@@ -27,8 +22,6 @@ export class BallSchema extends Schema {
     @type("number")
     y = 0
 }
-
-
 export class StateSchema extends Schema {
     @type({ map: UserSchema })
     clients = new MapSchema<UserSchema>();
@@ -36,11 +29,14 @@ export class StateSchema extends Schema {
     @type({ map: BallSchema })
     orbs = new MapSchema<BallSchema>();
 
-    createPlayer(sessionId: string, name: string, score: number) {
+
+    createPlayer(sessionId: string, name: string, x: number, y: number, size: number, score: number) {
         const newUser = new UserSchema();
         newUser.name = name;
+        newUser.x = x;
+        newUser.y = y;
         newUser.score = score;
-        newUser.circles = new MapSchema<UserCircleSchema>();
+        newUser.size = size
         this.clients.set(sessionId, newUser);
     }
 
@@ -77,10 +73,6 @@ export class GameRoom extends Room {
 
         this.onMessage("move", (client, message) => {
             this.engine.processPlayerAction(client.sessionId, message)
-        })
-
-        this.onMessage("split", (client, message) => {
-            this.engine.processPlayerSplit(client.sessionId, message)
         })
         this.setSimulationInterval((deltaTime) => this.update(deltaTime));
     }
