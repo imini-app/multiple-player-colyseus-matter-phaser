@@ -3,25 +3,25 @@ import { Schema, type, MapSchema, ArraySchema } from "@colyseus/schema";
 import { GameEngine } from "./matter-game-v2/GameEngine";
 import Matter from 'matter-js'
 
-export class UserCircleSchema extends Schema {
+export class PlayerCircleSchema extends Schema {
     @type("number")
     size = 0
     @type("number")
     x = 0
     @type("number")
     y = 0
+    @type("string")
+    playerId = ''
 }
 
-export class UserSchema extends Schema {
+export class PlayerSchema extends Schema {
     @type("string")
     name = "Guest"
     @type('number')
     score = 0
-    @type({ map: UserCircleSchema })
-    circles = new MapSchema<UserCircleSchema>();
 }
 
-export class BallSchema extends Schema {
+export class OrbSchema extends Schema {
     @type("number")
     x = 0
     @type("number")
@@ -30,39 +30,54 @@ export class BallSchema extends Schema {
 
 
 export class StateSchema extends Schema {
-    @type({ map: UserSchema })
-    clients = new MapSchema<UserSchema>();
+    @type({ map: PlayerSchema })
+    players = new MapSchema<PlayerSchema>();
 
-    @type({ map: BallSchema })
-    orbs = new MapSchema<BallSchema>();
+    @type({ map: PlayerCircleSchema })
+    playerCircles = new MapSchema<PlayerCircleSchema>()
+
+    @type({ map: OrbSchema })
+    orbs = new MapSchema<OrbSchema>();
 
     createPlayer(sessionId: string, name: string, score: number) {
-        const newUser = new UserSchema();
-        newUser.name = name;
-        newUser.score = score;
-        newUser.circles = new MapSchema<UserCircleSchema>();
-        this.clients.set(sessionId, newUser);
+        const newPlayer = new PlayerSchema();
+        newPlayer.name = name;
+        newPlayer.score = score;
+        this.players.set(sessionId, newPlayer);
     }
 
     removePlayer(sessionId: string) {
-        this.clients.delete(sessionId);
+        this.players.delete(sessionId);
     }
 
-    createBall(id: number, x: number, y: number) {
-        const newBall = new BallSchema();
-        newBall.x = x;
-        newBall.y = y;
-        this.orbs.set(String(id), newBall);
+    createPlayerCircle(worldId: number, playerId: string, x: number, y: number, size: number) {
+        const newPlayerCircle = new PlayerCircleSchema()
+        newPlayerCircle.playerId = playerId
+        newPlayerCircle.x = x
+        newPlayerCircle.y = y
+        newPlayerCircle.size = size
+        this.playerCircles.set(String(worldId), newPlayerCircle)
     }
 
-    removeBall(id: number) {
+    removePlayerCircle(worldId: number) {
+        this.playerCircles.delete(String(worldId))
+    }
+
+    createOrb(worldId: number, x: number, y: number) {
+        const newOrb = new OrbSchema();
+        newOrb.x = x;
+        newOrb.y = y;
+        this.orbs.set(String(worldId), newOrb);
+    }
+
+    removeOrb(id: number) {
         this.orbs.delete(String(id));
     }
 
 }
 
 export class GameRoom extends Room {
-    maxClients = 20;
+    maxplayers = 20;
     engine = null;
 
     onCreate(options) {
@@ -71,7 +86,7 @@ export class GameRoom extends Room {
         this.engine = new GameEngine(this.state)
 
         this.onMessage("message", (client, message) => {
-            const player = this.state.clients.get(client.sessionId)
+            const player = this.state.players.get(client.sessionId)
             this.broadcast("messages", `(${player.name}) ${message}`)
         });
 
@@ -94,7 +109,7 @@ export class GameRoom extends Room {
         this.broadcast("messages", `(${options?.name}) joined.`)
     }
     onLeave(client) {
-        const player = this.state.clients.get(client.sessionId)
+        const player = this.state.players.get(client.sessionId)
         this.engine.removePlayer(client.sessionId)
         this.broadcast("messages", `(${player?.name}) left.`)
     }

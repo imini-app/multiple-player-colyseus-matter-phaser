@@ -1,5 +1,5 @@
 import Matter from 'matter-js'
-import { UserCircleSchema } from '../circle-io-v2'
+import { PlayerCircleSchema } from '../circle-io-v2'
 
 export class GameEngine {
     world = null
@@ -197,7 +197,7 @@ export class GameEngine {
         this.playerIds[circle.id] = sessionId
         this.state.createPlayer(sessionId, name, initialScore)
         let stateCircleList = this.state.clients.get(sessionId).circles
-        const newCircle = new UserCircleSchema()
+        const newCircle = new PlayerCircleSchema()
         newCircle.x = startX
         newCircle.y = startY
         newCircle.size = initialSize
