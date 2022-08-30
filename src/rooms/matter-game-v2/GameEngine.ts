@@ -1,5 +1,4 @@
 import Matter from 'matter-js'
-import { PlayerCircleSchema } from '../circle-io-v2'
 
 export class GameEngine {
     world = null
@@ -10,8 +9,8 @@ export class GameEngine {
     circles = {}
     orbs = {}
     playerIds = {}
-    screenWidth = 1920 / 1.32 * 10
-    screenHeight = 1920 / 1.32 * 10
+    screenWidth = 1920 / 1.32 * 0.5
+    screenHeight = 1920 / 1.32 * 0.5
 
     constructor(roomState) {
         this.engine = Matter.Engine.create()
@@ -176,33 +175,32 @@ export class GameEngine {
 
         let orb = Matter.Bodies.circle(x, y, 20, { label: 'orb' })
         this.orbs[orb.id] = orb
-        this.state.createBall(orb.id, x, y)
+        this.state.createOrb(orb.id, x, y)
         Matter.Composite.add(this.world, [orb])
     }
 
     addPlayer(sessionId, name) {
+        const initialScore = 400
+        this.state.createPlayer(sessionId, name, initialScore)
+        this.addPlayerCircle(sessionId, 2)
+    }
+
+    addPlayerCircle(playerId, count = 1) {
         const startX = Math.random() * this.screenWidth
         const startY = Math.random() * this.screenHeight
-
         const initialSize = 25
-        const initialScore = 400
 
-        /*
-        Create a player then asign to `this.players[sessionId]`.
-        Also create player and add it to the world.
-        Plus create a client/player in the state.
-        */
-        const circle = Matter.Bodies.circle(startX, startY, initialSize, { label: "player" })
-        this.circles[circle.id] = circle
-        this.playerIds[circle.id] = sessionId
-        this.state.createPlayer(sessionId, name, initialScore)
-        let stateCircleList = this.state.clients.get(sessionId).circles
-        const newCircle = new PlayerCircleSchema()
-        newCircle.x = startX
-        newCircle.y = startY
-        newCircle.size = initialSize
-        stateCircleList.set(circle.id, newCircle)
-        Matter.Composite.add(this.world, [circle])
+        for (let x = 0; x < count; x++) {
+            const circle = Matter.Bodies.circle(
+                startX + (x * initialSize),
+                startY + (x * initialSize),
+                initialSize,
+                { label: "playerCircle" }
+            )
+            this.circles[circle.id] = circle
+            this.state.createPlayerCircle(circle.id, playerId, startX + (x * initialSize), startY + (x * initialSize), initialSize)
+            Matter.Composite.add(this.world, [circle])
+        }
     }
 
     removePlayer(sessionId) {
