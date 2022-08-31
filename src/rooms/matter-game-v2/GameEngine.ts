@@ -9,8 +9,8 @@ export class GameEngine {
     circles = {}
     orbs = {}
     playerIds = {}
-    screenWidth = 1920 / 1.32 * 0.5
-    screenHeight = 1920 / 1.32 * 0.5
+    screenWidth = 1920 / 1.32 * 10
+    screenHeight = 1920 / 1.32 * 10
 
     constructor(roomState) {
         this.engine = Matter.Engine.create()
@@ -51,13 +51,13 @@ export class GameEngine {
             // Update the state
             // apply the x position of the physics ball object back to the colyseus ball object
             // loop over all physics players and apply their properties back to colyseus players objects
+            for (const worldId in this.circles) {
 
-            for (const key in this.players) {
-                if (!this.state.clients.get(key) || !this.players[key]) {
+                if (!this.state.playerCircles.get(worldId) || !this.circles[worldId]) {
                     continue;
                 }
-                this.state.clients.get(key).x = this.players[key].position.x;
-                this.state.clients.get(key).y = this.players[key].position.y;
+                this.state.playerCircles.get(worldId).x = this.circles[worldId].position.x;
+                this.state.playerCircles.get(worldId).y = this.circles[worldId].position.y;
             }
         });
     }
@@ -182,7 +182,7 @@ export class GameEngine {
     addPlayer(sessionId, name) {
         const initialScore = 400
         this.state.createPlayer(sessionId, name, initialScore)
-        this.addPlayerCircle(sessionId, 2)
+        this.addPlayerCircle(sessionId, 5)
     }
 
     addPlayerCircle(playerId, count = 1) {
@@ -203,6 +203,19 @@ export class GameEngine {
         }
     }
 
+    findPlayerCircles(playerId) {
+        const circles = []
+        this.state.playerCircles.forEach((stateCircle, worldId) => {
+            if (stateCircle.playerId == playerId) {
+                const worldCircle = this.circles[worldId]
+                circles.push(worldCircle)
+            }
+        });
+        return circles
+    }
+
+
+
     removePlayer(sessionId) {
         let stateCircleList = this.state.clients.get(sessionId).circles
         stateCircleList.forEach((value, key) => {
@@ -219,27 +232,29 @@ export class GameEngine {
         let vy = data?.y
         let vx = data?.x
 
-        let player = this.players[sessionId]
-        if (!player) {
-            return
+        const playerCircles = this.findPlayerCircles(sessionId)
+
+        for (const playerCircle of playerCircles) {
+            if (!playerCircle) {
+                return
+            }
+
+            const currentVelocity = playerCircle.velocity
+
+            if (data.x) {
+                vx = data.x
+            } else {
+                vx = currentVelocity.x
+            }
+
+            if (data.y) {
+                vy = data.y
+            } else {
+                vy = currentVelocity.y
+            }
+            // I am trying to change the x and y of the player.
+            Matter.Body.setVelocity(playerCircle, { x: vx, y: vy })
         }
-
-        const currentVelocity = player.velocity
-
-        if (data.x) {
-            vx = data.x
-        } else {
-            vx = currentVelocity.x
-        }
-
-        if (data.y) {
-            vy = data.y
-        } else {
-            vy = currentVelocity.y
-        }
-        // I am trying to change the x and y of the player.
-
-        Matter.Body.setVelocity(player, { x: vx, y: vy })
     }
 
     processPlayerSplit(sessionId, data) {
