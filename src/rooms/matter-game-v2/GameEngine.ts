@@ -4,13 +4,13 @@ export class GameEngine {
     world = null
     state = null
     engine = null
-    maxPlayerSize = 7
+    maxPlayerCircleSize = 7
     players = {}
     circles = {}
     orbs = {}
     playerIds = {}
-    screenWidth = 1920 / 1.32 * 10
-    screenHeight = 1920 / 1.32 * 10
+    screenWidth = 1920 / 1.32 * 2
+    screenHeight = 1920 / 1.32 * 2
 
     constructor(roomState) {
         this.engine = Matter.Engine.create()
@@ -68,18 +68,18 @@ export class GameEngine {
             for (const pair of pairs) {
                 let bodyA = pair.bodyA
                 let bodyB = pair.bodyB
-                if (bodyA.label == "player" && bodyB.label == "orb") {
+                if (bodyA.label == "playerCircle" && bodyB.label == "orb") {
                     this.playEatOrb(bodyA, bodyB)
                 }
 
-                if (bodyA.label == "orb" && bodyB.label == "player") {
+                if (bodyA.label == "orb" && bodyB.label == "playerCircle") {
                     this.playEatOrb(bodyB, bodyA)
                 }
 
-                if (bodyA.label == "player" && bodyB.label == "player") {
-                    this.playerEatPlayer(bodyA, bodyB)
+                // if (bodyA.label == "playerCircle" && bodyB.label == "playerCircle") {
+                //     this.playerEatPlayer(bodyA, bodyB)
 
-                }
+                // }
             }
 
         })
@@ -125,7 +125,7 @@ export class GameEngine {
             const currentASize = playerAStatePlayer.size
             const scoreUp = playerBStatePlayer.score
             playerAStatePlayer.score += scoreUp
-            if (currentASize < this.screenWidth / this.maxPlayerSize) {
+            if (currentASize < this.screenWidth / this.maxPlayerCircleSize) {
                 playerAStatePlayer.size += playerBStatePlayer.size
                 const scaleUp = playerAStatePlayer.size / currentASize
                 Matter.Body.scale(playerA, scaleUp, scaleUp)
@@ -138,7 +138,7 @@ export class GameEngine {
             const currentBSize = playerBStatePlayer.size
             const scoreUp = playerAStatePlayer.score
             playerBStatePlayer.score += scoreUp
-            if (currentBSize < this.screenWidth / this.maxPlayerSize) {
+            if (currentBSize < this.screenWidth / this.maxPlayerCircleSize) {
                 playerBStatePlayer.size += playerAStatePlayer.size
                 const scaleUp = playerBStatePlayer.size / currentBSize
                 Matter.Body.scale(playerB, scaleUp, scaleUp)
@@ -150,21 +150,21 @@ export class GameEngine {
         this.resetPlayer(smallerPlayer, smallerBody)
     }
 
-    playEatOrb(player, orb) {
-        const id = this.playerIds[player.id]
-        const statePlayer = this.state.clients.get(id)
-        const currentSize = statePlayer.size
+    playEatOrb(playerCircle, orb) {
+        const statePlayerCircle = this.state.playerCircles.get(String(playerCircle.id))
+        const statePlayer = this.state.players.get(statePlayerCircle.playerId)
+        const currentSize = statePlayerCircle.size
         const currentScore = statePlayer.score
         const newScore = currentScore + 10
         statePlayer.score = newScore
-        if (currentSize < this.screenWidth / this.maxPlayerSize) {
+        if (currentSize < this.screenWidth / this.maxPlayerCircleSize) {
             const newSize = currentSize + 1
-            statePlayer.size = newSize
+            statePlayerCircle.size = newSize
             const scaleUp = newSize / currentSize
-            Matter.Body.scale(player, scaleUp, scaleUp)
+            Matter.Body.scale(playerCircle, scaleUp, scaleUp)
         }
 
-        this.state.removeBall(orb.id)
+        this.state.removeOrb(orb.id)
         Matter.Composite.remove(this.world, [orb])
         this.generateOrb()
     }
