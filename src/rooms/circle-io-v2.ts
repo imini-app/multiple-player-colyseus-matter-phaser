@@ -109,7 +109,7 @@ export class GameRoom extends Room {
         this.broadcast("messages", `(${options?.name}) joined.`)
     }
     onLeave(client) {
-        const player = this.state.players.get(client.sessionId)
+        const player = this.state.players?.get(client.sessionId)
         this.engine.removePlayer(client.sessionId)
         this.broadcast("messages", `(${player?.name}) left.`)
     }

@@ -9,8 +9,9 @@ export class GameEngine {
     circles = {}
     orbs = {}
     playerIds = {}
-    screenWidth = 1920 / 1.32 * 2
-    screenHeight = 1920 / 1.32 * 2
+    screenWidth = 1920 / 1.32 * 10
+    screenHeight = 1920 / 1.32 * 10
+
 
     constructor(roomState) {
         this.engine = Matter.Engine.create()
@@ -76,82 +77,93 @@ export class GameEngine {
                     this.playEatOrb(bodyB, bodyA)
                 }
 
-                // if (bodyA.label == "playerCircle" && bodyB.label == "playerCircle") {
-                //     this.playerEatPlayer(bodyA, bodyB)
+                if (bodyA.label == "playerCircle" && bodyB.label == "playerCircle") {
+                    this.playerEatPlayer(bodyA, bodyB)
 
-                // }
+                }
             }
 
         })
     }
 
-    resetPlayer(statePlayer, oldBody) {
-        const oldBodyId = oldBody.id
-        const sessionId = this.playerIds[oldBodyId]
-        // 1. remove the old body
+    resetPlayer(statePlayerCircle, oldBody, sameOrNot) {
+        // 0. Find every circle for that player and count. If 1 or 0 reset, otherwise return.
+        const statePlayer = this.state.players.get(statePlayerCircle.playerId)
+        const playerCircles = this.findPlayerCircles(statePlayerCircle.playerId)
+
+        // 1. remove the old body and Remove from state
+        this.state.removePlayerCircle(oldBody.id)
+        delete this.circles[oldBody.id]
         Matter.Composite.remove(this.world, [oldBody])
-        // 2. add a new body
-        const startX = Math.random() * this.screenWidth
-        const startY = Math.random() * this.screenHeight
 
-        const initialSize = 25
-        const initialScore = 400
 
-        const player = Matter.Bodies.circle(startX, startY, initialSize, { label: "player" })
-        // 3. update state with the body
-        this.circles[sessionId] = player
-        this.playerIds[player.id] = sessionId
-        delete this.playerIds[oldBodyId]
+        if (!sameOrNot && playerCircles.length <= 1) {
 
-        Matter.Composite.add(this.world, [player])
+            // 2. add a new body
+            const startX = Math.random() * this.screenWidth
+            const startY = Math.random() * this.screenHeight
 
-        statePlayer.size = initialSize
-        statePlayer.x = startX
-        statePlayer.y = startY
-        statePlayer.score = initialScore
+            const initialSize = 25
+            const initialScore = 400
+
+            const playerCircle = Matter.Bodies.circle(startX, startY, initialSize, { label: "playerCircle" })
+            // 3. update state with the body
+            this.circles[playerCircle.id] = playerCircle
+
+            Matter.Composite.add(this.world, [playerCircle])
+            this.state.createPlayerCircle(playerCircle.id, statePlayerCircle.playerId, startX, startY, initialSize)
+            if (statePlayer) statePlayer.score = initialScore
+        }
     }
 
     playerEatPlayer(playerA, playerB) {
-        const playerAId = this.playerIds[playerA.id]
-        const playerAStatePlayer = this.state.clients.get(playerAId)
+        const statePlayerACircle = this.state.playerCircles.get(String(playerA.id))
+        const statePlayerA = this.state.players.get(statePlayerACircle.playerId)
 
-        const playerBId = this.playerIds[playerB.id]
-        const playerBStatePlayer = this.state.clients.get(playerBId)
+        const statePlayerBCircle = this.state.playerCircles.get(String(playerB.id))
+        const statePlayerB = this.state.players.get(statePlayerBCircle.playerId)
 
-        let smallerPlayer = playerA
+        let smallerPlayerCircle = playerA
         let smallerBody = playerA
 
-        if (playerAStatePlayer.size > playerBStatePlayer.size) {
-            const currentASize = playerAStatePlayer.size
-            const scoreUp = playerBStatePlayer.score
-            playerAStatePlayer.score += scoreUp
+        const samePlayer = statePlayerACircle.playerId == statePlayerBCircle.playerId
+
+        if (statePlayerACircle.size > statePlayerBCircle.size) {
+            const currentASize = statePlayerACircle.size
+            if (!samePlayer) {
+                const scoreUp = statePlayerBCircle.size * 10
+                statePlayerA.score += scoreUp
+            }
             if (currentASize < this.screenWidth / this.maxPlayerCircleSize) {
-                playerAStatePlayer.size += playerBStatePlayer.size
-                const scaleUp = playerAStatePlayer.size / currentASize
+                statePlayerACircle.size += statePlayerBCircle.size
+                const scaleUp = statePlayerACircle.size / currentASize
                 Matter.Body.scale(playerA, scaleUp, scaleUp)
             }
-            smallerPlayer = playerBStatePlayer
+            smallerPlayerCircle = statePlayerBCircle
             smallerBody = playerB
         }
 
-        if (playerAStatePlayer.size < playerBStatePlayer.size) {
-            const currentBSize = playerBStatePlayer.size
-            const scoreUp = playerAStatePlayer.score
-            playerBStatePlayer.score += scoreUp
+        if (statePlayerBCircle.size > statePlayerACircle.size) {
+            const currentBSize = statePlayerBCircle.size
+            if (!samePlayer) {
+                const scoreUp = statePlayerACircle.size * 10
+                statePlayerB.score += scoreUp
+            }
             if (currentBSize < this.screenWidth / this.maxPlayerCircleSize) {
-                playerBStatePlayer.size += playerAStatePlayer.size
-                const scaleUp = playerBStatePlayer.size / currentBSize
+                statePlayerBCircle.size += statePlayerACircle.size
+                const scaleUp = statePlayerBCircle.size / currentBSize
                 Matter.Body.scale(playerB, scaleUp, scaleUp)
             }
-            smallerPlayer = playerAStatePlayer
+            smallerPlayerCircle = statePlayerACircle
             smallerBody = playerA
         }
 
-        this.resetPlayer(smallerPlayer, smallerBody)
+        this.resetPlayer(smallerPlayerCircle, smallerBody, samePlayer)
     }
 
     playEatOrb(playerCircle, orb) {
         const statePlayerCircle = this.state.playerCircles.get(String(playerCircle.id))
+        if (!statePlayerCircle) return
         const statePlayer = this.state.players.get(statePlayerCircle.playerId)
         const currentSize = statePlayerCircle.size
         const currentScore = statePlayer.score
@@ -182,7 +194,8 @@ export class GameEngine {
     addPlayer(sessionId, name) {
         const initialScore = 400
         this.state.createPlayer(sessionId, name, initialScore)
-        this.addPlayerCircle(sessionId, 5)
+
+        setTimeout(() => this.addPlayerCircle(sessionId, 5), 1000)
     }
 
     addPlayerCircle(playerId, count = 1) {
@@ -192,13 +205,13 @@ export class GameEngine {
 
         for (let x = 0; x < count; x++) {
             const circle = Matter.Bodies.circle(
-                startX + (x * initialSize),
-                startY + (x * initialSize),
+                startX + (x * initialSize * 2),
+                startY + (x * initialSize * 2),
                 initialSize,
                 { label: "playerCircle" }
             )
             this.circles[circle.id] = circle
-            this.state.createPlayerCircle(circle.id, playerId, startX + (x * initialSize), startY + (x * initialSize), initialSize)
+            this.state.createPlayerCircle(circle.id, playerId, startX + (x * initialSize * 2), startY + (x * initialSize * 2), initialSize)
             Matter.Composite.add(this.world, [circle])
         }
     }
@@ -272,7 +285,6 @@ export class GameEngine {
         playerStatePlayer.size -= targetSize
 
         Matter.Body.scale(player, 0.5, 0.5)
-        console.log(playerStatePlayer.size)
 
         // this.state.createPlayerDuplicate(sessionId, x, y, size, player)
 
