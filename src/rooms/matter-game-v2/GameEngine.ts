@@ -230,12 +230,11 @@ export class GameEngine {
 
 
     removePlayer(sessionId) {
-        let stateCircleList = this.state.clients.get(sessionId).circles
-        stateCircleList.forEach((value, key) => {
-            // Key is the matter body id and value is the `UserCircleSchema`
-            const circle = this.circles[key]
+        let worldCircleList = this.findPlayerCircles(sessionId)
+        for (const circle of worldCircleList) {
+            this.state.removePlayerCircle(circle.id)
             Matter.Composite.remove(this.world, [circle]);
-        });
+        }
 
         this.state.removePlayer(sessionId)
 
