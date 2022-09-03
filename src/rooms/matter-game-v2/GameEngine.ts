@@ -9,8 +9,8 @@ export class GameEngine {
     circles = {}
     orbs = {}
     playerIds = {}
-    screenWidth = 1920 / 1.32 * 10
-    screenHeight = 1920 / 1.32 * 10
+    screenWidth = 1920 / 1.32 * 2
+    screenHeight = 1920 / 1.32 * 2
 
 
     constructor(roomState) {
@@ -198,20 +198,19 @@ export class GameEngine {
         setTimeout(() => this.addPlayerCircle(sessionId, 5), 1000)
     }
 
-    addPlayerCircle(playerId, count = 1) {
-        const startX = Math.random() * this.screenWidth
-        const startY = Math.random() * this.screenHeight
-        const initialSize = 25
+    addPlayerCircle(playerId, count = 1, size = 25, initX = 0, initY = 0) {
+        const startX = initX == 0 ? Math.random() * this.screenWidth : initX
+        const startY = initY == 0 ? Math.random() * this.screenHeight : initY
 
         for (let x = 0; x < count; x++) {
             const circle = Matter.Bodies.circle(
-                startX + (x * initialSize * 2),
-                startY + (x * initialSize * 2),
-                initialSize,
+                startX + (x * size * 2),
+                startY + (x * size * 2),
+                size,
                 { label: "playerCircle" }
             )
             this.circles[circle.id] = circle
-            this.state.createPlayerCircle(circle.id, playerId, startX + (x * initialSize * 2), startY + (x * initialSize * 2), initialSize)
+            this.state.createPlayerCircle(circle.id, playerId, startX + (x * size * 2), startY + (x * size * 2), size)
             Matter.Composite.add(this.world, [circle])
         }
     }
@@ -269,23 +268,29 @@ export class GameEngine {
         }
     }
 
-    processPlayerSplit(sessionId, data) {
-        let size = data?.size / 2
-        let player = this.players[sessionId]
-        let x = data?.x
-        let y = data?.y
+    processPlayerSplit(sessionId) {
+        const playerCircles = this.findPlayerCircles(sessionId)
+        if (!playerCircles) return
+        for (const circle of playerCircles) {
+            let offset;
+            // 1. change the size in the state to half
+            const statePlayerCircle = this.state.playerCircles.get(String(circle.id))
+            const currentSize = statePlayerCircle.size
+            if (currentSize < 50) continue
+            statePlayerCircle.size = Math.floor(currentSize / 2)
+            // 2. scale the body in the matter to half
+            const scaleDown = statePlayerCircle.size / currentSize
+            Matter.Body.scale(circle, scaleDown, scaleDown)
 
-        const playerId = this.playerIds[player.id]
-        const playerStatePlayer = this.state.clients.get(playerId)
-
-        let targetSize = playerStatePlayer.size / 2
-
-        let scale = targetSize / playerStatePlayer.size
-        playerStatePlayer.size -= targetSize
-
-        Matter.Body.scale(player, 0.5, 0.5)
-
-        // this.state.createPlayerDuplicate(sessionId, x, y, size, player)
-
+            // 3. add new circle to the world and state
+            offset = statePlayerCircle.size * 2
+            this.addPlayerCircle(
+                sessionId,
+                1, // only one needed
+                statePlayerCircle.size,
+                statePlayerCircle.x + offset,
+                statePlayerCircle.y + offset
+            )
+        }
     }
 }

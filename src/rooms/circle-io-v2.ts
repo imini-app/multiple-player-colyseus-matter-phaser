@@ -95,7 +95,7 @@ export class GameRoom extends Room {
         })
 
         this.onMessage("split", (client, message) => {
-            this.engine.processPlayerSplit(client.sessionId, message)
+            this.engine.processPlayerSplit(client.sessionId)
         })
         this.setSimulationInterval((deltaTime) => this.update(deltaTime));
     }
