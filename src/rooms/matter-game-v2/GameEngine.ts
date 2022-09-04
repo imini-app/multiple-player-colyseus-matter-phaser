@@ -131,8 +131,10 @@ export class GameEngine {
         if (statePlayerACircle.size > statePlayerBCircle.size) {
             const currentASize = statePlayerACircle.size
             if (!samePlayer) {
-                const scoreUp = statePlayerBCircle.size * 10
-                statePlayerA.score += scoreUp
+                const scoreChange = statePlayerBCircle.size * 10
+                statePlayerA.score += scoreChange
+                statePlayerB.score -= scoreChange
+                if (statePlayerB.score < 100) statePlayerB.score = 100
             }
             if (currentASize < this.screenWidth / this.maxPlayerCircleSize) {
                 statePlayerACircle.size += statePlayerBCircle.size
@@ -146,8 +148,9 @@ export class GameEngine {
         if (statePlayerBCircle.size > statePlayerACircle.size) {
             const currentBSize = statePlayerBCircle.size
             if (!samePlayer) {
-                const scoreUp = statePlayerACircle.size * 10
-                statePlayerB.score += scoreUp
+                const scoreChange = statePlayerACircle.size * 10
+                statePlayerB.score += scoreChange
+                statePlayerA.score -= scoreChange
             }
             if (currentBSize < this.screenWidth / this.maxPlayerCircleSize) {
                 statePlayerBCircle.size += statePlayerACircle.size
