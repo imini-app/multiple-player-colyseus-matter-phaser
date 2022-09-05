@@ -128,7 +128,7 @@ export class GameEngine {
 
         const samePlayer = statePlayerACircle.playerId == statePlayerBCircle.playerId
 
-        if (statePlayerACircle.size > statePlayerBCircle.size) {
+        if (statePlayerACircle.size >= statePlayerBCircle.size) {
             const currentASize = statePlayerACircle.size
             if (!samePlayer) {
                 const scoreChange = statePlayerBCircle.size * 10
@@ -145,7 +145,7 @@ export class GameEngine {
             smallerBody = playerB
         }
 
-        if (statePlayerBCircle.size > statePlayerACircle.size) {
+        if (statePlayerBCircle.size >= statePlayerACircle.size) {
             const currentBSize = statePlayerBCircle.size
             if (!samePlayer) {
                 const scoreChange = statePlayerACircle.size * 10
@@ -202,8 +202,12 @@ export class GameEngine {
     }
 
     addPlayerCircle(playerId, count = 1, size = 25, initX = 0, initY = 0) {
-        const startX = initX == 0 ? Math.random() * this.screenWidth : initX
-        const startY = initY == 0 ? Math.random() * this.screenHeight : initY
+        let startX = initX == 0 ? Math.random() * this.screenWidth : initX
+        let startY = initY == 0 ? Math.random() * this.screenHeight : initY
+        if (startX > this.screenWidth - 2.5) startX = this.screenWidth - 20
+        if (startY > this.screenHeight - 2.5) startY = this.screenHeight - 20
+        if (startX < 2.5) startX = 20
+        if (startY < 2.5) startY = 20
 
         for (let x = 0; x < count; x++) {
             const circle = Matter.Bodies.circle(
