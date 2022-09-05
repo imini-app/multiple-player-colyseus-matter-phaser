@@ -9,8 +9,8 @@ export class GameEngine {
     circles = {}
     orbs = {}
     playerIds = {}
-    screenWidth = 1920 / 1.32 * 2
-    screenHeight = 1920 / 1.32 * 2
+    screenWidth = 1920 / 1.32 * 10
+    screenHeight = 1920 / 1.32 * 10
 
 
     constructor(roomState) {
