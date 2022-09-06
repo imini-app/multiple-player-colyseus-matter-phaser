@@ -195,13 +195,13 @@ export class GameEngine {
     }
 
     addPlayer(sessionId, name) {
-        const initialScore = 400
+        const initialScore = 800
         this.state.createPlayer(sessionId, name, initialScore)
 
-        setTimeout(() => this.addPlayerCircle(sessionId, 5), 1000)
+        setTimeout(() => this.addPlayerCircle(sessionId, 1), 1000)
     }
 
-    addPlayerCircle(playerId, count = 1, size = 25, initX = 0, initY = 0) {
+    addPlayerCircle(playerId, count = 1, size = 50, initX = 0, initY = 0) {
         let startX = initX == 0 ? Math.random() * this.screenWidth : initX
         let startY = initY == 0 ? Math.random() * this.screenHeight : initY
         if (startX > this.screenWidth - 2.5) startX = this.screenWidth - 20
