@@ -9,8 +9,8 @@ export class GameEngine {
     circles = {}
     orbs = {}
     playerIds = {}
-    screenWidth = 1920 / 1.32 * 10
-    screenHeight = 1920 / 1.32 * 10
+    screenWidth = 1920 / 1.32 * 12
+    screenHeight = 1920 / 1.32 * 12
 
 
     constructor(roomState) {
@@ -39,8 +39,8 @@ export class GameEngine {
 
         Matter.Composite.add(this.world, walls)
 
-        for (let x = 0; x < 200 * this.screenWidth / 1454.54545455; x++) {
-            this.generateOrb()
+        for (let x = 0; x < 300 * this.screenWidth / 1454.54545455; x++) {
+            setTimeout(() => this.generateOrb(), 5)
         }
         this.setupUpdateEvents()
         this.collision()
