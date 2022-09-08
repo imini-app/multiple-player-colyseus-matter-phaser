@@ -229,7 +229,7 @@ export class GameEngine {
                 initX,
                 initY,
                 size,
-                { label: "playerCircle", friction: 0, isSensor: true }
+                { label: "playerBullet", friction: 0, isSensor: true }
             )
             // Velocity stuff
             const xDist = targetX - initX;
@@ -239,7 +239,7 @@ export class GameEngine {
             const velocityY = Math.sin(angle) * speed
 
             this.bullets[bullet.id] = bullet
-            this.state.createPlayerCircle(bullet.id, playerId, initX, initY, size)
+            this.state.createPlayerBullet(bullet.id, playerId, initX, initY, size)
             Matter.Body.setVelocity(bullet, { x: velocityX, y: velocityY })
             Matter.Composite.add(this.world, [bullet])
         }
@@ -295,6 +295,20 @@ export class GameEngine {
             }
             // I am trying to change the x and y of the player.
             Matter.Body.setVelocity(playerCircle, { x: vx, y: vy })
+        }
+    }
+
+    processPlayerBullet(playerId, targets) {
+        const playerCircles = this.findPlayerCircles(playerId)
+        for (const playerCircle of playerCircles) {
+            console.log(playerCircle)
+            this.addPlayerBullet(
+                playerId,
+                targets.targetX,
+                targets.targetY,
+                playerCircle.position.x,
+                playerCircle.position.y
+            )
         }
     }
 

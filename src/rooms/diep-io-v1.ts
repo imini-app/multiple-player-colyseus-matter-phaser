@@ -1,6 +1,6 @@
 import { Room, Client } from "colyseus";
 import { Schema, type, MapSchema, ArraySchema } from "@colyseus/schema";
-import { GameEngine } from "./matter-game-v2/GameEngine";
+import { GameEngine } from "./diep-io-v1/GameEngine";
 import Matter from 'matter-js'
 
 export class PlayerCircleSchema extends Schema {
@@ -116,7 +116,7 @@ export class GameRoom extends Room {
         })
 
         this.onMessage("shoot", (client, message) => {
-            // TODO: Engine Stuff
+            this.engine.processPlayerBullet(client.sessionId, message)
         })
         this.setSimulationInterval((deltaTime) => this.update(deltaTime));
     }
