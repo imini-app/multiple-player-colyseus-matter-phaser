@@ -60,6 +60,14 @@ export class GameEngine {
                 this.state.playerCircles.get(worldId).x = this.circles[worldId].position.x;
                 this.state.playerCircles.get(worldId).y = this.circles[worldId].position.y;
             }
+
+            for (const worldId in this.bullets) {
+                if (!this.state.playerBullets.get(worldId) || !this.bullets[worldId]) {
+                    continue;
+                }
+                this.state.playerBullets.get(worldId).x = this.bullets[worldId].position.x;
+                this.state.playerBullets.get(worldId).y = this.bullets[worldId].position.y;
+            }
         });
     }
 
@@ -222,7 +230,7 @@ export class GameEngine {
         }
     }
 
-    addPlayerBullet(playerId, targetX, targetY, initX, initY, speed = 21, count = 1, size = 5) {
+    addPlayerBullet(playerId, targetX, targetY, initX, initY, speed = 21, count = 1, size = 25) {
 
         for (let x = 0; x < count; x++) {
             const bullet = Matter.Bodies.circle(
@@ -301,7 +309,6 @@ export class GameEngine {
     processPlayerBullet(playerId, targets) {
         const playerCircles = this.findPlayerCircles(playerId)
         for (const playerCircle of playerCircles) {
-            console.log(playerCircle)
             this.addPlayerBullet(
                 playerId,
                 targets.targetX,
