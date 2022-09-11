@@ -230,14 +230,14 @@ export class GameEngine {
         }
     }
 
-    addPlayerBullet(playerId, targetX, targetY, initX, initY, speed = 21, count = 1, size = 25) {
+    addPlayerBullet(playerId, targetX, targetY, initX, initY, size = 25, speed = 21, count = 1) {
 
         for (let x = 0; x < count; x++) {
             const bullet = Matter.Bodies.circle(
                 initX,
                 initY,
                 size,
-                { label: "playerBullet", friction: 0, isSensor: true }
+                { label: "playerBullet", friction: 0, isSensor: true, frictionAir: 0 }
             )
             // Velocity stuff
             const xDist = targetX - initX;
@@ -250,6 +250,10 @@ export class GameEngine {
             this.state.createPlayerBullet(bullet.id, playerId, initX, initY, size)
             Matter.Body.setVelocity(bullet, { x: velocityX, y: velocityY })
             Matter.Composite.add(this.world, [bullet])
+            setTimeout(() => {
+                this.state.removePlayerBullet(bullet.id)
+                Matter.Composite.remove(this.world, [bullet]);
+            }, 1000)
         }
     }
 
@@ -309,12 +313,14 @@ export class GameEngine {
     processPlayerBullet(playerId, targets) {
         const playerCircles = this.findPlayerCircles(playerId)
         for (const playerCircle of playerCircles) {
+            console.log(playerCircle)
             this.addPlayerBullet(
                 playerId,
                 targets.targetX,
                 targets.targetY,
                 playerCircle.position.x,
-                playerCircle.position.y
+                playerCircle.position.y,
+                playerCircle.circleRadius / 3
             )
         }
     }
