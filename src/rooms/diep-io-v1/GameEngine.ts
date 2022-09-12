@@ -9,8 +9,8 @@ export class GameEngine {
     circles = {}
     orbs = {}
     bullets = {}
-    screenWidth = 1920 / 1.32 * 12
-    screenHeight = 1920 / 1.32 * 12
+    screenWidth = 1920 / 1.32 * 1
+    screenHeight = 1920 / 1.32 * 1
 
 
     constructor(roomState) {
@@ -89,8 +89,31 @@ export class GameEngine {
                     this.playerEatPlayer(bodyA, bodyB)
 
                 }
-            }
 
+                if (bodyA.label == "playerBullet" && bodyB.label == "playerBullet") {
+                    this.state.removePlayerBullet(bodyA.id)
+                    Matter.Composite.remove(this.world, [bodyA])
+                    this.state.removePlayerBullet(bodyB.id)
+                    Matter.Composite.remove(this.world, [bodyB])
+                }
+
+                if (bodyA.label == "playerBullet" && bodyB.label == "playerCircle") {
+                    // this.state.removePlayerBullet(bodyA.id)
+                    // Matter.Composite.remove(this.world, [bodyA])
+                    // // const stateBullet = this.state.playerCircles.get(String(bodyB.id))
+                    // let trueOrFalse;
+                    // if()
+                    this.resetPlayer(this.state.playerCircles.get(String(bodyB.id)), bodyB, false)
+
+                }
+                if (bodyA.label == "playerCircle" && bodyB.label == "playerBullet") {
+                    this.state.removePlayerBullet(bodyB.id)
+                    Matter.Composite.remove(this.world, [bodyB])
+                    this.resetPlayer(this.state.playerCircles.get(String(bodyA.id)), bodyA, false)
+
+                }
+
+            }
         })
     }
 
@@ -111,8 +134,8 @@ export class GameEngine {
             const startX = Math.random() * this.screenWidth
             const startY = Math.random() * this.screenHeight
 
-            const initialSize = 25
-            const initialScore = 400
+            const initialSize = 50
+            const initialScore = 800
 
             const playerCircle = Matter.Bodies.circle(startX, startY, initialSize, { label: "playerCircle" })
             // 3. update state with the body
@@ -253,7 +276,7 @@ export class GameEngine {
             setTimeout(() => {
                 this.state.removePlayerBullet(bullet.id)
                 Matter.Composite.remove(this.world, [bullet]);
-            }, 1000)
+            }, 5000)
         }
     }
 
@@ -320,7 +343,7 @@ export class GameEngine {
                 targets.targetY,
                 playerCircle.position.x,
                 playerCircle.position.y,
-                playerCircle.circleRadius / 3
+                playerCircle.circleRadius / 2
             )
         }
     }
