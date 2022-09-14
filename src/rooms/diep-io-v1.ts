@@ -14,6 +14,11 @@ export class PlayerCircleSchema extends Schema {
     playerId = ''
 }
 
+export class PlayerBulletSchema extends PlayerCircleSchema {
+    @type("string")
+    circleId = ''
+}
+
 export class PlayerSchema extends Schema {
     @type("string")
     name = "Guest"
@@ -37,13 +42,13 @@ export class StateSchema extends Schema {
     playerCircles = new MapSchema<PlayerCircleSchema>()
 
     @type({ map: PlayerCircleSchema })
-    playerBullets = new MapSchema<PlayerCircleSchema>()
+    playerBullets = new MapSchema<PlayerBulletSchema>()
 
     @type({ map: OrbSchema })
     orbs = new MapSchema<OrbSchema>();
 
-    createPlayerObject(playerId: string, x: number, y: number, size: number) {
-        const newPlayerCircle = new PlayerCircleSchema()
+    createPlayerObject(playerId: string, x: number, y: number, size: number, schema: any) {
+        const newPlayerCircle = new schema()
         newPlayerCircle.playerId = playerId
         newPlayerCircle.x = x
         newPlayerCircle.y = y
@@ -63,7 +68,7 @@ export class StateSchema extends Schema {
     }
 
     createPlayerCircle(worldId: number, playerId: string, x: number, y: number, size: number) {
-        const newPlayerCircle = this.createPlayerObject(playerId, x, y, size)
+        const newPlayerCircle = this.createPlayerObject(playerId, x, y, size, PlayerCircleSchema)
         this.playerCircles.set(String(worldId), newPlayerCircle)
     }
 
@@ -71,8 +76,9 @@ export class StateSchema extends Schema {
         this.playerCircles.delete(String(worldId))
     }
 
-    createPlayerBullet(worldId: number, playerId: string, x: number, y: number, size: number) {
-        const newPlayerBullet = this.createPlayerObject(playerId, x, y, size)
+    createPlayerBullet(worldId: number, playerId: string, x: number, y: number, size: number, circleId: number) {
+        const newPlayerBullet = this.createPlayerObject(playerId, x, y, size, PlayerBulletSchema)
+        newPlayerBullet.circleId = String(circleId)
         this.playerBullets.set(String(worldId), newPlayerBullet)
     }
 

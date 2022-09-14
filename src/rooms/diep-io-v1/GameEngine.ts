@@ -77,11 +77,11 @@ export class GameEngine {
             for (const pair of pairs) {
                 let bodyA = pair.bodyA
                 let bodyB = pair.bodyB
-                if (bodyA.label == "playerCircle" && bodyB.label == "orb") {
+                if (bodyA.label == "playerBullet" && bodyB.label == "orb") {
                     this.playEatOrb(bodyA, bodyB)
                 }
 
-                if (bodyA.label == "orb" && bodyB.label == "playerCircle") {
+                if (bodyA.label == "orb" && bodyB.label == "playerBullet") {
                     this.playEatOrb(bodyB, bodyA)
                 }
 
@@ -98,18 +98,10 @@ export class GameEngine {
                 }
 
                 if (bodyA.label == "playerBullet" && bodyB.label == "playerCircle") {
-                    // this.state.removePlayerBullet(bodyA.id)
-                    // Matter.Composite.remove(this.world, [bodyA])
-                    // // const stateBullet = this.state.playerCircles.get(String(bodyB.id))
-                    // let trueOrFalse;
-                    // if()
-                    this.resetPlayer(this.state.playerCircles.get(String(bodyB.id)), bodyB, false)
-
+                    this.bulletHitPlayerCircle(bodyA, bodyB)
                 }
                 if (bodyA.label == "playerCircle" && bodyB.label == "playerBullet") {
-                    this.state.removePlayerBullet(bodyB.id)
-                    Matter.Composite.remove(this.world, [bodyB])
-                    this.resetPlayer(this.state.playerCircles.get(String(bodyA.id)), bodyA, false)
+                    this.bulletHitPlayerCircle(bodyB, bodyA)
 
                 }
 
@@ -117,7 +109,22 @@ export class GameEngine {
         })
     }
 
+    bulletHitPlayerCircle(bullet, playerCircle) {
+        console.log(typeof bullet, typeof playerCircle)
+        const stateBullet = this.state.playerBullets.get(String(bullet.id))
+        console.log(bullet.id, stateBullet, this.state.playerBullets)
+        if (!stateBullet) return
+        const stateBulletPlayer = this.state.players.get(stateBullet.playerId)
+        const statePlayerCircle = this.state.playerCircles.get(String(playerCircle.id))
+        const stateCirclePlayer = this.state.players.get(statePlayerCircle.playerId)
+        if (stateBulletPlayer.id == stateCirclePlayer.id) return
+        this.state.removePlayerBullet(bullet.id)
+        Matter.Composite.remove(this.world, [bullet])
+        this.resetPlayer(statePlayerCircle, playerCircle, false)
+    }
+
     resetPlayer(statePlayerCircle, oldBody, sameOrNot) {
+        console.log(typeof statePlayerCircle, typeof oldBody, sameOrNot)
         // 0. Find every circle for that player and count. If 1 or 0 reset, otherwise return.
         const statePlayer = this.state.players.get(statePlayerCircle.playerId)
         const playerCircles = this.findPlayerCircles(statePlayerCircle.playerId)
@@ -195,9 +202,12 @@ export class GameEngine {
         this.resetPlayer(smallerPlayerCircle, smallerBody, samePlayer)
     }
 
-    playEatOrb(playerCircle, orb) {
-        const statePlayerCircle = this.state.playerCircles.get(String(playerCircle.id))
+    playEatOrb(playerBullet, orb) {
+        const stateBullet = this.state.playerBullets.get(String(playerBullet.id))
+        const statePlayerCircle = this.state.playerCircles.get(String(stateBullet.circleId))
         if (!statePlayerCircle) return
+        const playerCircle = this.circles[statePlayerCircle.id]
+        if (!playerCircle) return
         const statePlayer = this.state.players.get(statePlayerCircle.playerId)
         const currentSize = statePlayerCircle.size
         const currentScore = statePlayer.score
@@ -207,6 +217,7 @@ export class GameEngine {
             const newSize = currentSize + 1
             statePlayerCircle.size = newSize
             const scaleUp = newSize / currentSize
+            console.log(typeof playerCircle)
             Matter.Body.scale(playerCircle, scaleUp, scaleUp)
         }
 
@@ -253,7 +264,7 @@ export class GameEngine {
         }
     }
 
-    addPlayerBullet(playerId, targetX, targetY, initX, initY, size = 25, speed = 21, count = 1) {
+    addPlayerBullet(playerId, targetX, targetY, initX, initY, circleId, size = 25, speed = 21, count = 1) {
 
         for (let x = 0; x < count; x++) {
             const bullet = Matter.Bodies.circle(
@@ -270,7 +281,7 @@ export class GameEngine {
             const velocityY = Math.sin(angle) * speed
 
             this.bullets[bullet.id] = bullet
-            this.state.createPlayerBullet(bullet.id, playerId, initX, initY, size)
+            this.state.createPlayerBullet(bullet.id, playerId, initX, initY, size, Number(circleId))
             Matter.Body.setVelocity(bullet, { x: velocityX, y: velocityY })
             Matter.Composite.add(this.world, [bullet])
             setTimeout(() => {
@@ -336,13 +347,13 @@ export class GameEngine {
     processPlayerBullet(playerId, targets) {
         const playerCircles = this.findPlayerCircles(playerId)
         for (const playerCircle of playerCircles) {
-            console.log(playerCircle)
             this.addPlayerBullet(
                 playerId,
                 targets.targetX,
                 targets.targetY,
                 playerCircle.position.x,
                 playerCircle.position.y,
+                playerCircle.id,
                 playerCircle.circleRadius / 2
             )
         }
