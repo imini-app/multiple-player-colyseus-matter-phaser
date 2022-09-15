@@ -110,21 +110,32 @@ export class GameEngine {
     }
 
     bulletHitPlayerCircle(bullet, playerCircle) {
-        console.log(typeof bullet, typeof playerCircle)
         const stateBullet = this.state.playerBullets.get(String(bullet.id))
-        console.log(bullet.id, stateBullet, this.state.playerBullets)
         if (!stateBullet) return
-        const stateBulletPlayer = this.state.players.get(stateBullet.playerId)
+
         const statePlayerCircle = this.state.playerCircles.get(String(playerCircle.id))
-        const stateCirclePlayer = this.state.players.get(statePlayerCircle.playerId)
-        if (stateBulletPlayer.id == stateCirclePlayer.id) return
+        if (stateBullet.playerId == statePlayerCircle.playerId) return
+
+        const stateBulletCircle = this.state.playerCircles.get(String(bullet.circleId))
+
         this.state.removePlayerBullet(bullet.id)
         Matter.Composite.remove(this.world, [bullet])
         this.resetPlayer(statePlayerCircle, playerCircle, false)
+
+        if (!stateBulletCircle) return
+        const matterBulletCircle = this.circles[stateBullet.circleId]
+        const stateBulletPlayer = this.state.players.get(String(bullet.playerId))
+        const currentSize = stateBulletCircle.size
+        if (currentSize.size < this.screenWidth / this.maxPlayerCircleSize) {
+            stateBulletPlayer.size += stateBulletCircle.size
+            const scaleUp = stateBulletCircle.size / stateBulletCircle
+            Matter.Body.scale(matterBulletCircle, scaleUp, scaleUp)
+        }
+        stateBulletPlayer.score += statePlayerCircle.size * 10
+
     }
 
     resetPlayer(statePlayerCircle, oldBody, sameOrNot) {
-        console.log(typeof statePlayerCircle, typeof oldBody, sameOrNot)
         // 0. Find every circle for that player and count. If 1 or 0 reset, otherwise return.
         const statePlayer = this.state.players.get(statePlayerCircle.playerId)
         const playerCircles = this.findPlayerCircles(statePlayerCircle.playerId)
@@ -206,7 +217,7 @@ export class GameEngine {
         const stateBullet = this.state.playerBullets.get(String(playerBullet.id))
         const statePlayerCircle = this.state.playerCircles.get(String(stateBullet.circleId))
         if (!statePlayerCircle) return
-        const playerCircle = this.circles[statePlayerCircle.id]
+        const playerCircle = this.circles[stateBullet.circleId]
         if (!playerCircle) return
         const statePlayer = this.state.players.get(statePlayerCircle.playerId)
         const currentSize = statePlayerCircle.size
@@ -217,7 +228,6 @@ export class GameEngine {
             const newSize = currentSize + 1
             statePlayerCircle.size = newSize
             const scaleUp = newSize / currentSize
-            console.log(typeof playerCircle)
             Matter.Body.scale(playerCircle, scaleUp, scaleUp)
         }
 
