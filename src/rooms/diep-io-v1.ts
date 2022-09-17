@@ -33,6 +33,17 @@ export class OrbSchema extends Schema {
     y = 0
 }
 
+export class WallSchema extends Schema {
+    @type("number")
+    x = 0
+    @type("number")
+    y = 0
+    @type("number")
+    width = 0
+    @type("number")
+    height = 0
+}
+
 
 export class StateSchema extends Schema {
     @type({ map: PlayerSchema })
@@ -46,6 +57,9 @@ export class StateSchema extends Schema {
 
     @type({ map: OrbSchema })
     orbs = new MapSchema<OrbSchema>();
+
+    @type({ map: WallSchema })
+    walls = new MapSchema<WallSchema>();
 
     createPlayerObject(playerId: string, x: number, y: number, size: number, schema: any) {
         const newPlayerCircle = new schema()
@@ -95,6 +109,15 @@ export class StateSchema extends Schema {
 
     removeOrb(id: number) {
         this.orbs.delete(String(id));
+    }
+
+    createWall(worldId: number, x: number, y: number, width: number, height: number) {
+        const newWall = new WallSchema();
+        newWall.x = x;
+        newWall.y = y;
+        newWall.width = width;
+        newWall.height = height;
+        this.walls.set(String(worldId), newWall);
     }
 
 }

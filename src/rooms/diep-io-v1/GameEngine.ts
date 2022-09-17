@@ -9,8 +9,8 @@ export class GameEngine {
     circles = {}
     orbs = {}
     bullets = {}
-    screenWidth = 1920 / 1.32 * 1.2
-    screenHeight = 1920 / 1.32 * 1.2
+    screenWidth = 1920 / 1.32 * 12
+    screenHeight = 1920 / 1.32 * 12
 
     constructor(roomState) {
         this.engine = Matter.Engine.create()
@@ -40,6 +40,10 @@ export class GameEngine {
 
         for (let x = 0; x < 300 * this.screenWidth / 1454.54545455; x++) {
             setTimeout(() => this.generateOrb(), 5)
+        }
+
+        for (let x = 0; x < 1 * this.screenWidth / 1454.54545455; x++) {
+            setTimeout(() => this.generateWall(), 5)
         }
         this.setupUpdateEvents()
         this.collision()
@@ -82,6 +86,28 @@ export class GameEngine {
 
                 if (bodyA.label == "orb" && bodyB.label == "playerBullet") {
                     this.playEatOrb(bodyB, bodyA)
+                }
+
+                if (bodyA.label == "playerBullet" && bodyB.label == "wall") {
+                    this.state.removePlayerBullet(bodyA.id)
+                    Matter.Composite.remove(this.world, [bodyA])
+                }
+
+                if (bodyA.label == "wall" && bodyB.label == "playerBullet") {
+                    this.state.removePlayerBullet(bodyB.id)
+                    Matter.Composite.remove(this.world, [bodyB])
+                }
+
+                if (bodyA.label == "orb" && bodyB.label == "wall") {
+                    this.state.removeOrb(bodyA.id)
+                    Matter.Composite.remove(this.world, [bodyA])
+                    this.generateOrb()
+                }
+
+                if (bodyA.label == "wall" && bodyB.label == "orb") {
+                    this.state.removeOrb(bodyB.id)
+                    Matter.Composite.remove(this.world, [bodyB])
+                    this.generateOrb()
                 }
 
                 if (bodyA.label == "playerCircle" && bodyB.label == "playerCircle") {
@@ -180,6 +206,7 @@ export class GameEngine {
             const currentASize = statePlayerACircle.size
             if (!samePlayer) {
                 const scoreChange = statePlayerBCircle.size * 10
+                if (!statePlayerA || !statePlayerB) return
                 statePlayerA.score += scoreChange
                 statePlayerB.score -= scoreChange
                 if (statePlayerB.score < 100) statePlayerB.score = 100
@@ -196,6 +223,7 @@ export class GameEngine {
         if (statePlayerBCircle.size >= statePlayerACircle.size) {
             const currentBSize = statePlayerBCircle.size
             if (!samePlayer) {
+                if (!statePlayerA || !statePlayerB) return
                 const scoreChange = statePlayerACircle.size * 10
                 statePlayerB.score += scoreChange
                 statePlayerA.score -= scoreChange
@@ -248,6 +276,17 @@ export class GameEngine {
         Matter.Composite.add(this.world, [orb])
     }
 
+    generateWall() {
+        const x = Math.random() * this.screenWidth
+        const y = Math.random() * this.screenHeight
+
+        const width = Math.random() * 2000
+        const height = Math.random() * 2000
+
+        const wall = Matter.Bodies.rectangle(x, y, width, height, { isStatic: true, label: 'wall' })
+        this.state.createWall(wall.id, x, y, width, height)
+        Matter.Composite.add(this.world, [wall])
+    }
     addPlayer(sessionId, name) {
         const initialScore = 800
         this.state.createPlayer(sessionId, name, initialScore)
@@ -298,6 +337,8 @@ export class GameEngine {
             Matter.Composite.add(this.world, [bullet])
             setTimeout(() => {
                 if (!this.state.playerBullets.get(bullet.id)) return
+
+                if (!this.state.playerBullets.get(bullet.id).circleId) this.state.removePlayerBullet(bullet.id); Matter.Composite.remove(this.world, [bullet]);
                 this.state.removePlayerBullet(bullet.id)
                 Matter.Composite.remove(this.world, [bullet]);
             }, 5000)
