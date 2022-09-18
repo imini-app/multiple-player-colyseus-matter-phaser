@@ -42,7 +42,7 @@ export class GameEngine {
             setTimeout(() => this.generateOrb(), 5)
         }
 
-        for (let x = 0; x < 7 * this.screenWidth * this.screenWidth / 1454.54545455; x++) {
+        for (let x = 0; x < 70 * this.screenWidth / 1454.54545455; x++) {
             setTimeout(() => this.generateWall(), 5)
         }
         this.setupUpdateEvents()
