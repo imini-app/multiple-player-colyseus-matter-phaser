@@ -9,8 +9,8 @@ export class GameEngine {
     circles = {}
     orbs = {}
     bullets = {}
-    screenWidth = 1920 / 1.32 * 12
-    screenHeight = 1920 / 1.32 * 12
+    screenWidth = 1920 / 1.32 * 10
+    screenHeight = 1920 / 1.32 * 10
 
     constructor(roomState) {
         this.engine = Matter.Engine.create()
@@ -38,11 +38,11 @@ export class GameEngine {
 
         Matter.Composite.add(this.world, walls)
 
-        for (let x = 0; x < 300 * this.screenWidth / 1454.54545455; x++) {
+        for (let x = 0; x < 250 * this.screenWidth / 1454.54545455; x++) {
             setTimeout(() => this.generateOrb(), 5)
         }
 
-        for (let x = 0; x < 1 * this.screenWidth / 1454.54545455; x++) {
+        for (let x = 0; x < 7 * this.screenWidth * this.screenWidth / 1454.54545455; x++) {
             setTimeout(() => this.generateWall(), 5)
         }
         this.setupUpdateEvents()
@@ -152,7 +152,7 @@ export class GameEngine {
         const stateBulletPlayer = this.state.players.get(String(bullet.playerId))
         const currentSize = stateBulletCircle.size
         if (currentSize.size < this.screenWidth / this.maxPlayerCircleSize) {
-            stateBulletPlayer.size += stateBulletCircle.size
+            matterBulletCircle.size += statePlayerCircle.size
             const scaleUp = stateBulletCircle.size / stateBulletCircle
             Matter.Body.scale(matterBulletCircle, scaleUp, scaleUp)
         }
@@ -202,15 +202,9 @@ export class GameEngine {
 
         const samePlayer = statePlayerACircle.playerId == statePlayerBCircle.playerId
 
+        if (!samePlayer) return
         if (statePlayerACircle.size >= statePlayerBCircle.size) {
             const currentASize = statePlayerACircle.size
-            if (!samePlayer) {
-                const scoreChange = statePlayerBCircle.size * 10
-                if (!statePlayerA || !statePlayerB) return
-                statePlayerA.score += scoreChange
-                statePlayerB.score -= scoreChange
-                if (statePlayerB.score < 100) statePlayerB.score = 100
-            }
             if (currentASize < this.screenWidth / this.maxPlayerCircleSize) {
                 statePlayerACircle.size += statePlayerBCircle.size
                 const scaleUp = statePlayerACircle.size / currentASize
@@ -222,12 +216,6 @@ export class GameEngine {
 
         if (statePlayerBCircle.size >= statePlayerACircle.size) {
             const currentBSize = statePlayerBCircle.size
-            if (!samePlayer) {
-                if (!statePlayerA || !statePlayerB) return
-                const scoreChange = statePlayerACircle.size * 10
-                statePlayerB.score += scoreChange
-                statePlayerA.score -= scoreChange
-            }
             if (currentBSize < this.screenWidth / this.maxPlayerCircleSize) {
                 statePlayerBCircle.size += statePlayerACircle.size
                 const scaleUp = statePlayerBCircle.size / currentBSize
@@ -280,8 +268,8 @@ export class GameEngine {
         const x = Math.random() * this.screenWidth
         const y = Math.random() * this.screenHeight
 
-        const width = Math.random() * 2000
-        const height = Math.random() * 2000
+        const width = Math.random() * (500 - 200 + 1) + 200
+        const height = Math.random() * (500 - 200 + 1) + 200
 
         const wall = Matter.Bodies.rectangle(x, y, width, height, { isStatic: true, label: 'wall' })
         this.state.createWall(wall.id, x, y, width, height)
