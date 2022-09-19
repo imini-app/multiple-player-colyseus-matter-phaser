@@ -9,6 +9,7 @@ export class GameEngine {
     circles = {}
     orbs = {}
     bullets = {}
+    turrets = {}
     screenWidth = 1920 / 1.32 * 10
     screenHeight = 1920 / 1.32 * 10
 
@@ -303,6 +304,30 @@ export class GameEngine {
         }
     }
 
+    addPlayerTurret(playerId, targetX, targetY, x, y, width, height, count) {
+        for (let i = 0; i < count; i++) {
+            const turret = Matter.Bodies.rectangle(
+                x,
+                y,
+                width,
+                height,
+                { friction: 0, isSensor: true, frictionAir: 0 }
+            )
+
+            const xDist = targetX - x;
+            const yDist = targetY - y;
+            const angle = Math.atan2(yDist, xDist) + x / 10
+            Matter.Body.setAngle(turret, angle)
+        }
+    }
+
+    pointCircleToTargetXY(targetX, targetY, circle) {
+        const xDist = targetX - circle.position.x;
+        const yDist = targetY - circle.position.y;
+        const angle = Math.atan2(yDist, xDist)
+        this.state.playerCircles.get(circle.id).angle = angle
+    }
+
     addPlayerBullet(playerId, targetX, targetY, initX, initY, circleId, size = 25, speed = 21, count = 1) {
 
         for (let x = 0; x < count; x++) {
@@ -315,7 +340,7 @@ export class GameEngine {
             // Velocity stuff
             const xDist = targetX - initX;
             const yDist = targetY - initY;
-            const angle = Math.atan2(yDist, xDist) + x / 5
+            const angle = Math.atan2(yDist, xDist) + x / 10
             const velocityX = Math.cos(angle) * speed
             const velocityY = Math.sin(angle) * speed
 
@@ -391,6 +416,11 @@ export class GameEngine {
         for (const playerCircle of playerCircles) {
             let size = playerCircle.circleRadius / 3
             if ((playerCircle.circleRadius / 3) < (this.maxPlayerCircleSize / 5)) size = this.maxPlayerCircleSize / 5
+            this.pointCircleToTargetXY(
+                targets.targetX,
+                targets.targetY,
+                playerCircle
+            )
             this.addPlayerBullet(
                 playerId,
                 targets.targetX,

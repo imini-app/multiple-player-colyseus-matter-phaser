@@ -10,6 +10,8 @@ export class PlayerCircleSchema extends Schema {
     x = 0
     @type("number")
     y = 0
+    @type("number")
+    angle = 0
     @type("string")
     playerId = ''
 }
