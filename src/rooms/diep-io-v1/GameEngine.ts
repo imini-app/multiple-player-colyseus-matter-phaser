@@ -10,8 +10,8 @@ export class GameEngine {
     orbs = {}
     bullets = {}
     turrets = {}
-    screenWidth = 1920 / 1.32 * 10
-    screenHeight = 1920 / 1.32 * 10
+    screenWidth = 1920 / 1.32 * 1
+    screenHeight = 1920 / 1.32 * 1
 
     constructor(roomState) {
         this.engine = Matter.Engine.create()
@@ -43,7 +43,7 @@ export class GameEngine {
             setTimeout(() => this.generateOrb(), 5)
         }
 
-        for (let x = 0; x < 70 * this.screenWidth / 1454.54545455; x++) {
+        for (let x = 0; x < 1 * this.screenWidth / 1454.54545455; x++) {
             setTimeout(() => this.generateWall(), 5)
         }
         this.setupUpdateEvents()
@@ -304,28 +304,13 @@ export class GameEngine {
         }
     }
 
-    addPlayerTurret(playerId, targetX, targetY, x, y, width, height, count) {
-        for (let i = 0; i < count; i++) {
-            const turret = Matter.Bodies.rectangle(
-                x,
-                y,
-                width,
-                height,
-                { friction: 0, isSensor: true, frictionAir: 0 }
-            )
-
-            const xDist = targetX - x;
-            const yDist = targetY - y;
-            const angle = Math.atan2(yDist, xDist) + x / 10
-            Matter.Body.setAngle(turret, angle)
-        }
-    }
-
     pointCircleToTargetXY(targetX, targetY, circle) {
         const xDist = targetX - circle.position.x;
         const yDist = targetY - circle.position.y;
         const angle = Math.atan2(yDist, xDist)
-        this.state.playerCircles.get(circle.id).angle = angle
+        if (this.state.playerCircles.get(String(circle.id))) {
+            this.state.playerCircles.get(String(circle.id)).angle = Number(angle)
+        }
     }
 
     addPlayerBullet(playerId, targetX, targetY, initX, initY, circleId, size = 25, speed = 21, count = 1) {
