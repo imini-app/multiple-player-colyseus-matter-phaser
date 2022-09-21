@@ -142,6 +142,10 @@ export class GameRoom extends Room {
             this.engine.processPlayerAction(client.sessionId, message)
         })
 
+        this.onMessage("pointermove", (client, message) => {
+            this.engine.processPlayerPointer(client.sessionId, message)
+        })
+
         this.onMessage("split", (client, message) => {
             this.engine.processPlayerSplit(client.sessionId)
         })

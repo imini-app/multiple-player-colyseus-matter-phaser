@@ -142,22 +142,24 @@ export class GameEngine {
         const statePlayerCircle = this.state.playerCircles.get(String(playerCircle.id))
         if (stateBullet?.playerId == statePlayerCircle?.playerId) return
 
-        const stateBulletCircle = this.state.playerCircles.get(String(bullet.circleId))
-
+        const stateBulletCircle = this.state.playerCircles.get(String(stateBullet.circleId))
+        const scoreUp = statePlayerCircle.size * 10
+        const sizeUp = statePlayerCircle.size
         this.state.removePlayerBullet(bullet.id)
         Matter.Composite.remove(this.world, [bullet])
         this.resetPlayer(statePlayerCircle, playerCircle, false)
 
         if (!stateBulletCircle) return
         const matterBulletCircle = this.circles[stateBullet.circleId]
-        const stateBulletPlayer = this.state.players.get(String(bullet.playerId))
         const currentSize = stateBulletCircle.size
-        if (currentSize.size < this.screenWidth / this.maxPlayerCircleSize) {
-            matterBulletCircle.size += statePlayerCircle.size
-            const scaleUp = stateBulletCircle.size / stateBulletCircle
+        const stateBulletPlayer = this.state.players.get(stateBullet.playerId)
+        stateBulletPlayer.score += scoreUp
+        if (stateBulletCircle.size < this.screenWidth / this.maxPlayerCircleSize) {
+            const newSize = stateBulletCircle.size + sizeUp
+            stateBulletCircle.size = newSize
+            const scaleUp = newSize / currentSize
             Matter.Body.scale(matterBulletCircle, scaleUp, scaleUp)
         }
-        stateBulletPlayer.score += statePlayerCircle.size * 10
 
     }
 
@@ -193,10 +195,8 @@ export class GameEngine {
 
     playerEatPlayer(playerA, playerB) {
         const statePlayerACircle = this.state.playerCircles.get(String(playerA.id))
-        const statePlayerA = this.state.players.get(statePlayerACircle?.playerId)
 
         const statePlayerBCircle = this.state.playerCircles.get(String(playerB.id))
-        const statePlayerB = this.state.players.get(statePlayerBCircle?.playerId)
 
         let smallerPlayerCircle = playerA
         let smallerBody = playerA
@@ -399,8 +399,8 @@ export class GameEngine {
     processPlayerBullet(playerId, targets) {
         const playerCircles = this.findPlayerCircles(playerId)
         for (const playerCircle of playerCircles) {
-            let size = playerCircle.circleRadius / 3
-            if ((playerCircle.circleRadius / 3) < (this.maxPlayerCircleSize / 5)) size = this.maxPlayerCircleSize / 5
+            let size = (playerCircle.circleRadius / 4)
+            if ((playerCircle.circleRadius / 4) < (this.maxPlayerCircleSize / 4)) size = this.maxPlayerCircleSize / 5
             this.pointCircleToTargetXY(
                 targets.targetX,
                 targets.targetY,
@@ -414,6 +414,17 @@ export class GameEngine {
                 playerCircle.position.y,
                 playerCircle.id,
                 size
+            )
+        }
+    }
+
+    processPlayerPointer(playerId, targets) {
+        const playerCircles = this.findPlayerCircles(playerId)
+        for (const playerCircle of playerCircles) {
+            this.pointCircleToTargetXY(
+                targets.targetX,
+                targets.targetY,
+                playerCircle
             )
         }
     }
