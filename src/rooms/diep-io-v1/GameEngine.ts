@@ -10,8 +10,8 @@ export class GameEngine {
     orbs = {}
     bullets = {}
     turrets = {}
-    screenWidth = 1920 / 1.32 * 1
-    screenHeight = 1920 / 1.32 * 1
+    screenWidth = 1920 / 1.32 * 12
+    screenHeight = 1920 / 1.32 * 12
 
     constructor(roomState) {
         this.engine = Matter.Engine.create()
@@ -43,7 +43,7 @@ export class GameEngine {
             setTimeout(() => this.generateOrb(), 5)
         }
 
-        for (let x = 0; x < 1 * this.screenWidth / 1454.54545455; x++) {
+        for (let x = 0; x < 50 * this.screenWidth / 1454.54545455; x++) {
             setTimeout(() => this.generateWall(), 5)
         }
         this.setupUpdateEvents()
@@ -145,6 +145,7 @@ export class GameEngine {
         const stateBulletCircle = this.state.playerCircles.get(String(stateBullet.circleId))
         const scoreUp = statePlayerCircle.size * 10
         const sizeUp = statePlayerCircle.size
+        this.state.players.get(playerCircle.id).score -= scoreUp
         this.state.removePlayerBullet(bullet.id)
         Matter.Composite.remove(this.world, [bullet])
         this.resetPlayer(statePlayerCircle, playerCircle, false)
@@ -269,8 +270,8 @@ export class GameEngine {
         const x = Math.random() * this.screenWidth
         const y = Math.random() * this.screenHeight
 
-        const width = Math.random() * (500 - 200 + 1) + 200
-        const height = Math.random() * (500 - 200 + 1) + 200
+        const width = Math.random() * (700 - 200 + 1) + 200
+        const height = Math.random() * (700 - 200 + 1) + 200
 
         const wall = Matter.Bodies.rectangle(x, y, width, height, { isStatic: true, label: 'wall' })
         this.state.createWall(wall.id, x, y, width, height)
