@@ -43,7 +43,7 @@ export class GameEngine {
             setTimeout(() => this.generateOrb(), 5)
         }
 
-        for (let x = 0; x < 50 * this.screenWidth / 1454.54545455; x++) {
+        for (let x = 0; x < 65 * this.screenWidth / 1454.54545455; x++) {
             setTimeout(() => this.generateWall(), 5)
         }
         this.setupUpdateEvents()
@@ -270,8 +270,8 @@ export class GameEngine {
         const x = Math.random() * this.screenWidth
         const y = Math.random() * this.screenHeight
 
-        const width = Math.random() * (700 - 200 + 1) + 200
-        const height = Math.random() * (700 - 200 + 1) + 200
+        const width = Math.random() * (500 - 200 + 1) + 200
+        const height = Math.random() * (500 - 200 + 1) + 200
 
         const wall = Matter.Bodies.rectangle(x, y, width, height, { isStatic: true, label: 'wall' })
         this.state.createWall(wall.id, x, y, width, height)
