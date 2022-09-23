@@ -43,7 +43,7 @@ export class GameEngine {
             setTimeout(() => this.generateOrb(), 5)
         }
 
-        for (let x = 0; x < 65 * this.screenWidth / 1454.54545455; x++) {
+        for (let x = 0; x < 60 * this.screenWidth / 1454.54545455; x++) {
             setTimeout(() => this.generateWall(), 5)
         }
         this.setupUpdateEvents()
@@ -140,12 +140,14 @@ export class GameEngine {
         if (!stateBullet) return
 
         const statePlayerCircle = this.state.playerCircles.get(String(playerCircle.id))
+        if (!statePlayerCircle) return
         if (stateBullet?.playerId == statePlayerCircle?.playerId) return
 
         const stateBulletCircle = this.state.playerCircles.get(String(stateBullet.circleId))
+        if (!stateBulletCircle) return
         const scoreUp = statePlayerCircle.size * 10
         const sizeUp = statePlayerCircle.size
-        this.state.players.get(playerCircle.id).score -= scoreUp
+        this.state.players.get(statePlayerCircle.playerId).score -= scoreUp
         this.state.removePlayerBullet(bullet.id)
         Matter.Composite.remove(this.world, [bullet])
         this.resetPlayer(statePlayerCircle, playerCircle, false)
