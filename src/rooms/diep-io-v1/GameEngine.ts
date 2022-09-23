@@ -9,7 +9,6 @@ export class GameEngine {
     circles = {}
     orbs = {}
     bullets = {}
-    turrets = {}
     screenWidth = 1920 / 1.32 * 12
     screenHeight = 1920 / 1.32 * 12
 
@@ -39,11 +38,11 @@ export class GameEngine {
 
         Matter.Composite.add(this.world, walls)
 
-        for (let x = 0; x < 250 * this.screenWidth / 1454.54545455; x++) {
+        for (let x = 0; x < 350 * this.screenWidth / 1454.54545455; x++) {
             setTimeout(() => this.generateOrb(), 5)
         }
 
-        for (let x = 0; x < 60 * this.screenWidth / 1454.54545455; x++) {
+        for (let x = 0; x < 25 * this.screenWidth / 1454.54545455; x++) {
             setTimeout(() => this.generateWall(), 5)
         }
         this.setupUpdateEvents()
@@ -403,7 +402,7 @@ export class GameEngine {
         const playerCircles = this.findPlayerCircles(playerId)
         for (const playerCircle of playerCircles) {
             let size = (playerCircle.circleRadius / 4)
-            if ((playerCircle.circleRadius / 4) < (this.maxPlayerCircleSize / 4)) size = this.maxPlayerCircleSize / 5
+            if ((playerCircle.circleRadius / 4) < (this.maxPlayerCircleSize / 7)) size = this.maxPlayerCircleSize / 5
             this.pointCircleToTargetXY(
                 targets.targetX,
                 targets.targetY,
