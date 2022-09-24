@@ -9,8 +9,8 @@ export class GameEngine {
     circles = {}
     orbs = {}
     bullets = {}
-    screenWidth = 1920 / 1.32 * 12
-    screenHeight = 1920 / 1.32 * 12
+    screenWidth = 1920 / 1.32 * 9
+    screenHeight = 1920 / 1.32 * 9
 
     constructor(roomState) {
         this.engine = Matter.Engine.create()
@@ -116,10 +116,7 @@ export class GameEngine {
                 }
 
                 if (bodyA.label == "playerBullet" && bodyB.label == "playerBullet") {
-                    this.state.removePlayerBullet(bodyA.id)
-                    Matter.Composite.remove(this.world, [bodyA])
-                    this.state.removePlayerBullet(bodyB.id)
-                    Matter.Composite.remove(this.world, [bodyB])
+                    this.bulletHitBullet(bodyA, bodyB)
                 }
 
                 if (bodyA.label == "playerBullet" && bodyB.label == "playerCircle") {
@@ -132,6 +129,48 @@ export class GameEngine {
 
             }
         })
+    }
+
+    bulletHitBullet(bulletA, bulletB) {
+        const stateBulletA = this.state.playerBullets.get(bulletA.id)
+        if (!stateBulletA) return
+        const stateBulletB = this.state.playerBullets.get(bulletB.id)
+        if (!stateBulletB) return
+        const sameOrNot = stateBulletA.playerId == stateBulletB.playerId
+        if (sameOrNot) return
+
+        let smallerBody = null
+
+        if (stateBulletA.size > stateBulletB.size) {
+            smallerBody = bulletB
+            const sizeDifference = stateBulletA.size - stateBulletB.size
+            const pastSize = stateBulletA.size
+            if (sizeDifference > 100) {
+                stateBulletA.size = sizeDifference
+                const scaleDown = stateBulletA.size / pastSize
+                Matter.Body.scale(bulletA, scaleDown, scaleDown)
+            } else {
+                this.state.removePlayerBullet(bulletA.id)
+                Matter.Composite.remove(this.world, [bulletA])
+            }
+        }
+
+        if (stateBulletB.size > stateBulletA.size) {
+            smallerBody = bulletA
+            const sizeDifference = stateBulletB.size - stateBulletA.size
+            const pastSize = stateBulletB.size
+            if (sizeDifference > 100) {
+                stateBulletB.size = sizeDifference
+                const scaleDown = stateBulletB.size / pastSize
+                Matter.Body.scale(bulletB, scaleDown, scaleDown)
+            } else {
+                this.state.removePlayerBullet(bulletB.id)
+                Matter.Composite.remove(this.world, [bulletB])
+            }
+        }
+
+        this.state.removePlayerBullet(smallerBody.id)
+        Matter.Composite.remove(this.world, [smallerBody])
     }
 
     bulletHitPlayerCircle(bullet, playerCircle) {
@@ -341,7 +380,7 @@ export class GameEngine {
                 if (!this.state.playerBullets.get(bullet.id).circleId) this.state.removePlayerBullet(bullet.id); Matter.Composite.remove(this.world, [bullet]);
                 this.state.removePlayerBullet(bullet.id)
                 Matter.Composite.remove(this.world, [bullet]);
-            }, 5000)
+            }, 10000)
         }
     }
 
