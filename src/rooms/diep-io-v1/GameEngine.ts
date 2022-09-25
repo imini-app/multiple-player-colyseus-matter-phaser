@@ -242,7 +242,7 @@ export class GameEngine {
         let smallerPlayerCircle = playerA
         let smallerBody = playerA
 
-        const samePlayer = statePlayerACircle.playerId == statePlayerBCircle.playerId
+        const samePlayer = statePlayerACircle?.playerId == statePlayerBCircle?.playerId
 
         if (!samePlayer) return
         if (statePlayerACircle.size >= statePlayerBCircle.size) {
@@ -300,7 +300,7 @@ export class GameEngine {
         let x = Math.random() * this.screenWidth
         let y = Math.random() * this.screenHeight
 
-        let orb = Matter.Bodies.circle(x, y, 20, { label: 'orb' })
+        let orb = Matter.Bodies.circle(x, y, 20, { label: 'orb', isSensor: true })
         this.orbs[orb.id] = orb
         this.state.createOrb(orb.id, x, y)
         Matter.Composite.add(this.world, [orb])
@@ -472,8 +472,10 @@ export class GameEngine {
 
     processPlayerSplit(sessionId) {
         const playerCircles = this.findPlayerCircles(sessionId)
+        let amountOfCircles = playerCircles?.length
         if (!playerCircles) return
         for (const circle of playerCircles) {
+            if (amountOfCircles >= 16) return
             let offset;
             // 1. change the size in the state to half
             const statePlayerCircle = this.state.playerCircles.get(String(circle.id))
@@ -485,6 +487,7 @@ export class GameEngine {
             Matter.Body.scale(circle, scaleDown, scaleDown)
 
             // 3. add new circle to the world and state
+            amountOfCircles++
             offset = statePlayerCircle.size * 2
             this.addPlayerCircle(
                 sessionId,
