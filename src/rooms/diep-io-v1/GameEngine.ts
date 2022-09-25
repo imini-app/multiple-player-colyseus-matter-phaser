@@ -132,9 +132,9 @@ export class GameEngine {
     }
 
     bulletHitBullet(bulletA, bulletB) {
-        const stateBulletA = this.state.playerBullets.get(bulletA.id)
+        const stateBulletA = this.state.playerBullets.get(String(bulletA.id))
         if (!stateBulletA) return
-        const stateBulletB = this.state.playerBullets.get(bulletB.id)
+        const stateBulletB = this.state.playerBullets.get(String(bulletB.id))
         if (!stateBulletB) return
         const sameOrNot = stateBulletA.playerId == stateBulletB.playerId
         if (sameOrNot) return
@@ -145,7 +145,7 @@ export class GameEngine {
             smallerBody = bulletB
             const sizeDifference = stateBulletA.size - stateBulletB.size
             const pastSize = stateBulletA.size
-            if (sizeDifference > 100) {
+            if (sizeDifference > 10) {
                 stateBulletA.size = sizeDifference
                 const scaleDown = stateBulletA.size / pastSize
                 Matter.Body.scale(bulletA, scaleDown, scaleDown)
