@@ -4,7 +4,7 @@ export class GameEngine {
     world = null
     state = null
     engine = null
-    maxPlayerCircleSize = 7
+    maxPlayerCircleSize = 17.448
     players = {}
     circles = {}
     orbs = {}
@@ -195,8 +195,8 @@ export class GameEngine {
         const currentSize = stateBulletCircle.size
         const stateBulletPlayer = this.state.players.get(stateBullet.playerId)
         stateBulletPlayer.score += scoreUp
-        if (stateBulletCircle.size < this.screenWidth / this.maxPlayerCircleSize) {
-            const newSize = stateBulletCircle.size + sizeUp
+        const newSize = stateBulletCircle.size + sizeUp
+        if (newSize < this.screenWidth / this.maxPlayerCircleSize) {
             stateBulletCircle.size = newSize
             const scaleUp = newSize / currentSize
             Matter.Body.scale(matterBulletCircle, scaleUp, scaleUp)
