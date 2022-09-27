@@ -38,7 +38,7 @@ export class GameEngine {
 
         Matter.Composite.add(this.world, walls)
 
-        for (let x = 0; x < 350 * this.screenWidth / 1454.54545455; x++) {
+        for (let x = 0; x < 200 * this.screenWidth / 1454.54545455; x++) {
             setTimeout(() => this.generateOrb(), 5)
         }
 
@@ -300,7 +300,7 @@ export class GameEngine {
         let x = Math.random() * this.screenWidth
         let y = Math.random() * this.screenHeight
 
-        let orb = Matter.Bodies.circle(x, y, 20, { label: 'orb', isSensor: true })
+        let orb = Matter.Bodies.rectangle(x, y, 30, 30, { label: 'orb', isSensor: true })
         this.orbs[orb.id] = orb
         this.state.createOrb(orb.id, x, y)
         Matter.Composite.add(this.world, [orb])
