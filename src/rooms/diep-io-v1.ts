@@ -33,6 +33,8 @@ export class OrbSchema extends Schema {
     x = 0
     @type("number")
     y = 0
+    @type("string")
+    type = ''
 }
 
 export class WallSchema extends Schema {
@@ -102,10 +104,11 @@ export class StateSchema extends Schema {
         this.playerBullets.delete(String(worldId))
     }
 
-    createOrb(worldId: number, x: number, y: number) {
+    createOrb(worldId: number, x: number, y: number, type: string) {
         const newOrb = new OrbSchema();
         newOrb.x = x;
         newOrb.y = y;
+        newOrb.type = type
         this.orbs.set(String(worldId), newOrb);
     }
 

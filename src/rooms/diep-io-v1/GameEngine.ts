@@ -38,8 +38,12 @@ export class GameEngine {
 
         Matter.Composite.add(this.world, walls)
 
-        for (let x = 0; x < 200 * this.screenWidth / 1454.54545455; x++) {
-            setTimeout(() => this.generateOrb(), 5)
+        for (let x = 0; x < 150 * this.screenWidth / 1454.54545455; x++) {
+            setTimeout(() => this.generateSquare(), 5)
+        }
+
+        for (let x = 0; x < 75 * this.screenWidth / 1454.54545455; x++) {
+            setTimeout(() => this.generateTriangle(), 5)
         }
 
         for (let x = 0; x < 25 * this.screenWidth / 1454.54545455; x++) {
@@ -101,13 +105,13 @@ export class GameEngine {
                 if (bodyA.label == "orb" && bodyB.label == "wall") {
                     this.state.removeOrb(bodyA.id)
                     Matter.Composite.remove(this.world, [bodyA])
-                    this.generateOrb()
+                    this.generateSquare()
                 }
 
                 if (bodyA.label == "wall" && bodyB.label == "orb") {
                     this.state.removeOrb(bodyB.id)
                     Matter.Composite.remove(this.world, [bodyB])
-                    this.generateOrb()
+                    this.generateSquare()
                 }
 
                 if (bodyA.label == "playerCircle" && bodyB.label == "playerCircle") {
@@ -293,18 +297,28 @@ export class GameEngine {
         Matter.Composite.remove(this.world, [playerBullet])
         this.state.removeOrb(orb.id)
         Matter.Composite.remove(this.world, [orb])
-        this.generateOrb()
+        this.generateSquare()
     }
 
-    generateOrb() {
+    generateSquare() {
         let x = Math.random() * this.screenWidth
         let y = Math.random() * this.screenHeight
 
-        let orb = Matter.Bodies.rectangle(x, y, 30, 30, { label: 'orb', isSensor: true })
+        let orb = Matter.Bodies.rectangle(x, y, 30, 30, { label: 'square', isSensor: true })
         this.orbs[orb.id] = orb
-        this.state.createOrb(orb.id, x, y)
+        this.state.createOrb(orb.id, x, y, 'square')
         Matter.Composite.add(this.world, [orb])
     }
+    generateTriangle() {
+        let x = Math.random() * this.screenWidth
+        let y = Math.random() * this.screenHeight
+
+        let orb = Matter.Bodies.polygon(x, y, 3, 30, { label: 'triangle', isSensor: true })
+        this.orbs[orb.id] = orb
+        this.state.createOrb(orb.id, x, y, 'triangle')
+        Matter.Composite.add(this.world, [orb])
+    }
+
 
     generateWall() {
         const x = Math.random() * this.screenWidth
