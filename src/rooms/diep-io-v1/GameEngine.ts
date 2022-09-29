@@ -275,6 +275,23 @@ export class GameEngine {
     }
 
     playEatOrb(playerBullet, orb) {
+        let xp = 10
+        let destroyWhat;
+        switch (this.state.orbs.get(orb?.id).type) {
+            case 'rectangle':
+                xp = 10
+                destroyWhat = 'rectangle'
+                break;
+            case 'triangle':
+                xp = 25
+                destroyWhat = 'triangle'
+                break;
+            case 'pentagon':
+                xp = 130
+                destroyWhat = 'pentagon'
+                break;
+
+        }
         const stateBullet = this.state.playerBullets.get(String(playerBullet.id))
         if (!stateBullet) return
         const statePlayerCircle = this.state.playerCircles.get(String(stateBullet.circleId))
@@ -284,10 +301,10 @@ export class GameEngine {
         const statePlayer = this.state.players.get(statePlayerCircle.playerId)
         const currentSize = statePlayerCircle.size
         const currentScore = statePlayer.score
-        const newScore = currentScore + 10
+        const newScore = currentScore + xp
         statePlayer.score = newScore
         if (currentSize < this.screenWidth / this.maxPlayerCircleSize) {
-            const newSize = currentSize + 1
+            const newSize = currentSize + xp / 10
             statePlayerCircle.size = newSize
             const scaleUp = newSize / currentSize
             Matter.Body.scale(playerCircle, scaleUp, scaleUp)
@@ -297,23 +314,29 @@ export class GameEngine {
         Matter.Composite.remove(this.world, [playerBullet])
         this.state.removeOrb(orb.id)
         Matter.Composite.remove(this.world, [orb])
-        this.generateSquare()
+        if (destroyWhat == 'rectangle') {
+            this.generateSquare()
+        } else if (destroyWhat == 'triangle') {
+            this.generateTriangle()
+        } else if (destroyWhat == 'pentagon') {
+            // this.generatePentagon()
+        }
     }
 
     generateSquare() {
         let x = Math.random() * this.screenWidth
         let y = Math.random() * this.screenHeight
 
-        let orb = Matter.Bodies.rectangle(x, y, 30, 30, { label: 'square', isSensor: true })
+        let orb = Matter.Bodies.rectangle(x, y, 30, 30, { label: 'orb', isSensor: true })
         this.orbs[orb.id] = orb
-        this.state.createOrb(orb.id, x, y, 'square')
+        this.state.createOrb(orb.id, x, y, 'rectangle')
         Matter.Composite.add(this.world, [orb])
     }
     generateTriangle() {
         let x = Math.random() * this.screenWidth
         let y = Math.random() * this.screenHeight
 
-        let orb = Matter.Bodies.polygon(x, y, 3, 30, { label: 'triangle', isSensor: true })
+        let orb = Matter.Bodies.polygon(x, y, 3, 30, { label: 'orb', isSensor: true })
         this.orbs[orb.id] = orb
         this.state.createOrb(orb.id, x, y, 'triangle')
         Matter.Composite.add(this.world, [orb])
