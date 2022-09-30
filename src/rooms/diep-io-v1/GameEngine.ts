@@ -39,15 +39,19 @@ export class GameEngine {
         Matter.Composite.add(this.world, walls)
 
         for (let x = 0; x < 150 * this.screenWidth / 1454.54545455; x++) {
-            setTimeout(() => this.generateSquare(), 5)
+            setTimeout(() => this.generateSquare(), 1)
         }
 
         for (let x = 0; x < 75 * this.screenWidth / 1454.54545455; x++) {
-            setTimeout(() => this.generateTriangle(), 5)
+            setTimeout(() => this.generateTriangle(), 1)
         }
 
         for (let x = 0; x < 25 * this.screenWidth / 1454.54545455; x++) {
-            setTimeout(() => this.generateWall(), 5)
+            setTimeout(() => this.generatePentagon(), 1)
+        }
+
+        for (let x = 0; x < 25 * this.screenWidth / 1454.54545455; x++) {
+            setTimeout(() => this.generateWall(), 1)
         }
         this.setupUpdateEvents()
         this.collision()
@@ -277,7 +281,8 @@ export class GameEngine {
     playEatOrb(playerBullet, orb) {
         let xp = 10
         let destroyWhat;
-        switch (this.state.orbs.get(orb?.id).type) {
+        if (!this.state.orbs.get(String(orb?.id))) return
+        switch (this.state.orbs.get(String(orb?.id)).type) {
             case 'rectangle':
                 xp = 10
                 destroyWhat = 'rectangle'
@@ -289,6 +294,10 @@ export class GameEngine {
             case 'pentagon':
                 xp = 130
                 destroyWhat = 'pentagon'
+                break;
+            default:
+                xp = 10
+                destroyWhat = ''
                 break;
 
         }
@@ -319,7 +328,9 @@ export class GameEngine {
         } else if (destroyWhat == 'triangle') {
             this.generateTriangle()
         } else if (destroyWhat == 'pentagon') {
-            // this.generatePentagon()
+            this.generatePentagon()
+        } else {
+            return
         }
     }
 
@@ -339,6 +350,16 @@ export class GameEngine {
         let orb = Matter.Bodies.polygon(x, y, 3, 30, { label: 'orb', isSensor: true })
         this.orbs[orb.id] = orb
         this.state.createOrb(orb.id, x, y, 'triangle')
+        Matter.Composite.add(this.world, [orb])
+    }
+
+    generatePentagon() {
+        let x = Math.random() * this.screenWidth
+        let y = Math.random() * this.screenHeight
+
+        let orb = Matter.Bodies.polygon(x, y, 5, 50, { label: 'orb', isSensor: true })
+        this.orbs[orb.id] = orb
+        this.state.createOrb(orb.id, x, y, 'pentagon')
         Matter.Composite.add(this.world, [orb])
     }
 
@@ -420,7 +441,6 @@ export class GameEngine {
             }, 10000)
         }
     }
-
     findPlayerCircles(playerId) {
         const circles = []
         this.state.playerCircles.forEach((stateCircle, worldId) => {
