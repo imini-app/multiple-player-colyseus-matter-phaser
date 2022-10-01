@@ -362,8 +362,6 @@ export class GameEngine {
         let orb = Matter.Bodies.polygon(x, y, 5, 50, { label: 'orb', isSensor: true })
         this.orbs[orb.id] = orb
         this.state.createOrb(orb.id, x, y, 'pentagon')
-
-        console.log('triangle', x, y, orb.vertices)
         Matter.Composite.add(this.world, [orb])
     }
 
@@ -436,6 +434,8 @@ export class GameEngine {
             this.state.createPlayerBullet(bullet.id, playerId, initX, initY, size, Number(circleId))
             Matter.Body.setVelocity(bullet, { x: velocityX, y: velocityY })
             Matter.Composite.add(this.world, [bullet])
+
+            console.log(bullet.x, bullet.y)
             setTimeout(() => {
                 if (!this.state.playerBullets.get(bullet.id)) return
 
