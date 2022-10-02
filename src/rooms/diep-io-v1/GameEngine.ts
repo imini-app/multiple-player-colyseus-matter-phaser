@@ -9,8 +9,8 @@ export class GameEngine {
     circles = {}
     orbs = {}
     bullets = {}
-    screenWidth = 1920 / 1.32 * 1
-    screenHeight = 1920 / 1.32 * 1
+    screenWidth = 1920 / 1.32 * 9
+    screenHeight = 1920 / 1.32 * 9
 
     constructor(roomState) {
         this.engine = Matter.Engine.create()
@@ -38,19 +38,19 @@ export class GameEngine {
 
         Matter.Composite.add(this.world, walls)
 
-        for (let x = 0; x < 0 * this.screenWidth / 1454.54545455; x++) {
+        for (let x = 0; x < 100 * this.screenWidth / 1454.54545455; x++) {
             setTimeout(() => this.generateSquare(), 1)
         }
 
-        for (let x = 0; x < 0 * this.screenWidth / 1454.54545455; x++) {
+        for (let x = 0; x < 33 * this.screenWidth / 1454.54545455; x++) {
             setTimeout(() => this.generateTriangle(), 1)
         }
 
-        for (let x = 0; x < 1 * this.screenWidth / 1454.54545455; x++) {
+        for (let x = 0; x < 5 * this.screenWidth / 1454.54545455; x++) {
             setTimeout(() => this.generatePentagon(), 1)
         }
 
-        for (let x = 0; x < 0 * this.screenWidth / 1454.54545455; x++) {
+        for (let x = 0; x < 25 * this.screenWidth / 1454.54545455; x++) {
             setTimeout(() => this.generateWall(), 1)
         }
         this.setupUpdateEvents()
@@ -356,8 +356,6 @@ export class GameEngine {
     generatePentagon() {
         let x = Math.random() * this.screenWidth
         let y = Math.random() * this.screenHeight
-        x = 100
-        y = 100
 
         let orb = Matter.Bodies.polygon(x, y, 5, 50, { label: 'orb', isSensor: true })
         this.orbs[orb.id] = orb
@@ -437,9 +435,9 @@ export class GameEngine {
 
             console.log(bullet.x, bullet.y)
             setTimeout(() => {
-                if (!this.state.playerBullets.get(bullet.id)) return
+                if (!this.state.playerBullets.get(String(bullet.id))) return
 
-                if (!this.state.playerBullets.get(bullet.id).circleId) this.state.removePlayerBullet(bullet.id); Matter.Composite.remove(this.world, [bullet]);
+                if (!this.state.playerBullets.get(String(bullet.id)).circleId) this.state.removePlayerBullet(bullet.id); Matter.Composite.remove(this.world, [bullet]);
                 this.state.removePlayerBullet(bullet.id)
                 Matter.Composite.remove(this.world, [bullet]);
             }, 10000)
