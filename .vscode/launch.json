@@ -2,6 +2,12 @@
     "version": "0.2.0",
     "configurations": [
       {
+        "name": "Attach to Process",
+        "type": "node",
+        "request": "attach",
+        "port": 4321
+      },
+      {
         "name": "Debug",
         "type": "pwa-node",
         "request": "launch",
