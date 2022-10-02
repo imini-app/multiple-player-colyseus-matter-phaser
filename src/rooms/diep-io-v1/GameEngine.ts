@@ -4,7 +4,7 @@ export class GameEngine {
     world = null
     state = null
     engine = null
-    maxPlayerCircleSize = 17.448
+    maxPlayerCircleSize = 34.968
     players = {}
     circles = {}
     orbs = {}
@@ -38,11 +38,11 @@ export class GameEngine {
 
         Matter.Composite.add(this.world, walls)
 
-        for (let x = 0; x < 100 * this.screenWidth / 1454.54545455; x++) {
+        for (let x = 0; x < 10 * this.screenWidth / 1454.54545455; x++) {
             setTimeout(() => this.generateSquare(), 1)
         }
 
-        for (let x = 0; x < 33 * this.screenWidth / 1454.54545455; x++) {
+        for (let x = 0; x < 10 * this.screenWidth / 1454.54545455; x++) {
             setTimeout(() => this.generateTriangle(), 1)
         }
 
@@ -50,7 +50,7 @@ export class GameEngine {
             setTimeout(() => this.generatePentagon(), 1)
         }
 
-        for (let x = 0; x < 25 * this.screenWidth / 1454.54545455; x++) {
+        for (let x = 0; x < 1 * this.screenWidth / 1454.54545455; x++) {
             setTimeout(() => this.generateWall(), 1)
         }
         this.setupUpdateEvents()
@@ -368,8 +368,8 @@ export class GameEngine {
         const x = Math.random() * this.screenWidth
         const y = Math.random() * this.screenHeight
 
-        const width = Math.random() * (500 - 200 + 1) + 200
-        const height = Math.random() * (500 - 200 + 1) + 200
+        const width = Math.random() * (5000 - 1000 + 1) + 1000
+        const height = Math.random() * (5000 - 1000 + 1) + 1000
 
         const wall = Matter.Bodies.rectangle(x, y, width, height, { isStatic: true, label: 'wall' })
         this.state.createWall(wall.id, x, y, width, height)
@@ -432,8 +432,6 @@ export class GameEngine {
             this.state.createPlayerBullet(bullet.id, playerId, initX, initY, size, Number(circleId))
             Matter.Body.setVelocity(bullet, { x: velocityX, y: velocityY })
             Matter.Composite.add(this.world, [bullet])
-
-            console.log(bullet.x, bullet.y)
             setTimeout(() => {
                 if (!this.state.playerBullets.get(String(bullet.id))) return
 
