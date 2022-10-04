@@ -38,11 +38,11 @@ export class GameEngine {
 
         Matter.Composite.add(this.world, walls)
 
-        for (let x = 0; x < 10 * this.screenWidth / 1454.54545455; x++) {
+        for (let x = 0; x < 100 * this.screenWidth / 1454.54545455; x++) {
             setTimeout(() => this.generateSquare(), 1)
         }
 
-        for (let x = 0; x < 10 * this.screenWidth / 1454.54545455; x++) {
+        for (let x = 0; x < 33 * this.screenWidth / 1454.54545455; x++) {
             setTimeout(() => this.generateTriangle(), 1)
         }
 
@@ -320,6 +320,7 @@ export class GameEngine {
         }
 
         this.state.removePlayerBullet(playerBullet.id)
+        console.log('remove', playerBullet.id)
         Matter.Composite.remove(this.world, [playerBullet])
         this.state.removeOrb(orb.id)
         Matter.Composite.remove(this.world, [orb])
@@ -368,8 +369,8 @@ export class GameEngine {
         const x = Math.random() * this.screenWidth
         const y = Math.random() * this.screenHeight
 
-        const width = Math.random() * (5000 - 1000 + 1) + 1000
-        const height = Math.random() * (5000 - 1000 + 1) + 1000
+        const width = Math.random() * (3000 - 1000 + 1) + 1000
+        const height = Math.random() * (3000 - 1000 + 1) + 1000
 
         const wall = Matter.Bodies.rectangle(x, y, width, height, { isStatic: true, label: 'wall' })
         this.state.createWall(wall.id, x, y, width, height)
@@ -438,7 +439,7 @@ export class GameEngine {
                 if (!this.state.playerBullets.get(String(bullet.id)).circleId) this.state.removePlayerBullet(bullet.id); Matter.Composite.remove(this.world, [bullet]);
                 this.state.removePlayerBullet(bullet.id)
                 Matter.Composite.remove(this.world, [bullet]);
-            }, 10000)
+            }, 3500)
         }
     }
     findPlayerCircles(playerId) {
@@ -496,6 +497,7 @@ export class GameEngine {
 
     processPlayerBullet(playerId, targets) {
         const playerCircles = this.findPlayerCircles(playerId)
+        console.log('shoot')
         for (const playerCircle of playerCircles) {
             let size = (playerCircle.circleRadius / 4)
             if ((playerCircle.circleRadius / 4) < (this.maxPlayerCircleSize / 7)) size = this.maxPlayerCircleSize / 5
