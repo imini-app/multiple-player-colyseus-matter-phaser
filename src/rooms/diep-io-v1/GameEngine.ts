@@ -9,8 +9,8 @@ export class GameEngine {
     circles = {}
     orbs = {}
     bullets = {}
-    screenWidth = 1920 / 1.32 * 9
-    screenHeight = 1920 / 1.32 * 9
+    screenWidth = 1920 / 1.32 * 12
+    screenHeight = 1920 / 1.32 * 12
 
     constructor(roomState) {
         this.engine = Matter.Engine.create()
@@ -50,7 +50,7 @@ export class GameEngine {
             setTimeout(() => this.generatePentagon(), 1)
         }
 
-        for (let x = 0; x < 1 * this.screenWidth / 1454.54545455; x++) {
+        for (let x = 0; x < 2 * this.screenWidth / 1454.54545455; x++) {
             setTimeout(() => this.generateWall(), 1)
         }
         this.setupUpdateEvents()
@@ -320,7 +320,6 @@ export class GameEngine {
         }
 
         this.state.removePlayerBullet(playerBullet.id)
-        console.log('remove', playerBullet.id)
         Matter.Composite.remove(this.world, [playerBullet])
         this.state.removeOrb(orb.id)
         Matter.Composite.remove(this.world, [orb])
@@ -497,7 +496,6 @@ export class GameEngine {
 
     processPlayerBullet(playerId, targets) {
         const playerCircles = this.findPlayerCircles(playerId)
-        console.log('shoot')
         for (const playerCircle of playerCircles) {
             let size = (playerCircle.circleRadius / 4)
             if ((playerCircle.circleRadius / 4) < (this.maxPlayerCircleSize / 7)) size = this.maxPlayerCircleSize / 5
