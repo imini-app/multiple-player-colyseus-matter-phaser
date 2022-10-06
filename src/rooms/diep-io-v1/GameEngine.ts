@@ -532,7 +532,7 @@ export class GameEngine {
         let amountOfCircles = playerCircles?.length
         if (!playerCircles) return
         for (const circle of playerCircles) {
-            if (amountOfCircles >= 16) return
+            if (amountOfCircles >= 4) return
             let offset;
             // 1. change the size in the state to half
             const statePlayerCircle = this.state.playerCircles.get(String(circle.id))
