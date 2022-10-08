@@ -1,6 +1,6 @@
 import Matter from 'matter-js'
-
-export class GameEngine {
+import SpriteWithHeathBar from '../../../../phaser-examples/src/games/platformer/SpriteWithHealthBar.js'
+export default class GameEngine {
     world = null
     state = null
     engine = null
@@ -398,7 +398,7 @@ export class GameEngine {
                 { label: "playerCircle" }
             )
             this.circles[circle.id] = circle
-            this.state.createPlayerCircle(circle.id, playerId, startX + (x * size * 2), startY + (x * size * 2), size)
+            this.state.createPlayerCircle(circle.id, playerId, startX + (x * size * 2), startY + (x * size * 2), size, 60)
             Matter.Composite.add(this.world, [circle])
         }
     }
@@ -438,7 +438,7 @@ export class GameEngine {
                 if (!this.state.playerBullets.get(String(bullet.id)).circleId) this.state.removePlayerBullet(bullet.id); Matter.Composite.remove(this.world, [bullet]);
                 this.state.removePlayerBullet(bullet.id)
                 Matter.Composite.remove(this.world, [bullet]);
-            }, 3000)
+            }, 3500)
         }
     }
     findPlayerCircles(playerId) {

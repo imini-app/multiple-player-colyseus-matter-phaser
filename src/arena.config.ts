@@ -19,6 +19,7 @@ import { MatterjsPlatformRoom } from "./rooms/matterjs-platform";
 import { GameRoom as GameRoomV1 } from "./rooms/circle-io-v1";
 import { GameRoom as GameRoomV2 } from "./rooms/circle-io-v2";
 import { GameRoom as DiepRoomV1 } from "./rooms/diep-io-v1";
+import { GameRoom as DiepRoomV2 } from "./rooms/diep-io-v2";
 
 export default Arena({
     getId: () => "Your Colyseus App",
@@ -48,6 +49,9 @@ export default Arena({
 
 
         gameServer.define("diep_io_v1", DiepRoomV1)
+            .enableRealtimeListing();
+
+        gameServer.define("diep_io_v1", DiepRoomV2)
             .enableRealtimeListing();
 
         // Register ChatRoom with initial options, as "chat_with_options"
