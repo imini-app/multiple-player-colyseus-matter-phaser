@@ -51,7 +51,7 @@ export default Arena({
         gameServer.define("diep_io_v1", DiepRoomV1)
             .enableRealtimeListing();
 
-        gameServer.define("diep_io_v1", DiepRoomV2)
+        gameServer.define("diep_io_v2", DiepRoomV2)
             .enableRealtimeListing();
 
         // Register ChatRoom with initial options, as "chat_with_options"

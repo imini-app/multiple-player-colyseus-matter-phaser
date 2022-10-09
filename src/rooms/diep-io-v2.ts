@@ -21,6 +21,8 @@ export class PlayerCircleSchema extends Schema {
 export class PlayerBulletSchema extends PlayerCircleSchema {
     @type("string")
     circleId = ''
+    @type("number")
+    damage = 0
 }
 
 export class PlayerSchema extends Schema {
@@ -99,9 +101,10 @@ export class StateSchema extends Schema {
         this.playerCircles.delete(String(worldId))
     }
 
-    createPlayerBullet(worldId: number, playerId: string, x: number, y: number, size: number, circleId: number) {
+    createPlayerBullet(worldId: number, playerId: string, x: number, y: number, size: number, circleId: number, damage: number) {
         const newPlayerBullet = this.createPlayerObject(playerId, x, y, size, PlayerBulletSchema)
         newPlayerBullet.circleId = String(circleId)
+        newPlayerBullet.damage = damage
         this.playerBullets.set(String(worldId), newPlayerBullet)
     }
 

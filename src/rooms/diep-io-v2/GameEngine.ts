@@ -281,8 +281,9 @@ export default class GameEngine {
     playEatOrb(playerBullet, orb) {
         let xp = 10
         let destroyWhat;
-        if (!this.state.orbs.get(String(orb?.id))) return
-        switch (this.state.orbs.get(String(orb?.id)).type) {
+        const stateOrb = this.state.orbs.get(String(orb?.id))
+        if (!stateOrb) return
+        switch (stateOrb.type) {
             case 'rectangle':
                 xp = 10
                 destroyWhat = 'rectangle'
@@ -308,6 +309,13 @@ export default class GameEngine {
         const playerCircle = this.circles[stateBullet.circleId]
         if (!playerCircle) return
         const statePlayer = this.state.players.get(statePlayerCircle.playerId)
+        const objectAliveHpDifference = stateOrb.hp - stateBullet.damage
+        if (objectAliveHpDifference) {
+            stateOrb.hp = objectAliveHpDifference
+            this.state.removePlayerBullet(playerBullet.id)
+            Matter.Composite.remove(this.world, [playerBullet])
+            return
+        }
         const currentSize = statePlayerCircle.size
         const currentScore = statePlayer.score
         const newScore = currentScore + xp
@@ -340,7 +348,7 @@ export default class GameEngine {
 
         let orb = Matter.Bodies.rectangle(x, y, 30, 30, { label: 'orb', isSensor: true })
         this.orbs[orb.id] = orb
-        this.state.createOrb(orb.id, x, y, 'rectangle')
+        this.state.createOrb(orb.id, x, y, 'rectangle', 10)
         Matter.Composite.add(this.world, [orb])
     }
     generateTriangle() {
@@ -349,7 +357,7 @@ export default class GameEngine {
 
         let orb = Matter.Bodies.polygon(x, y, 3, 30, { label: 'orb', isSensor: true })
         this.orbs[orb.id] = orb
-        this.state.createOrb(orb.id, x, y, 'triangle')
+        this.state.createOrb(orb.id, x, y, 'triangle', 30)
         Matter.Composite.add(this.world, [orb])
     }
 
@@ -359,7 +367,7 @@ export default class GameEngine {
 
         let orb = Matter.Bodies.polygon(x, y, 5, 50, { label: 'orb', isSensor: true })
         this.orbs[orb.id] = orb
-        this.state.createOrb(orb.id, x, y, 'pentagon')
+        this.state.createOrb(orb.id, x, y, 'pentagon', 100)
         Matter.Composite.add(this.world, [orb])
     }
 
@@ -412,7 +420,7 @@ export default class GameEngine {
         }
     }
 
-    addPlayerBullet(playerId, targetX, targetY, initX, initY, circleId, size = 25, speed = 21, count = 1) {
+    addPlayerBullet(playerId, targetX, targetY, initX, initY, circleId, size = 25, damage = 5, speed = 21, count = 1) {
 
         for (let x = 0; x < count; x++) {
             const bullet = Matter.Bodies.circle(
@@ -429,7 +437,7 @@ export default class GameEngine {
             const velocityY = Math.sin(angle) * speed
 
             this.bullets[bullet.id] = bullet
-            this.state.createPlayerBullet(bullet.id, playerId, initX, initY, size, Number(circleId))
+            this.state.createPlayerBullet(bullet.id, playerId, initX, initY, size, Number(circleId), damage)
             Matter.Body.setVelocity(bullet, { x: velocityX, y: velocityY })
             Matter.Composite.add(this.world, [bullet])
             setTimeout(() => {
