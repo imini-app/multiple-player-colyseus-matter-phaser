@@ -440,6 +440,7 @@ export default class GameEngine {
             const yDist = targetY - initY;
             const angle = Math.atan2(yDist, xDist) + x / 10
             const velocityX = Math.cos(angle) * speed
+
             const velocityY = Math.sin(angle) * speed
 
             this.bullets[bullet.id] = bullet
