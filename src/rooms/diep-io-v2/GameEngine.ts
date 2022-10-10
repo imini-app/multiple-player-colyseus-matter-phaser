@@ -1,5 +1,4 @@
 import Matter from 'matter-js'
-import SpriteWithHeathBar from '../../../../phaser-examples/src/games/platformer/SpriteWithHealthBar.js'
 export default class GameEngine {
     world = null
     state = null
@@ -191,6 +190,13 @@ export default class GameEngine {
 
         const stateBulletCircle = this.state.playerCircles.get(String(stateBullet.circleId))
         if (!stateBulletCircle) return
+        const hpLeft = statePlayerCircle.hp - stateBullet.damage
+        if (hpLeft > 0) {
+            statePlayerCircle.hp = hpLeft
+            this.state.removePlayerBullet(bullet.id)
+            Matter.Composite.remove(this.world, [bullet])
+            return
+        }
         const scoreUp = statePlayerCircle.size * 10
         const sizeUp = statePlayerCircle.size
         this.state.players.get(statePlayerCircle.playerId).score -= scoreUp
@@ -308,9 +314,9 @@ export default class GameEngine {
         if (!statePlayerCircle) return
         const playerCircle = this.circles[stateBullet.circleId]
         if (!playerCircle) return
-        const statePlayer = this.state.players.get(statePlayerCircle.playerId)
+        const statePlayer = this.state.players.get(String(statePlayerCircle.playerId))
         const objectAliveHpDifference = stateOrb.hp - stateBullet.damage
-        if (objectAliveHpDifference) {
+        if (objectAliveHpDifference > 0) {
             stateOrb.hp = objectAliveHpDifference
             this.state.removePlayerBullet(playerBullet.id)
             Matter.Composite.remove(this.world, [playerBullet])
@@ -406,7 +412,7 @@ export default class GameEngine {
                 { label: "playerCircle" }
             )
             this.circles[circle.id] = circle
-            this.state.createPlayerCircle(circle.id, playerId, startX + (x * size * 2), startY + (x * size * 2), size, 60)
+            this.state.createPlayerCircle(circle.id, playerId, startX + (x * size * 2), startY + (x * size * 2), size, (50 + (2 * (size / 50) - 1)))
             Matter.Composite.add(this.world, [circle])
         }
     }
@@ -437,7 +443,7 @@ export default class GameEngine {
             const velocityY = Math.sin(angle) * speed
 
             this.bullets[bullet.id] = bullet
-            this.state.createPlayerBullet(bullet.id, playerId, initX, initY, size, Number(circleId), damage)
+            this.state.createPlayerBullet(bullet.id, playerId, initX, initY, size, Number(circleId), size / damage * 2)
             Matter.Body.setVelocity(bullet, { x: velocityX, y: velocityY })
             Matter.Composite.add(this.world, [bullet])
             setTimeout(() => {

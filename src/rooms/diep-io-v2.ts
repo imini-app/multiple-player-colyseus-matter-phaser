@@ -1,6 +1,6 @@
 import { Room, Client } from "colyseus";
 import { Schema, type, MapSchema, ArraySchema } from "@colyseus/schema";
-import { GameEngine } from "./diep-io-v1/GameEngine";
+import GameEngine from "./diep-io-v2/GameEngine";
 import Matter from 'matter-js'
 
 export class PlayerCircleSchema extends Schema {
@@ -112,11 +112,12 @@ export class StateSchema extends Schema {
         this.playerBullets.delete(String(worldId))
     }
 
-    createOrb(worldId: number, x: number, y: number, type: string) {
+    createOrb(worldId: number, x: number, y: number, type: string, hp: number) {
         const newOrb = new OrbSchema();
         newOrb.x = x;
         newOrb.y = y;
         newOrb.type = type
+        newOrb.hp = hp
         this.orbs.set(String(worldId), newOrb);
     }
 
