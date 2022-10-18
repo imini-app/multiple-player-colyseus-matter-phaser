@@ -176,6 +176,7 @@ export default class GameEngine {
             }
         }
 
+        if (!smallerBody) return
         this.state.removePlayerBullet(smallerBody.id)
         Matter.Composite.remove(this.world, [smallerBody])
     }
