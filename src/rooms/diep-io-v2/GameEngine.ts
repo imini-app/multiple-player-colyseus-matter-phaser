@@ -214,6 +214,10 @@ export default class GameEngine {
             stateBulletCircle.size = newSize
             const scaleUp = newSize / currentSize
             Matter.Body.scale(matterBulletCircle, scaleUp, scaleUp)
+        } else {
+            stateBulletCircle.size = this.screenWidth / this.maxPlayerCircleSize
+            const scaleUp = this.screenWidth / this.maxPlayerCircleSize / currentSize
+            Matter.Body.scale(matterBulletCircle, scaleUp, scaleUp)
         }
 
     }
@@ -243,7 +247,7 @@ export default class GameEngine {
             this.circles[playerCircle.id] = playerCircle
 
             Matter.Composite.add(this.world, [playerCircle])
-            this.state.createPlayerCircle(playerCircle.id, statePlayerCircle?.playerId, startX, startY, initialSize)
+            this.state.createPlayerCircle(playerCircle.id, statePlayerCircle?.playerId, startX, startY, initialSize, (initialSize + (2 * (initialSize / 50) - 1)))
             if (statePlayer) statePlayer.score = initialScore
         }
     }
