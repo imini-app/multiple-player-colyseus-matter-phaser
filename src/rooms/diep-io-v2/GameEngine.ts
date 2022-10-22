@@ -10,6 +10,193 @@ export default class GameEngine {
     bullets = {}
     screenWidth = 1920 / 1.32 * 12
     screenHeight = 1920 / 1.32 * 12
+    tankStats = {
+        "Basic": {
+            upgradesFrom: "Unknown",
+            level: 1,
+            turrets: 1,
+            bullets: 1,
+            bulletDamage: 3,
+            bulletPenatration: 3,
+            bulletSpeed: 15,
+            reload: 5,
+            healthRegen: 1,
+            maxHealth: 51,
+            bodyDamage: 1,
+            movementSpeed: 3,
+            accuracy: 1
+        },
+
+        "BasicRammer": {
+            upgradesFrom: "Basic",
+            level: 15,
+            turrets: 0,
+            bullets: 0,
+            bulletDamage: 0,
+            bulletPenatration: 0,
+            bulletSpeed: 0,
+            reload: 0,
+            healthRegen: 5,
+            maxHealth: 51,
+            bodyDamage: 10,
+            movementSpeed: 4,
+            accuracy: 0
+        },
+
+        "Sniper": {
+            upgradesFrom: "Basic",
+            level: 15,
+            turrets: 1,
+            bullets: 1,
+            bulletDamage: 4,
+            bulletPenatration: 4,
+            bulletSpeed: 20,
+            reload: 3,
+            healthRegen: 4,
+            maxHealth: 54,
+            bodyDamage: 4,
+            movementSpeed: 4,
+            accuracy: 1
+        },
+
+        "Assassin": {
+            upgradesFrom: "Sniper",
+            level: 30,
+            turrets: 1,
+            bullets: 1,
+            bulletDamage: 7,
+            bulletPentration: 7,
+            bulletSpeed: 25,
+            reload: 6,
+            healthRegen: 7,
+            maxHealth: 57,
+            bodyDamage: 7,
+            movementSpeed: 9,
+            accuracy: 1,
+            sight: 2.5,
+            desription: "This is a tank from diep.io it's bullet damage, pentration and speed are the same as the Spam-Shooter. This tank can counter the One-Shot-Wonder tank with it's movement speed + high sight range and shoot a bunch of bullets at the enemy most likely killing it."
+        },
+
+        "One-Shot-Wonder": {
+            upgradesFrom: "Assassin",
+            level: 45,
+            turrets: 1,
+            bullets: 1,
+            bulletDamage: 77,
+            bulletPentration: 77,
+            bulletSpeed: 77,
+            reload: 3,
+            healthRegen: 1,
+            maxHealth: 20,
+            bodyDamage: 1,
+            movementSpeed: 2,
+            accuracy: 1,
+            sight: 4,
+            desription: "My own design! This is deadly and long range combat but with it's low hp and regen suck at melee/close combat. Best used at ambushing enemys with its long sight range and deadly bullets though it can be countered by a bullet spammer or realy fast rammer seeing as it's reload is low."
+        },
+
+        "Spam-Shooter AKA Pea-Shooter": {
+            upgradesFrom: "Assassin",
+            level: 45,
+            turrets: 1,
+            bullets: 10,
+            bulletDamage: 7,
+            bulletPentration: 7,
+            bulletSpeed: 25,
+            reload: 10,
+            healthRegen: 10,
+            maxHealth: 60,
+            bodyDamage: 10,
+            movementSpeed: 10,
+            accuracy: 1,
+            sight: 1.5,
+            desription: "My own design! This tank was inspired by the repeater but with more bullets from plants vs zombies 2. This tank will shoot 10 medium strenth bullets for each time it's reload time ends. This tank is a bullet spammer and a good choice for newbs when the playing this game. This tank has a unique abilty: Survive for over 5 minutes and you're bullet stats change and become stronger."
+        },
+
+        "Twin-Destroyer": {
+            upgradesFrom: "Assassin",
+            level: 45,
+            turrets: 2,
+            bullets: 1,
+            bulletDamage: 30,
+            bulletPentration: 30,
+            bulletSpeed: 30,
+            reload: 14,
+            healthRegen: 7,
+            maxHealth: 7,
+            bodyDamage: 7,
+            movementSpeed: 30,
+            accuracy: 1,
+            sight: 3,
+            desription: "My own design! Design from Copter.io Dual Gun Sniper. With it's super duper high reload this tank has highest DPS of all the tanks released in this game but it also has the lowest hp of all tanks! Best used at long range or against low DPS tank or even One-Shot-Wonder tank(due to it's high movementSpeed)."
+        },
+
+        "Smasher": {
+            upgradesFrom: "BasicRammer",
+            level: 30,
+            bulletDamage: 0,
+            bulletPenatration: 0,
+            bulletSpeed: 0,
+            reload: 0,
+            healthRegen: 9,
+            maxHealth: 54,
+            bodyDamage: 20,
+            movementSpeed: 9,
+            accuracy: 0
+        },
+
+        "Spike": {
+            upgradesFrom: "Smasher",
+            level: 45,
+            bulletDamage: 0,
+            bulletPenatration: 0,
+            bulletSpeed: 0,
+            reload: 0,
+            healthRegen: 12,
+            maxHealth: 54,
+            bodyDamage: 40,
+            movementSpeed: 12,
+            accuracy: 0
+        },
+
+        // "Machine-Gun": {
+        //     bulletDamage: 3,
+        //     bulletPenatration: 4,
+        //     bulletSpeed: 19,
+        //     reload: 10,
+        //     healthRegen: 9,
+        //     maxHealth: 54,
+        //     bodyDamage: 4,
+        //     movementSpeed: 4,
+        //     accuracy: 0.3
+        // },
+
+        // "Twin": {
+        //     bulletDamage: 2,
+        //     bulletPenatration: 0,
+        //     bulletSpeed: 19,
+        //     reload: 9,
+        //     healthRegen: 5,
+        //     maxHealth: 50,
+        //     bodyDamage: 0,
+        //     movementSpeed: 0,
+        //     accuracy: 1
+        // },
+
+        // "Flank-Guard": {
+        //     bulletDamage: 9,
+        //     bulletPenatration: 5,
+        //     bulletSpeed: 19,
+        //     reload: 9,
+        //     healthRegen: 9,
+        //     maxHealth: 54,
+        //     bodyDamage: 4,
+        //     movementSpeed: 9,
+        //     accuracy: 1
+        // },
+
+
+    }
 
     constructor(roomState) {
         this.engine = Matter.Engine.create()
