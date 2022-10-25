@@ -43,6 +43,58 @@ export default class GameEngine {
             accuracy: 0
         },
 
+        "BasicDroneUser": {
+            upgradesFrom: "Basic",
+            level: 15,
+            turrets: 1,
+            bullets: 4,
+            ammunition: "drones",
+            bulletDamage: 2,
+            bulletPenatration: 8,
+            bulletSpeed: 13,
+            reload: 0.2,
+            healthRegen: 5,
+            maxHealth: 51,
+            bodyDamage: 5,
+            movementSpeed: 4,
+            accuracy: 1
+        },
+
+        "Overseer": {
+            upgradesFrom: "Basic",
+            level: 30,
+            turrets: 1,
+            bullets: 8,
+            ammunition: "drones",
+            bulletDamage: 5,
+            bulletPenatration: 13,
+            bulletSpeed: 15,
+            reload: 0.3,
+            healthRegen: 5,
+            maxHealth: 53,
+            bodyDamage: 5,
+            movementSpeed: 8,
+            accuracy: 1
+        },
+
+        "Overlord": {
+            upgradesFrom: "Basic",
+            level: 45,
+            turrets: 1,
+            bullets: 16,
+            ammunition: "drones",
+            bulletDamage: 12,
+            bulletPenatration: 17,
+            bulletSpeed: 19,
+            reload: 0.7,
+            healthRegen: 9,
+            maxHealth: 57,
+            bodyDamage: 7,
+            movementSpeed: 12,
+            accuracy: 1
+        },
+
+
         "Sniper": {
             upgradesFrom: "Basic",
             level: 15,
@@ -216,14 +268,14 @@ export default class GameEngine {
             sight: 1.5
         },
 
-        "Annihilator": {
-            upgradesFrom: "Destroyer",
+        "Dayeeter": {
+            upgradesFrom: "Machine-Gun",
             level: 45,
             turrets: 1,
             bullets: 1,
-            bulletDamage: 40,
-            bulletPenatration: 40,
-            bulletSpeed: 15,
+            bulletDamage: 25,
+            bulletPenatration: 25,
+            bulletSpeed: 25,
             reload: 10,
             healthRegen: 9,
             maxHealth: 54,
@@ -231,6 +283,24 @@ export default class GameEngine {
             movementSpeed: 4,
             accuracy: 1,
             sight: 2
+        },
+
+        "Annihilator": {
+            upgradesFrom: "Destroyer",
+            level: 45,
+            turrets: 1,
+            bullets: 1,
+            bulletDamage: 5,
+            bulletPenatration: 5,
+            bulletSpeed: 5,
+            reload: 14.5,
+            healthRegen: 15,
+            maxHealth: 70,
+            bodyDamage: 10,
+            movementSpeed: 20,
+            accuracy: 1,
+            sight: 2,
+            description: "The Ramming Destroyer. It's reload is the highest in game but the bullet stats are weak. DPS is really low."
         },
 
         "Twestroyer": {
@@ -266,7 +336,7 @@ export default class GameEngine {
             movementSpeed: 10,
             accuracy: 1,
             sight: 2,
-            desription: "Tank Vs Destructor = Destructor bullet hit's enemy while taking damage by the enemy bullets touch's enemy. BOOM! One Shot One Kill! Yup that is true! This tank's bullets are the strongest of the destroyer branch this can be an effective rammer too! But the enemy has to have less than half of it's hp. You can't ram a one shot wonder tank due to powerful bullets. This tank is best used for taking pop shots at enemys."
+            desription: "Tank Vs Destructor = Destructor bullet hit's enemy while taking damage by the enemy bullets touch's enemy. BOOM! One Shot One Kill! Yup that is true! This tank's bullets are the strongest of the destroyer branch this can be an effective rammer too! But the enemy has to have less than half of it's hp. You can't ram a one shot wonder tank due to it's powerful bullets. This tank is best used for taking pop shots at enemys."
         },
         "Twin": {
             upgradesFrom: "Basic",
