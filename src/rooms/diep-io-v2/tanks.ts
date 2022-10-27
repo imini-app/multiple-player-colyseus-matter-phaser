@@ -414,8 +414,8 @@ const tankStats = {
 
     "Twin-Flank": {
         upgradesFrom: "Flank-Guard",
-        level: 45,
-        turrets: 11,
+        level: 30,
+        turrets: 4,
         bullets: 1,
         bulletDamage: 6,
         bulletPenatration: 9,
@@ -427,6 +427,57 @@ const tankStats = {
         movementSpeed: 9,
         accuracy: 1,
         sight: 1
+    },
+
+    "L-BOZO-Spammer": {
+        upgradesFrom: "Twin-Flank",
+        level: 45,
+        turrets: 12,
+        bullets: 12,
+        bulletDamage: 1,
+        bulletPenatration: 1,
+        bulletSpeed: 20,
+        reload: 14,
+        healthRegen: 9,
+        maxHealth: 54,
+        bodyDamage: 4,
+        movementSpeed: 9,
+        accuracy: 1,
+        sight: 2
+    },
+
+    "Epic-Moments-Spammer": {
+        upgradesFrom: "Twin-Flank",
+        level: 45,
+        turrets: 1,
+        bullets: 24,
+        bulletDamage: 6,
+        bulletPenatration: 6,
+        bulletSpeed: 20,
+        reload: 14,
+        healthRegen: 9,
+        maxHealth: 54,
+        bodyDamage: 4,
+        movementSpeed: 9,
+        accuracy: 1,
+        sight: 2
+    },
+
+    "Gold-Twin-Flank": {
+        upgradesFrom: "Twin-Flank",
+        level: 45,
+        turrets: 4,
+        bullets: 1,
+        bulletDamage: 9,
+        bulletPenatration: 14,
+        bulletSpeed: 29,
+        reload: 12,
+        healthRegen: 9,
+        maxHealth: 54,
+        bodyDamage: 4,
+        movementSpeed: 9,
+        accuracy: 1,
+        sight: 2
     },
 }
 
