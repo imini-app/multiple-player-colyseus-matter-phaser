@@ -15,6 +15,63 @@ const tankStats = {
         accuracy: 1
     },
 
+    "StormBasic": {
+        upgradesFrom: "Basic",
+        level: 105,
+        turrets: 1,
+        bullets: 70,
+        bulletDamage: 10,
+        bulletPenatration: 10,
+        bulletSpeed: 35,
+        reload: 14,
+        healthRegen: 30,
+        maxHealth: 150,
+        bodyDamage: 30,
+        movementSpeed: 30,
+        accuracy: "Whirl Pool Life Span x 100",
+        sight: 5,
+        autoFire: true,
+        description: "Two pieces of info here. Don't Get near this tank or else it will bullet storm you. It's bullets are mini octo tanks and will chase you while bullet storming you with huge amounts of attackers due to their 300 second life span so you can onl win by one shotting this tank"
+    },
+
+    "UltraBasic": {
+        upgradesFrom: "Basic",
+        level: 105,
+        turrets: 1,
+        bullets: 10,
+        bulletDamage: 100,
+        bulletPenatration: 100,
+        bulletSpeed: 35,
+        reload: 14,
+        healthRegen: 30,
+        maxHealth: 150,
+        bodyDamage: 30,
+        movementSpeed: 30,
+        accuracy: "Target Chaser Life Span x 75",
+        sight: 5,
+        autoFire: true,
+        description: "One piece of info here. This tank is OP any tank that comes into to its sight will get chased by 3 bullets will home on to the most dangerest thing in sight the 4 other bullets will find the other objects using this list(1. lv 105 tank, 2. Mothership, lv 45 tank(Drone, Sniper Branch, Destroyer Branch, Rammer, Random), lv 30 tank(Drone, Sniper Branch, Destroyer Branch, Rammer, Random), lv 15 tank(Drone, Sniper Branch, Destroyer Branch, Rammer, Random). Notice that basics won't get killed by this tank but basics can't kill this tank either.)"
+    },
+
+    "SpamBasic": {
+        upgradesFrom: "Basic",
+        level: 105,
+        turrets: 1,
+        bullets: 100,
+        bulletDamage: 100,
+        bulletPenatration: 100,
+        bulletSpeed: 35,
+        reload: 14,
+        healthRegen: 30,
+        maxHealth: 150,
+        bodyDamage: 30,
+        movementSpeed: 30,
+        accuracy: "Life Span x Infinity",
+        sight: 5,
+        autoFire: true,
+        description: "Just Spam! This tank just spams OP bullets with Infinite Life Span."
+    },
+
     "BasicRammer": {
         upgradesFrom: "Basic",
         level: 15,
@@ -49,9 +106,9 @@ const tankStats = {
     },
 
     "Overseer": {
-        upgradesFrom: "Basic",
+        upgradesFrom: "BasicDroneUser",
         level: 30,
-        turrets: 1,
+        turrets: 2,
         bullets: 8,
         ammunition: "drones",
         bulletDamage: 5,
@@ -66,9 +123,9 @@ const tankStats = {
     },
 
     "Overlord": {
-        upgradesFrom: "Basic",
+        upgradesFrom: "Overseer",
         level: 45,
-        turrets: 1,
+        turrets: 4,
         bullets: 16,
         ammunition: "drones",
         bulletDamage: 12,
@@ -81,6 +138,24 @@ const tankStats = {
         movementSpeed: 12,
         accuracy: 1
     },
+
+    "Mothership": {
+        upgradesFrom: "Overlord",
+        level: 45,
+        turrets: 16,
+        bullets: 64,
+        ammunition: "drones",
+        bulletDamage: 50,
+        bulletPenatration: 50,
+        bulletSpeed: 50,
+        reload: 14,
+        healthRegen: 10,
+        maxHealth: 197,
+        bodyDamage: 50,
+        movementSpeed: 50,
+        accuracy: 1
+    },
+
 
 
     "Sniper": {
