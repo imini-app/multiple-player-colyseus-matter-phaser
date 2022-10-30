@@ -61,7 +61,7 @@ const tankStats = {
         bulletDamage: 100,
         bulletPenatration: 100,
         bulletSpeed: 35,
-        reload: 14,
+        reload: 12,
         healthRegen: 30,
         maxHealth: 150,
         bodyDamage: 30,
@@ -72,6 +72,24 @@ const tankStats = {
         description: "Just Spam! This tank just spams OP bullets with Infinite Life Span."
     },
 
+    "ArenaCloser": {
+        upgradesFrom: "Basic",
+        level: 270,
+        turrets: 1,
+        bullets: 1,
+        bulletDamage: 196,
+        bulletPenatration: Infinity,
+        bulletSpeed: 35,
+        reload: 14,
+        healthRegen: Infinity,
+        maxHealth: Infinity,
+        bodyDamage: Infinity,
+        movementSpeed: 30,
+        accuracy: "Life Span x Infinity",
+        sight: 5,
+        autoFire: true,
+        description: "Just Spam! This tank just spams OP bullets with Infinite Life Span."
+    },
     "BasicRammer": {
         upgradesFrom: "Basic",
         level: 15,
@@ -141,19 +159,20 @@ const tankStats = {
 
     "Mothership": {
         upgradesFrom: "Overlord",
-        level: 45,
+        level: 135,
         turrets: 16,
-        bullets: 64,
+        bullets: 100,
         ammunition: "drones",
         bulletDamage: 50,
         bulletPenatration: 50,
         bulletSpeed: 50,
         reload: 14,
         healthRegen: 10,
-        maxHealth: 197,
+        maxHealth: 3000,
         bodyDamage: 50,
         movementSpeed: 50,
-        accuracy: 1
+        accuracy: 1,
+        sight: 6,
     },
 
 
@@ -336,14 +355,14 @@ const tankStats = {
         level: 45,
         turrets: 1,
         bullets: 1,
-        bulletDamage: 25,
-        bulletPenatration: 25,
-        bulletSpeed: 25,
-        reload: 10,
-        healthRegen: 9,
-        maxHealth: 54,
-        bodyDamage: 4,
-        movementSpeed: 4,
+        bulletDamage: 1,
+        bulletPenatration: 1,
+        bulletSpeed: 1,
+        reload: 15,
+        healthRegen: 100,
+        maxHealth: 25,
+        bodyDamage: 25,
+        movementSpeed: 100,
         accuracy: 1,
         sight: 2
     },
@@ -433,6 +452,23 @@ const tankStats = {
         movementSpeed: 9,
         accuracy: 1,
         sight: 1.5,
+    },
+
+    "Triplet": {
+        upgradesFrom: "Triple-Shot",
+        level: 45,
+        turrets: 3,
+        bullets: 1,
+        bulletDamage: 6,
+        bulletPenatration: 6,
+        bulletSpeed: 25,
+        reload: 13,
+        healthRegen: 6,
+        maxHealth: 54,
+        bodyDamage: 8,
+        movementSpeed: 9,
+        accuracy: 1,
+        sight: 2,
     },
 
     "Penta-Shot": {
@@ -553,6 +589,22 @@ const tankStats = {
         movementSpeed: 9,
         accuracy: 1,
         sight: 2
+    },
+    "Diamond-Twin-Flank": {
+        upgradesFrom: "Twin-Flank",
+        level: 105,
+        turrets: 4,
+        bullets: 1,
+        bulletDamage: 30,
+        bulletPenatration: 30,
+        bulletSpeed: 30,
+        reload: 14.5,
+        healthRegen: 50,
+        maxHealth: 150,
+        bodyDamage: 4,
+        movementSpeed: 20,
+        accuracy: 1,
+        sight: 4
     },
 }
 
