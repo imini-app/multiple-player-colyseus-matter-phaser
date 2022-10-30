@@ -88,6 +88,25 @@ const tankStats = {
         accuracy: "Life Span x Infinity",
         sight: 5,
         autoFire: true,
+        description: "ArEnA cLoSeR iS oP l BoZo PlUs RaTiO l BoZo<A><B><C><D><E><F><G><H><I><J><K><L><M><N>."
+    },
+
+    "TheGodOfTanks": {
+        upgradesFrom: "Basic",
+        level: 995,
+        turrets: 1,
+        bullets: 1,
+        bulletDamage: Infinity,
+        bulletPenatration: Infinity,
+        bulletSpeed: 100,
+        reload: 15,
+        healthRegen: Infinity,
+        maxHealth: Infinity,
+        bodyDamage: Infinity,
+        movementSpeed: 100,
+        accuracy: "Life Span x Infinity",
+        sight: 10,
+        autoFire: true,
         description: "Just Spam! This tank just spams OP bullets with Infinite Life Span."
     },
     "BasicRammer": {
