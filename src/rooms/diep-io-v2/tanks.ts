@@ -82,13 +82,13 @@ const tankStats = {
         bulletSpeed: 35,
         reload: 14,
         healthRegen: Infinity,
-        maxHealth: Infinity,
+        maxHealth: Infinity - 1,
         bodyDamage: Infinity,
         movementSpeed: 30,
         accuracy: "Life Span x Infinity",
         sight: 5,
         autoFire: true,
-        description: "ArEnA cLoSeR iS oP l BoZo PlUs RaTiO l BoZo<A><B><C><D><E><F><G><H><I><J><K><L><M><N>."
+        description: "ArEnA cLoSeR iS oP l BoZo PlUs RaTiO l BoZo<A><B><C><D><E><F><G><H><I><J><K><L><M><N><O><P><Q><R><S><T><U><V><W><X><Y><Z>."
     },
 
     "TheGodOfTanks": {
@@ -107,7 +107,7 @@ const tankStats = {
         accuracy: "Life Span x Infinity",
         sight: 10,
         autoFire: true,
-        description: "Just Spam! This tank just spams OP bullets with Infinite Life Span."
+        description: "ArenaCLoser Destrution."
     },
     "BasicRammer": {
         upgradesFrom: "Basic",
@@ -527,8 +527,8 @@ const tankStats = {
 
     "Flank-Guard": {
         upgradesFrom: "Basic",
-        level: 45,
-        turrets: 11,
+        level: 15,
+        turrets: 2,
         bullets: 1,
         bulletDamage: 9,
         bulletPenatration: 5,
@@ -540,6 +540,74 @@ const tankStats = {
         movementSpeed: 9,
         accuracy: 1,
         sight: 1
+    },
+
+    "Tri-Angle": {
+        upgradesFrom: "Flank-Guard",
+        level: 30,
+        turrets: 3,
+        bullets: 1,
+        bulletDamage: 9,
+        bulletPenatration: 5,
+        bulletSpeed: 19,
+        reload: 11,
+        healthRegen: 11,
+        maxHealth: 56,
+        bodyDamage: 6,
+        movementSpeed: 11,
+        accuracy: 1,
+        sight: 2
+    },
+
+    "Booster": {
+        upgradesFrom: "Tri-Angle",
+        level: 45,
+        turrets: 5,
+        bullets: 1,
+        bulletDamage: 9,
+        bulletPenatration: 5,
+        bulletSpeed: 19,
+        reload: 12,
+        healthRegen: 12,
+        maxHealth: 62,
+        bodyDamage: 12,
+        movementSpeed: 12,
+        accuracy: 1,
+        sight: 3
+    },
+
+    "Super-Booster": {
+        upgradesFrom: "Booster",
+        level: 60,
+        turrets: 7,
+        bullets: 1,
+        bulletDamage: 9,
+        bulletPenatration: 5,
+        bulletSpeed: 19,
+        reload: 13,
+        healthRegen: 13,
+        maxHealth: 63,
+        bodyDamage: 13,
+        movementSpeed: 13,
+        accuracy: 1,
+        sight: 3
+    },
+
+    "Fallen-Booster": {
+        upgradesFrom: "Super-Booster",
+        level: 105,
+        turrets: 9,
+        bullets: 1,
+        bulletDamage: 1,
+        bulletPenatration: 1,
+        bulletSpeed: 1,
+        reload: 14.5,
+        healthRegen: 30,
+        maxHealth: 200,
+        bodyDamage: 30,
+        movementSpeed: 30,
+        accuracy: 1,
+        sight: 3
     },
 
     "Twin-Flank": {
