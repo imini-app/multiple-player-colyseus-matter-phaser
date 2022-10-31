@@ -176,6 +176,41 @@ const tankStats = {
         accuracy: 1
     },
 
+    "Fallen-Overlord": {
+        upgradesFrom: "Overseer",
+        level: 105,
+        turrets: 4,
+        bullets: 56,
+        ammunition: "drones",
+        bulletDamage: 25,
+        bulletPenatration: 25,
+        bulletSpeed: 25,
+        reload: 14.5,
+        healthRegen: 5,
+        maxHealth: 3000,
+        bodyDamage: 5,
+        movementSpeed: 5,
+        accuracy: 1
+    },
+
+    "Summoner": {
+        upgradesFrom: "Overlord",
+        level: 135,
+        turrets: 4,
+        bullets: 132,
+        ammunition: "drones",
+        bulletDamage: 50,
+        bulletPenatration: 7,
+        bulletSpeed: 25,
+        reload: 14.5,
+        healthRegen: 5,
+        maxHealth: 3000,
+        bodyDamage: 5,
+        movementSpeed: 5,
+        accuracy: 1
+    },
+
+
     "Mothership": {
         upgradesFrom: "Overlord",
         level: 135,
@@ -603,8 +638,8 @@ const tankStats = {
         bulletSpeed: 1,
         reload: 14.5,
         healthRegen: 5,
-        maxHealth: 1000,
-        bodyDamage: 1000,
+        maxHealth: 3000,
+        bodyDamage: 100,
         movementSpeed: 40,
         accuracy: 1,
         sight: 3
