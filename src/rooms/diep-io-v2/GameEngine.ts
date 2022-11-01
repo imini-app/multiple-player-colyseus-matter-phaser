@@ -418,7 +418,7 @@ export default class GameEngine {
                 { label: "playerCircle" }
             )
             this.circles[circle.id] = circle
-            this.state.createPlayerCircle(circle.id, playerId, startX + (x * size * 2), startY + (x * size * 2), size, (50 + (2 * (size / 50) - 1)))
+            this.state.createPlayerCircle(circle.id, playerId, startX + (x * size * 2), startY + (x * size * 2), size, (50 + (2 * (size / 50) - 1)),)
             Matter.Composite.add(this.world, [circle])
         }
     }

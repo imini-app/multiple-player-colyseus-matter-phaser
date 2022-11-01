@@ -16,6 +16,8 @@ export class PlayerCircleSchema extends Schema {
     playerId = ''
     @type("number")
     hp = 0
+    @type("number")
+    sight = 0
 }
 
 export class PlayerBulletSchema extends PlayerCircleSchema {
