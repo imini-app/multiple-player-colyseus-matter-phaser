@@ -147,30 +147,27 @@ export default class GameEngine {
         const sameOrNot = stateBulletA.playerId == stateBulletB.playerId
         if (sameOrNot) return
 
+        const stateBulletAHealth = stateBulletA.health
+        const stateBulletBHealth = stateBulletB.health
+
         let smallerBody = null
 
-        if (stateBulletA.size > stateBulletB.size) {
+        if (stateBulletAHealth > stateBulletBHealth) {
             smallerBody = bulletB
-            const sizeDifference = stateBulletA.size - stateBulletB.size
-            const pastSize = stateBulletA.size
-            if (sizeDifference > 10) {
-                stateBulletA.size = sizeDifference
-                const scaleDown = stateBulletA.size / pastSize
-                Matter.Body.scale(bulletA, scaleDown, scaleDown)
+            const healthDifference = stateBulletA.size - stateBulletB.size
+            if (healthDifference > 0) {
+                stateBulletA.health = healthDifference
             } else {
                 this.state.removePlayerBullet(bulletA.id)
                 Matter.Composite.remove(this.world, [bulletA])
             }
         }
 
-        if (stateBulletB.size > stateBulletA.size) {
+        if (stateBulletBHealth > stateBulletAHealth) {
             smallerBody = bulletA
-            const sizeDifference = stateBulletB.size - stateBulletA.size
-            const pastSize = stateBulletB.size
-            if (sizeDifference > 100) {
-                stateBulletB.size = sizeDifference
-                const scaleDown = stateBulletB.size / pastSize
-                Matter.Body.scale(bulletB, scaleDown, scaleDown)
+            const healthDifference = stateBulletB.size - stateBulletA.size
+            if (healthDifference > 0) {
+                stateBulletB.health = healthDifference
             } else {
                 this.state.removePlayerBullet(bulletB.id)
                 Matter.Composite.remove(this.world, [bulletB])
@@ -249,7 +246,7 @@ export default class GameEngine {
             this.circles[playerCircle.id] = playerCircle
 
             Matter.Composite.add(this.world, [playerCircle])
-            this.state.createPlayerCircle(playerCircle.id, statePlayerCircle?.playerId, startX, startY, initialSize, (initialSize + (2 * (initialSize / 50) - 1)))
+            this.state.createPlayerCircle(playerCircle.id, statePlayerCircle?.playerId, startX, startY, initialSize, (initialSize + (2 * (initialSize / 50) - 1)), 1, "Basic")
             if (statePlayer) statePlayer.score = initialScore
         }
     }
@@ -418,7 +415,7 @@ export default class GameEngine {
                 { label: "playerCircle" }
             )
             this.circles[circle.id] = circle
-            this.state.createPlayerCircle(circle.id, playerId, startX + (x * size * 2), startY + (x * size * 2), size, (50 + (2 * (size / 50) - 1)),)
+            this.state.createPlayerCircle(circle.id, playerId, startX + (x * size * 2), startY + (x * size * 2), size, (50 + (2 * (size / 50) - 1)), 1, "Basic")
             Matter.Composite.add(this.world, [circle])
         }
     }
@@ -446,11 +443,13 @@ export default class GameEngine {
             const yDist = targetY - initY;
             const angle = Math.atan2(yDist, xDist) + x / 10
             const velocityX = Math.cos(angle) * speed
-
             const velocityY = Math.sin(angle) * speed
 
+            const statePlayerCircleTankName = this.state.playerCircles.get(String(circleId)).tankName
+
             this.bullets[bullet.id] = bullet
-            this.state.createPlayerBullet(bullet.id, playerId, initX, initY, size, Number(circleId), size / damage * 2)
+            this.state.createPlayerBullet(bullet.id, playerId, initX, initY, size, Number(circleId),
+                tankStats[statePlayerCircleTankName].damage, tankStats[statePlayerCircleTankName].pentration)
             Matter.Body.setVelocity(bullet, { x: velocityX, y: velocityY })
             Matter.Composite.add(this.world, [bullet])
             setTimeout(() => {

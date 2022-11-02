@@ -18,6 +18,8 @@ export class PlayerCircleSchema extends Schema {
     hp = 0
     @type("number")
     sight = 0
+    @type("string")
+    tankName = ''
 }
 
 export class PlayerBulletSchema extends PlayerCircleSchema {
@@ -25,6 +27,8 @@ export class PlayerBulletSchema extends PlayerCircleSchema {
     circleId = ''
     @type("number")
     damage = 0
+    @type("number")
+    health
 }
 
 export class PlayerSchema extends Schema {

@@ -82,7 +82,7 @@ const tankStats = {
         bulletSpeed: 35,
         reload: 14,
         healthRegen: Infinity,
-        maxHealth: Infinity - 1,
+        maxHealth: 1000000,
         bodyDamage: Infinity,
         movementSpeed: 30,
         accuracy: "Life Span x Infinity",
