@@ -336,7 +336,7 @@ export default class GameEngine {
         const playerCircle = this.circles[stateBullet.circleId]
         if (!playerCircle) return
         const statePlayer = this.state.players.get(String(statePlayerCircle.playerId))
-        const objectAliveHpDifference = stateOrb.hp - stateBullet.damage
+        const objectAliveHpDifference = stateOrb.hp - stateBullet.damage * (stateBullet.health / (3 * 2.335 / 5 + 1.005265))
         if (objectAliveHpDifference > 0) {
             stateOrb.hp = objectAliveHpDifference
             this.state.removePlayerBullet(playerBullet.id)
@@ -347,8 +347,8 @@ export default class GameEngine {
         const currentScore = statePlayer.score
         const newScore = currentScore + xp
         statePlayer.score = newScore
-        if (currentSize < this.screenWidth / this.maxPlayerCircleSize) {
-            const newSize = currentSize + xp / 10
+        const newSize = currentSize + (xp / 10)
+        if (newSize < this.screenWidth / this.maxPlayerCircleSize) {
             statePlayerCircle.size = newSize
             const scaleUp = newSize / currentSize
             Matter.Body.scale(playerCircle, scaleUp, scaleUp)
