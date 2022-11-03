@@ -174,6 +174,23 @@ export default class GameEngine {
             }
         }
 
+        if (stateBulletBHealth == stateBulletAHealth) {
+            const damageDifference = stateBulletA.size - stateBulletB.size
+            if (damageDifference > 0) {
+                stateBulletA.damage = damageDifference
+                smallerBody = bulletB
+            } else if (damageDifference < 0) {
+                stateBulletB.damage = stateBulletB.size - stateBulletA.size
+                smallerBody = bulletA
+            } else {
+                this.state.removePlayerBullet(bulletA.id)
+                Matter.Composite.remove(this.world, [bulletA])
+                this.state.removePlayerBullet(bulletB.id)
+                Matter.Composite.remove(this.world, [bulletB])
+            }
+        }
+
+
         if (!smallerBody) return
         this.state.removePlayerBullet(smallerBody.id)
         Matter.Composite.remove(this.world, [smallerBody])
