@@ -213,7 +213,8 @@ export default class GameEngine {
             Matter.Composite.remove(this.world, [bullet])
             return
         }
-        const scoreUp = statePlayerCircle.size * 10
+        const scoreFormula = statePlayerCircle.size * 10
+        const scoreUp = scoreFormula >= 7500 ? 7500 : scoreFormula
         const sizeUp = statePlayerCircle.size
         this.state.players.get(statePlayerCircle.playerId).score -= scoreUp
         this.state.removePlayerBullet(bullet.id)
