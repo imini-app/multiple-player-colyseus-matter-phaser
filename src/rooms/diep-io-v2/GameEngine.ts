@@ -447,7 +447,7 @@ export default class GameEngine {
         }
     }
 
-    addPlayerBullet(playerId, targetX, targetY, initX, initY, circleId, size = 25, damage = 5, speed = 21, count = 1) {
+    addPlayerBullet(playerId, targetX, targetY, initX, initY, circleId, size = 25, speed = 21, count = 1) {
 
         for (let x = 0; x < count; x++) {
             const bullet = Matter.Bodies.circle(
@@ -466,7 +466,7 @@ export default class GameEngine {
             const statePlayerCircleTankName = this.state.playerCircles.get(String(circleId)).tankName
 
             this.bullets[bullet.id] = bullet
-            this.state.createPlayerBullet(bullet.id, playerId, initX, initY, size, Number(circleId),
+            this.state.createPlayerBullet(bullet.id, playerId, initX, initY, size, circleId,
                 tankStats[statePlayerCircleTankName].damage, tankStats[statePlayerCircleTankName].pentration)
             Matter.Body.setVelocity(bullet, { x: velocityX, y: velocityY })
             Matter.Composite.add(this.world, [bullet])
@@ -476,7 +476,7 @@ export default class GameEngine {
                 if (!this.state.playerBullets.get(String(bullet.id)).circleId) this.state.removePlayerBullet(bullet.id); Matter.Composite.remove(this.world, [bullet]);
                 this.state.removePlayerBullet(bullet.id)
                 Matter.Composite.remove(this.world, [bullet]);
-            }, 3500)
+            }, 3000)
         }
     }
     findPlayerCircles(playerId) {

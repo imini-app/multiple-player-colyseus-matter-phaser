@@ -107,10 +107,11 @@ export class StateSchema extends Schema {
         this.playerCircles.delete(String(worldId))
     }
 
-    createPlayerBullet(worldId: number, playerId: string, x: number, y: number, size: number, circleId: number, damage: number) {
+    createPlayerBullet(worldId: number, playerId: string, x: number, y: number, circleId: number, size: number, damage: number, health: number) {
         const newPlayerBullet = this.createPlayerObject(playerId, x, y, size, PlayerBulletSchema)
         newPlayerBullet.circleId = String(circleId)
         newPlayerBullet.damage = damage
+        newPlayerBullet.health = health
         this.playerBullets.set(String(worldId), newPlayerBullet)
     }
 
