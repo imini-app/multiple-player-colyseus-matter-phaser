@@ -28,7 +28,7 @@ export class PlayerBulletSchema extends PlayerCircleSchema {
     @type("number")
     damage = 0
     @type("number")
-    health
+    health = 0
 }
 
 export class PlayerSchema extends Schema {
@@ -36,6 +36,8 @@ export class PlayerSchema extends Schema {
     name = "Guest"
     @type('number')
     score = 0
+    @type("string")
+    tankName = ""
 }
 
 export class OrbSchema extends Schema {
@@ -86,10 +88,11 @@ export class StateSchema extends Schema {
         return newPlayerCircle
     }
 
-    createPlayer(sessionId: string, name: string, score: number) {
+    createPlayer(sessionId: string, name: string, score: number, tankName: string) {
         const newPlayer = new PlayerSchema();
         newPlayer.name = name;
         newPlayer.score = score;
+        newPlayer.tankName = tankName
         this.players.set(sessionId, newPlayer);
     }
 

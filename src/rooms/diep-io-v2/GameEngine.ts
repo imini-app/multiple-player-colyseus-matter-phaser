@@ -154,7 +154,7 @@ export default class GameEngine {
 
         if (stateBulletAHealth > stateBulletBHealth) {
             smallerBody = bulletB
-            const healthDifference = stateBulletA.size - stateBulletB.size
+            const healthDifference = stateBulletA.health - stateBulletB.health
             if (healthDifference > 0) {
                 stateBulletA.health = healthDifference
             } else {
@@ -165,7 +165,7 @@ export default class GameEngine {
 
         if (stateBulletBHealth > stateBulletAHealth) {
             smallerBody = bulletA
-            const healthDifference = stateBulletB.size - stateBulletA.size
+            const healthDifference = stateBulletB.health - stateBulletA.health
             if (healthDifference > 0) {
                 stateBulletB.health = healthDifference
             } else {
@@ -174,13 +174,13 @@ export default class GameEngine {
             }
         }
 
-        if (stateBulletBHealth == stateBulletAHealth) {
-            const damageDifference = stateBulletA.size - stateBulletB.size
+        if (stateBulletAHealth == stateBulletBHealth) {
+            const damageDifference = stateBulletA.damage - stateBulletB.damage
             if (damageDifference > 0) {
                 stateBulletA.damage = damageDifference
                 smallerBody = bulletB
             } else if (damageDifference < 0) {
-                stateBulletB.damage = stateBulletB.size - stateBulletA.size
+                stateBulletB.damage = stateBulletB.damage - stateBulletA.damage
                 smallerBody = bulletA
             } else {
                 this.state.removePlayerBullet(bulletA.id)
@@ -264,7 +264,7 @@ export default class GameEngine {
             this.circles[playerCircle.id] = playerCircle
 
             Matter.Composite.add(this.world, [playerCircle])
-            this.state.createPlayerCircle(playerCircle.id, statePlayerCircle?.playerId, startX, startY, initialSize, (initialSize + (2 * (initialSize / 50) - 1)), 1, "Basic")
+            this.state.createPlayerCircle(playerCircle.id, statePlayerCircle?.playerId, startX, startY, initialSize, (initialSize + (2 * (initialSize / 50) - 1)), 1, statePlayer.tankName)
             if (statePlayer) statePlayer.score = initialScore
         }
     }
@@ -412,7 +412,7 @@ export default class GameEngine {
     }
     addPlayer(sessionId, name) {
         const initialScore = 800
-        this.state.createPlayer(sessionId, name, initialScore)
+        this.state.createPlayer(sessionId, name, initialScore, "Basic")
 
         setTimeout(() => this.addPlayerCircle(sessionId, 1), 1000)
     }
