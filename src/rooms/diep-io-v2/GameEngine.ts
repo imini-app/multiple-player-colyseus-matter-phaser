@@ -324,8 +324,6 @@ export default class GameEngine {
                 destroyWhat = 'pentagon'
                 break;
             default:
-                xp = 10
-                destroyWhat = ''
                 break;
 
         }

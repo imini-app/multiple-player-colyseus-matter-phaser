@@ -1,5 +1,5 @@
-import { Room, Client } from "colyseus";
-import { Schema, type, MapSchema, ArraySchema } from "@colyseus/schema";
+import { Room } from "colyseus";
+import { Schema, type, MapSchema } from "@colyseus/schema";
 import GameEngine from "./diep-io-v2/GameEngine";
 import Matter from 'matter-js'
 
