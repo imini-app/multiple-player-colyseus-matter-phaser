@@ -53,6 +53,11 @@ export default class GameEngine {
         for (let x = 0; x < 2 * this.screenWidth / 1454.54545455; x++) {
             setTimeout(() => this.generateWall(), 1)
         }
+
+        for (let x = 0; x < 4; x++) {
+            setTimeout(() => this.generateAlphaPentagon(), 1)
+
+        }
         this.setupUpdateEvents()
         this.collision()
     }
@@ -335,6 +340,10 @@ export default class GameEngine {
                 xp = 130
                 destroyWhat = 'pentagon'
                 break;
+            case 'alphaPentagon':
+                xp = 3000
+                destroyWhat = 'alphaPentagon'
+                break;
             default:
                 break;
 
@@ -374,6 +383,8 @@ export default class GameEngine {
             this.generateTriangle()
         } else if (destroyWhat == 'pentagon') {
             this.generatePentagon()
+        } else if (destroyWhat == 'alphaPentagon') {
+            this.generateAlphaPentagon()
         } else {
             return
         }
@@ -405,6 +416,16 @@ export default class GameEngine {
         let orb = Matter.Bodies.polygon(x, y, 5, 50, { label: 'orb', isSensor: true })
         this.orbs[orb.id] = orb
         this.state.createOrb(orb.id, x, y, 'pentagon', 100)
+        Matter.Composite.add(this.world, [orb])
+    }
+
+    generateAlphaPentagon() {
+        let x = Math.random() * this.screenWidth
+        let y = Math.random() * this.screenHeight
+
+        let orb = Matter.Bodies.polygon(x, y, 5, 500, { label: 'orb', isSensor: true })
+        this.orbs[orb.id] = orb
+        this.state.createOrb(orb.id, x, y, 'alphaPentagon', 3000)
         Matter.Composite.add(this.world, [orb])
     }
 
