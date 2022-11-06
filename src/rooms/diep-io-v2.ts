@@ -143,6 +143,9 @@ export class StateSchema extends Schema {
         newWall.height = height;
         this.walls.set(String(worldId), newWall);
     }
+    removeWall(worldId: number) {
+        this.walls.delete(String(worldId));
+    }
 
 }
 

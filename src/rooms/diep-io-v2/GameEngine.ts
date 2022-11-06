@@ -29,11 +29,11 @@ export default class GameEngine {
             // Top wall
             Matter.Bodies.rectangle(this.screenWidth / 2, 0, this.screenWidth, 5, { isStatic: true }),
             // Bottom wall
-            Matter.Bodies.rectangle(this.screenWidth / 2, this.screenHeight, this.screenWidth, 5, { isStatic: true }),
+            Matter.Bodies.rectangle(this.screenWidth / 2, this.screenHeight, this.screenWidth, 5, { isStatic: true, label: 'mapEnd' }),
             // Right wall
-            Matter.Bodies.rectangle(this.screenWidth, this.screenHeight / 2, 5, this.screenHeight, { isStatic: true }),
+            Matter.Bodies.rectangle(this.screenWidth, this.screenHeight / 2, 5, this.screenHeight, { isStatic: true, label: 'mapEnd' }),
             // Left wall
-            Matter.Bodies.rectangle(0, this.screenHeight / 2, 5, this.screenHeight, { isStatic: true })
+            Matter.Bodies.rectangle(0, this.screenHeight / 2, 5, this.screenHeight, { isStatic: true, label: 'mapEnd' })
         ]
 
         Matter.Composite.add(this.world, walls)
@@ -133,6 +133,18 @@ export default class GameEngine {
                 if (bodyA.label == "playerCircle" && bodyB.label == "playerBullet") {
                     this.bulletHitPlayerCircle(bodyB, bodyA)
 
+                }
+
+                if (bodyA.label == "wall" && bodyB.label == "mapEnd") {
+                    this.state.removeWall(bodyA.id)
+                    Matter.Composite.remove(this.world, [bodyA])
+                    this.generateWall()
+                }
+
+                if (bodyA.label == "mapEnd" && bodyB.label == "wall") {
+                    this.state.removeWall(bodyB.id)
+                    Matter.Composite.remove(this.world, [bodyB])
+                    this.generateWall()
                 }
 
             }
