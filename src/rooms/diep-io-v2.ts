@@ -100,9 +100,11 @@ export class StateSchema extends Schema {
         this.players.delete(sessionId);
     }
 
-    createPlayerCircle(worldId: number, playerId: string, x: number, y: number, size: number, hp: number) {
+    createPlayerCircle(worldId: number, playerId: string, x: number, y: number, size: number, hp: number, sight: number, tankName: string) {
         const newPlayerCircle = this.createPlayerObject(playerId, x, y, size, PlayerCircleSchema)
         newPlayerCircle.hp = hp
+        newPlayerCircle.sight = sight
+        newPlayerCircle.tankName = tankName
         this.playerCircles.set(String(worldId), newPlayerCircle)
     }
 

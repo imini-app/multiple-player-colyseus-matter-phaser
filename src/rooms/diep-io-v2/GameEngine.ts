@@ -498,7 +498,7 @@ export default class GameEngine {
 
             this.bullets[bullet.id] = bullet
             this.state.createPlayerBullet(bullet.id, playerId, initX, initY, size, circleId,
-                tankStats[statePlayerCircleTankName].damage, tankStats[statePlayerCircleTankName].pentration)
+                tankStats[statePlayerCircleTankName].bulletDamage, tankStats[statePlayerCircleTankName].bulletPentration)
             Matter.Body.setVelocity(bullet, { x: velocityX, y: velocityY })
             Matter.Composite.add(this.world, [bullet])
             setTimeout(() => {
@@ -580,7 +580,7 @@ export default class GameEngine {
                 playerCircle.position.x,
                 playerCircle.position.y,
                 playerCircle.id,
-                size
+                1
             )
         }
     }
