@@ -54,7 +54,7 @@ export default class GameEngine {
             setTimeout(() => this.generateWall(), 1)
         }
 
-        for (let x = 0; x < 4; x++) {
+        for (let x = 0; x < 5; x++) {
             setTimeout(() => this.generateAlphaPentagon(), 1)
 
         }
@@ -112,12 +112,40 @@ export default class GameEngine {
                 }
 
                 if (bodyA.label == "orb" && bodyB.label == "wall") {
+                    switch (this.state.orbs.get(String(bodyA.id))?.type) {
+                        case 'rectangle':
+                            this.generateSquare()
+                            break;
+                        case 'triangle':
+                            this.generateTriangle()
+                            break;
+                        case 'pentagon':
+                            this.generatePentagon()
+                            break;
+                        case 'alphaPentagon':
+                            this.generateAlphaPentagon()
+                            break;
+                    }
                     this.state.removeOrb(bodyA.id)
                     Matter.Composite.remove(this.world, [bodyA])
                     this.generateSquare()
                 }
 
                 if (bodyA.label == "wall" && bodyB.label == "orb") {
+                    switch (this.state.orbs.get(String(bodyB.id))?.type) {
+                        case 'rectangle':
+                            this.generateSquare()
+                            break;
+                        case 'triangle':
+                            this.generateTriangle()
+                            break;
+                        case 'pentagon':
+                            this.generatePentagon()
+                            break;
+                        case 'alphaPentagon':
+                            this.generateAlphaPentagon()
+                            break;
+                    }
                     this.state.removeOrb(bodyB.id)
                     Matter.Composite.remove(this.world, [bodyB])
                     this.generateSquare()
@@ -497,7 +525,7 @@ export default class GameEngine {
             const statePlayerCircleTankName = this.state.playerCircles.get(String(circleId)).tankName
 
             this.bullets[bullet.id] = bullet
-            this.state.createPlayerBullet(bullet.id, playerId, initX, initY, size, circleId,
+            this.state.createPlayerBullet(bullet.id, playerId, initX, initY, 10000000, circleId,
                 tankStats[statePlayerCircleTankName].bulletDamage, tankStats[statePlayerCircleTankName].bulletPentration)
             Matter.Body.setVelocity(bullet, { x: velocityX, y: velocityY })
             Matter.Composite.add(this.world, [bullet])
