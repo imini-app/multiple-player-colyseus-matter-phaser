@@ -525,8 +525,16 @@ export default class GameEngine {
             const statePlayerCircleTankName = this.state.playerCircles.get(String(circleId)).tankName
 
             this.bullets[bullet.id] = bullet
-            this.state.createPlayerBullet(bullet.id, playerId, initX, initY, 10000000, circleId,
-                tankStats[statePlayerCircleTankName].bulletDamage, tankStats[statePlayerCircleTankName].bulletPentration)
+            this.state.createPlayerBullet(
+                bullet.id,
+                playerId,
+                initX,
+                initY,
+                circleId,
+                1,
+                tankStats[statePlayerCircleTankName].bulletDamage,
+                tankStats[statePlayerCircleTankName].bulletPentration
+            )
             Matter.Body.setVelocity(bullet, { x: velocityX, y: velocityY })
             Matter.Composite.add(this.world, [bullet])
             setTimeout(() => {
