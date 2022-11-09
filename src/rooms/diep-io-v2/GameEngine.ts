@@ -54,7 +54,7 @@ export default class GameEngine {
             setTimeout(() => this.generateWall(), 1)
         }
 
-        for (let x = 0; x < 5; x++) {
+        for (let x = 0; x < 7; x++) {
             setTimeout(() => this.generateAlphaPentagon(), 1)
 
         }
@@ -383,7 +383,7 @@ export default class GameEngine {
         const playerCircle = this.circles[stateBullet.circleId]
         if (!playerCircle) return
         const statePlayer = this.state.players.get(String(statePlayerCircle.playerId))
-        const objectAliveHpDifference = stateOrb.hp - stateBullet.damage * (stateBullet.health / (3 * 2.335 / 5 + 1.005265))
+        const objectAliveHpDifference = stateOrb.hp - stateBullet.damage
         if (objectAliveHpDifference > 0) {
             stateOrb.hp = objectAliveHpDifference
             this.state.removePlayerBullet(playerBullet.id)
@@ -424,7 +424,7 @@ export default class GameEngine {
 
         let orb = Matter.Bodies.rectangle(x, y, 30, 30, { label: 'orb', isSensor: true })
         this.orbs[orb.id] = orb
-        this.state.createOrb(orb.id, x, y, 'rectangle', 10)
+        this.state.createOrb(orb.id, x, y, 'rectangle', 10, 1)
         Matter.Composite.add(this.world, [orb])
     }
     generateTriangle() {
@@ -433,7 +433,7 @@ export default class GameEngine {
 
         let orb = Matter.Bodies.polygon(x, y, 3, 30, { label: 'orb', isSensor: true })
         this.orbs[orb.id] = orb
-        this.state.createOrb(orb.id, x, y, 'triangle', 30)
+        this.state.createOrb(orb.id, x, y, 'triangle', 30, 1)
         Matter.Composite.add(this.world, [orb])
     }
 
@@ -443,7 +443,7 @@ export default class GameEngine {
 
         let orb = Matter.Bodies.polygon(x, y, 5, 50, { label: 'orb', isSensor: true })
         this.orbs[orb.id] = orb
-        this.state.createOrb(orb.id, x, y, 'pentagon', 100)
+        this.state.createOrb(orb.id, x, y, 'pentagon', 100, 1)
         Matter.Composite.add(this.world, [orb])
     }
 
@@ -453,7 +453,7 @@ export default class GameEngine {
 
         let orb = Matter.Bodies.polygon(x, y, 5, 500, { label: 'orb', isSensor: true })
         this.orbs[orb.id] = orb
-        this.state.createOrb(orb.id, x, y, 'alphaPentagon', 3000)
+        this.state.createOrb(orb.id, x, y, 'alphaPentagon', 3000, 4)
         Matter.Composite.add(this.world, [orb])
     }
 
@@ -506,7 +506,7 @@ export default class GameEngine {
         }
     }
 
-    addPlayerBullet(playerId, targetX, targetY, initX, initY, circleId, size = 25, speed = 21, count = 1) {
+    addPlayerBullet(playerId, targetX, targetY, initX, initY, circleId, size = 25, count = 1) {
 
         for (let x = 0; x < count; x++) {
             const bullet = Matter.Bodies.circle(
@@ -515,14 +515,15 @@ export default class GameEngine {
                 size,
                 { label: "playerBullet", friction: 0, isSensor: true, frictionAir: 0 }
             )
+
+            const statePlayerCircleTankName = this.state.playerCircles.get(String(circleId)).tankName
+            const speed = tankStats[statePlayerCircleTankName].bulletSpeed
             // Velocity stuff
             const xDist = targetX - initX;
             const yDist = targetY - initY;
             const angle = Math.atan2(yDist, xDist) + x / 10
             const velocityX = Math.cos(angle) * speed
             const velocityY = Math.sin(angle) * speed
-
-            const statePlayerCircleTankName = this.state.playerCircles.get(String(circleId)).tankName
 
             this.bullets[bullet.id] = bullet
             this.state.createPlayerBullet(
@@ -531,7 +532,7 @@ export default class GameEngine {
                 initX,
                 initY,
                 circleId,
-                1,
+                size,
                 tankStats[statePlayerCircleTankName].bulletDamage,
                 tankStats[statePlayerCircleTankName].bulletPentration
             )
@@ -603,7 +604,7 @@ export default class GameEngine {
         const playerCircles = this.findPlayerCircles(playerId)
         for (const playerCircle of playerCircles) {
             let size = (playerCircle.circleRadius / 4)
-            if ((playerCircle.circleRadius / 4) < (this.maxPlayerCircleSize / 7)) size = this.maxPlayerCircleSize / 5
+            if (size < (this.maxPlayerCircleSize / 7)) size = this.maxPlayerCircleSize / 5
             this.pointCircleToTargetXY(
                 targets.targetX,
                 targets.targetY,
@@ -616,7 +617,7 @@ export default class GameEngine {
                 playerCircle.position.x,
                 playerCircle.position.y,
                 playerCircle.id,
-                1
+                size
             )
         }
     }

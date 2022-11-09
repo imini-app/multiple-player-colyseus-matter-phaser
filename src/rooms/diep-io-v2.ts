@@ -49,6 +49,8 @@ export class OrbSchema extends Schema {
     type = ''
     @type("number")
     hp = 0
+    @type("number")
+    hpBarSizeMultiplier = 0
 }
 
 export class WallSchema extends Schema {
@@ -133,12 +135,13 @@ export class StateSchema extends Schema {
         this.playerBullets.delete(String(worldId))
     }
 
-    createOrb(worldId: number, x: number, y: number, type: string, hp: number) {
+    createOrb(worldId: number, x: number, y: number, type: string, hp: number, hpBarSizeMultiplier: number) {
         const newOrb = new OrbSchema();
         newOrb.x = x;
         newOrb.y = y;
         newOrb.type = type
         newOrb.hp = hp
+        newOrb.hpBarSizeMultiplier = hpBarSizeMultiplier
         this.orbs.set(String(worldId), newOrb);
     }
 
