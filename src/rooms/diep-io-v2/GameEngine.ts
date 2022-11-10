@@ -422,7 +422,7 @@ export default class GameEngine {
         let x = Math.random() * this.screenWidth
         let y = Math.random() * this.screenHeight
 
-        let orb = Matter.Bodies.rectangle(x, y, 30, 30, { label: 'orb', isSensor: true })
+        let orb = Matter.Bodies.rectangle(x, y, 30, 30, { label: 'orb', isStatic: true })
         this.orbs[orb.id] = orb
         this.state.createOrb(orb.id, x, y, 'rectangle', 10, 1)
         Matter.Composite.add(this.world, [orb])
@@ -431,9 +431,9 @@ export default class GameEngine {
         let x = Math.random() * this.screenWidth
         let y = Math.random() * this.screenHeight
 
-        let orb = Matter.Bodies.polygon(x, y, 3, 30, { label: 'orb', isSensor: true })
+        let orb = Matter.Bodies.polygon(x, y, 3, 30, { label: 'orb', isStatic: true })
         this.orbs[orb.id] = orb
-        this.state.createOrb(orb.id, x, y, 'triangle', 30, 1)
+        this.state.createOrb(orb.id, x, y, 'triangle', 30, 1.25)
         Matter.Composite.add(this.world, [orb])
     }
 
@@ -441,9 +441,9 @@ export default class GameEngine {
         let x = Math.random() * this.screenWidth
         let y = Math.random() * this.screenHeight
 
-        let orb = Matter.Bodies.polygon(x, y, 5, 50, { label: 'orb', isSensor: true })
+        let orb = Matter.Bodies.polygon(x, y, 5, 50, { label: 'orb', isStatic: true })
         this.orbs[orb.id] = orb
-        this.state.createOrb(orb.id, x, y, 'pentagon', 100, 1)
+        this.state.createOrb(orb.id, x, y, 'pentagon', 100, 1.5)
         Matter.Composite.add(this.world, [orb])
     }
 
@@ -451,9 +451,9 @@ export default class GameEngine {
         let x = Math.random() * this.screenWidth
         let y = Math.random() * this.screenHeight
 
-        let orb = Matter.Bodies.polygon(x, y, 5, 500, { label: 'orb', isSensor: true })
+        let orb = Matter.Bodies.polygon(x, y, 5, 500, { label: 'orb', isStatic: true })
         this.orbs[orb.id] = orb
-        this.state.createOrb(orb.id, x, y, 'alphaPentagon', 3000, 4)
+        this.state.createOrb(orb.id, x, y, 'alphaPentagon', 3000, 5)
         Matter.Composite.add(this.world, [orb])
     }
 
@@ -506,7 +506,9 @@ export default class GameEngine {
         }
     }
 
-    addPlayerBullet(playerId, targetX, targetY, initX, initY, circleId, size = 25, count = 1) {
+    addPlayerBullet(playerId, targetX, targetY, initX, initY, circleId, size = 25,) {
+        const statePlayerCircleTankName = this.state.playerCircles.get(String(circleId)).tankName
+        const count = tankStats[statePlayerCircleTankName].bullets
 
         for (let x = 0; x < count; x++) {
             const bullet = Matter.Bodies.circle(
@@ -516,7 +518,6 @@ export default class GameEngine {
                 { label: "playerBullet", friction: 0, isSensor: true, frictionAir: 0 }
             )
 
-            const statePlayerCircleTankName = this.state.playerCircles.get(String(circleId)).tankName
             const speed = tankStats[statePlayerCircleTankName].bulletSpeed
             // Velocity stuff
             const xDist = targetX - initX;
