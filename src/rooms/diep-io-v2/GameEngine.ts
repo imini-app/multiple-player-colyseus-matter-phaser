@@ -94,11 +94,11 @@ export default class GameEngine {
                 let bodyA = pair.bodyA
                 let bodyB = pair.bodyB
                 if (bodyA.label == "playerBullet" && bodyB.label == "orb") {
-                    this.playEatOrb(bodyA, bodyB)
+                    this.bulletHitOrb(bodyA, bodyB)
                 }
 
                 if (bodyA.label == "orb" && bodyB.label == "playerBullet") {
-                    this.playEatOrb(bodyB, bodyA)
+                    this.bulletHitOrb(bodyB, bodyA)
                 }
 
                 if (bodyA.label == "playerBullet" && bodyB.label == "wall") {
@@ -152,7 +152,7 @@ export default class GameEngine {
                 }
 
                 if (bodyA.label == "playerCircle" && bodyB.label == "playerCircle") {
-                    this.playerEatPlayer(bodyA, bodyB)
+                    this.playerTouchPlayer(bodyA, bodyB)
 
                 }
 
@@ -182,6 +182,45 @@ export default class GameEngine {
 
             }
         })
+    }
+
+    levelUp(statePlayerCircle) {
+        const statePlayer = this.state.players.get(String(statePlayerCircle.playerId))
+        const statePlayerScore = statePlayer.score
+        const newLevel = Math.floor(statePlayerScore / 100) - 8
+
+        this.upgradePlayer(newLevel, statePlayer)
+    }
+
+    upgradePlayer(level, statePlayer) {
+        const currentTank = statePlayer.tankName
+        const currentLevel = statePlayer.level
+        if (level >= 15 || level >= 30 || level >= 45 || level >= 60 || level >= 105 || level >= 135 || level >= 270 || level >= 995) {
+
+            const listOfTanksToUpgradeTo = []
+            const tankKeys = []
+
+            let x = 0
+            for (const tankName of tankStats[currentTank].upgradesTo) {
+                listOfTanksToUpgradeTo.push(tankName)
+                tankKeys.push(x)
+                x++
+            }
+
+            for (const tankName of listOfTanksToUpgradeTo) {
+                if (tankStats[tankName].level > currentLevel) {
+                    const id = listOfTanksToUpgradeTo.indexOf(tankName)
+                    listOfTanksToUpgradeTo.splice(id, 1)
+                }
+            }
+
+            this.displayTanksToUpgrade(listOfTanksToUpgradeTo)
+
+        }
+    }
+
+    displayTanksToUpgrade(listOfTanks) {
+
     }
 
     bulletHitBullet(bulletA, bulletB) {
@@ -314,7 +353,7 @@ export default class GameEngine {
         }
     }
 
-    playerEatPlayer(playerA, playerB) {
+    playerTouchPlayer(playerA, playerB) {
         const statePlayerACircle = this.state.playerCircles.get(String(playerA.id))
 
         const statePlayerBCircle = this.state.playerCircles.get(String(playerB.id))
@@ -350,7 +389,7 @@ export default class GameEngine {
         this.resetPlayer(smallerPlayerCircle, smallerBody, samePlayer)
     }
 
-    playEatOrb(playerBullet, orb) {
+    bulletHitOrb(playerBullet, orb) {
         let xp = 10
         let destroyWhat;
         const stateOrb = this.state.orbs.get(String(orb?.id))
@@ -443,7 +482,7 @@ export default class GameEngine {
 
         let orb = Matter.Bodies.polygon(x, y, 5, 50, { label: 'orb', isStatic: true })
         this.orbs[orb.id] = orb
-        this.state.createOrb(orb.id, x, y, 'pentagon', 100, 1.5)
+        this.state.createOrb(orb.id, x, y, 'pentagon', 100, 1)
         Matter.Composite.add(this.world, [orb])
     }
 
@@ -451,9 +490,9 @@ export default class GameEngine {
         let x = Math.random() * this.screenWidth
         let y = Math.random() * this.screenHeight
 
-        let orb = Matter.Bodies.polygon(x, y, 5, 500, { label: 'orb', isStatic: true })
+        let orb = Matter.Bodies.polygon(x, y, 5, 250, { label: 'orb', isStatic: true })
         this.orbs[orb.id] = orb
-        this.state.createOrb(orb.id, x, y, 'alphaPentagon', 3000, 5)
+        this.state.createOrb(orb.id, x, y, 'alphaPentagon', 3000, 2.5)
         Matter.Composite.add(this.world, [orb])
     }
 

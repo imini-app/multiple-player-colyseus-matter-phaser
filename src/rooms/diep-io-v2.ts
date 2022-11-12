@@ -34,8 +34,10 @@ export class PlayerBulletSchema extends PlayerCircleSchema {
 export class PlayerSchema extends Schema {
     @type("string")
     name = "Guest"
-    @type('number')
+    @type("number")
     score = 0
+    @type("number")
+    level = 0
     @type("string")
     tankName = ""
 }
@@ -95,6 +97,7 @@ export class StateSchema extends Schema {
         newPlayer.name = name;
         newPlayer.score = score;
         newPlayer.tankName = tankName
+        newPlayer.level = 1
         this.players.set(sessionId, newPlayer);
     }
 

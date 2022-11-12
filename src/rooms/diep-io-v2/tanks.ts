@@ -12,7 +12,8 @@ const tankStats = {
         maxHealth: 51,
         bodyDamage: 1,
         movementSpeed: 3,
-        accuracy: 1
+        accuracy: 1,
+        upgradesTo: ["BasicRammer", "BasicDroneUser", "Sniper", "Twin", "Flank-Guard", "Machine-Gun"]
     },
 
     "StormBasic": {
