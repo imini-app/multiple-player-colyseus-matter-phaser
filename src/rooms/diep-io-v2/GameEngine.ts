@@ -220,7 +220,18 @@ export default class GameEngine {
     }
 
     displayTanksToUpgrade(listOfTanks) {
+        const createdTanks = []
+        for (const tankName of listOfTanks) {
+            const newTankImage = this.generateTankImage(tankStats[tankName])
+            createdTanks.push(newTankImage)
+        }
 
+        // TODO: Pass through info to state createdTanks == info
+    }
+
+    generateTankImage(tankObject) {
+        if (tankObject.ammunition == false) return
+        const tankImageStats = [tankObject.turrets, tankObject.accuracy, tankObject.ammunition]
     }
 
     bulletHitBullet(bulletA, bulletB) {
