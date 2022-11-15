@@ -232,6 +232,15 @@ export default class GameEngine {
     generateTankImage(tankObject) {
         if (tankObject.ammunition == false) return
         const tankImageStats = [tankObject.turrets, tankObject.accuracy, tankObject.ammunition]
+        // TODO: create the actual image
+
+        const tankImage = null
+
+        const background = Matter.Bodies.rectangle() // TODO: Set it to the corner position
+        const tankIcon = Matter.Composite.create()
+        tankIcon.add(tankImage)
+        tankIcon.add(background)
+        return tankIcon
     }
 
     bulletHitBullet(bulletA, bulletB) {
