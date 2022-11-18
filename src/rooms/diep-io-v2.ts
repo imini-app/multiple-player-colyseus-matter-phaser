@@ -2,6 +2,7 @@ import { Room } from "colyseus";
 import { Schema, type, MapSchema } from "@colyseus/schema";
 import GameEngine from "./diep-io-v2/GameEngine";
 import Matter from 'matter-js'
+import tankStats from "./diep-io-v2/tanks"
 
 export class PlayerCircleSchema extends Schema {
     @type("number")
@@ -40,6 +41,8 @@ export class PlayerSchema extends Schema {
     level = 0
     @type("string")
     tankName = ""
+    @type("string")
+    tankUpgradeNames = ""
 }
 
 export class OrbSchema extends Schema {
@@ -82,6 +85,9 @@ export class StateSchema extends Schema {
 
     @type({ map: WallSchema })
     walls = new MapSchema<WallSchema>();
+
+    @type("string")
+    tanks = JSON.stringify(tankStats)
 
     createPlayerObject(playerId: string, x: number, y: number, size: number, schema: any) {
         const newPlayerCircle = new schema()

@@ -187,12 +187,13 @@ export default class GameEngine {
     levelUp(statePlayerCircle) {
         const statePlayer = this.state.players.get(String(statePlayerCircle.playerId))
         const statePlayerScore = statePlayer.score
-        const newLevel = Math.floor(statePlayerScore / 100) - 8
-
+        const newLevel = Math.floor(statePlayerScore / 5) - 8
+        statePlayer.level = newLevel
         this.upgradePlayer(newLevel, statePlayer)
     }
 
     upgradePlayer(level, statePlayer) {
+
         const currentTank = statePlayer.tankName
         const currentLevel = statePlayer.level
         if (level >= 15 || level >= 30 || level >= 45 || level >= 60 || level >= 105 || level >= 135 || level >= 270 || level >= 995) {
@@ -214,34 +215,10 @@ export default class GameEngine {
                 }
             }
 
-            this.displayTanksToUpgrade(listOfTanksToUpgradeTo)
-
+            statePlayer.tankUpgradeNames = JSON.stringify(listOfTanksToUpgradeTo)
         }
     }
 
-    displayTanksToUpgrade(listOfTanks) {
-        const createdTanks = []
-        for (const tankName of listOfTanks) {
-            const newTankImage = this.generateTankImage(tankStats[tankName])
-            createdTanks.push(newTankImage)
-        }
-
-        // TODO: Pass through info to state createdTanks == info
-    }
-
-    generateTankImage(tankObject) {
-        if (tankObject.ammunition == false) return
-        const tankImageStats = [tankObject.turrets, tankObject.accuracy, tankObject.ammunition]
-        // TODO: create the actual image
-
-        const tankImage = null
-
-        const background = Matter.Bodies.rectangle() // TODO: Set it to the corner position
-        const tankIcon = Matter.Composite.create()
-        tankIcon.add(tankImage)
-        tankIcon.add(background)
-        return tankIcon
-    }
 
     bulletHitBullet(bulletA, bulletB) {
         const stateBulletA = this.state.playerBullets.get(String(bulletA.id))
@@ -464,6 +441,9 @@ export default class GameEngine {
         Matter.Composite.remove(this.world, [playerBullet])
         this.state.removeOrb(orb.id)
         Matter.Composite.remove(this.world, [orb])
+
+        this.levelUp(statePlayerCircle)
+
         if (destroyWhat == 'rectangle') {
             this.generateSquare()
         } else if (destroyWhat == 'triangle') {
