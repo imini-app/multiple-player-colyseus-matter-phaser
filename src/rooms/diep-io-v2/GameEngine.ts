@@ -643,6 +643,9 @@ export default class GameEngine {
     processPlayerBullet(playerId, targets) {
         const playerCircles = this.findPlayerCircles(playerId)
         for (const playerCircle of playerCircles) {
+            // const statePlayerCircle = this.state.playerCircles.get(String(playerCircle.id))
+            // if (!statePlayerCircle) return
+            console.log(playerCircle)
             let size = (playerCircle.circleRadius / 4)
             if (size < (this.maxPlayerCircleSize / 7)) size = this.maxPlayerCircleSize / 5
             this.pointCircleToTargetXY(
@@ -670,6 +673,15 @@ export default class GameEngine {
                 targets.targetY,
                 playerCircle
             )
+        }
+    }
+
+    processPlayerUpgrade(playerId, tankName) {
+        const playerCircles = this.findPlayerCircles(playerId)
+        for (const playerCircle of playerCircles) {
+            const statePlayerCircle = this.state.playerCircles.get(String(playerCircle.id))
+            if (!statePlayerCircle) return
+            statePlayerCircle.bulletSize = 2
         }
     }
 

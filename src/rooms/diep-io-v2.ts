@@ -21,6 +21,8 @@ export class PlayerCircleSchema extends Schema {
     sight = 0
     @type("string")
     tankName = ''
+    @type("number")
+    bulletSize = 1
 }
 
 export class PlayerBulletSchema extends PlayerCircleSchema {
@@ -200,6 +202,10 @@ export class GameRoom extends Room {
 
         this.onMessage("shoot", (client, message) => {
             this.engine.processPlayerBullet(client.sessionId, message)
+        })
+
+        this.onMessage("upgrade", (client, message) => {
+            this.engine.processPlayerUpgrade(client.sessionId, message)
         })
         this.setSimulationInterval((deltaTime) => this.update(deltaTime));
     }
