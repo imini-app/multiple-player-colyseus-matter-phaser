@@ -237,7 +237,7 @@ const tankStats = {
         level: 15,
         turrets: 1,
         bullets: 1,
-        bulletDamage: 4,
+        bulletDamage: 8,
         bulletPenatration: 4,
         bulletSpeed: 20,
         reload: 3,

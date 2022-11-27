@@ -530,7 +530,9 @@ export default class GameEngine {
                 size,
                 { label: "playerCircle" }
             )
+
             this.circles[circle.id] = circle
+
             this.state.createPlayerCircle(circle.id, playerId, startX + (x * size * 2), startY + (x * size * 2), size, (50 + (2 * (size / 50) - 1)), 1, "Basic")
             Matter.Composite.add(this.world, [circle])
         }
@@ -545,7 +547,7 @@ export default class GameEngine {
         }
     }
 
-    addPlayerBullet(playerId, targetX, targetY, initX, initY, circleId, size = 25,) {
+    addPlayerBullet(playerId, targetX, targetY, initX, initY, circleId, size = 25) {
         const statePlayerCircleTankName = this.state.playerCircles.get(String(circleId)).tankName
         const count = tankStats[statePlayerCircleTankName].bullets
 
@@ -681,7 +683,20 @@ export default class GameEngine {
         for (const playerCircle of playerCircles) {
             const statePlayerCircle = this.state.playerCircles.get(String(playerCircle.id))
             if (!statePlayerCircle) return
-            statePlayerCircle.bulletSize = 2
+            const statePlayer = this.state.playerCircles.get(String(statePlayerCircle.playerId))
+            if (!statePlayer) return
+
+            const playerCircleId = playerCircle.id
+            const playerX = statePlayerCircle.x
+            const playerY = statePlayerCircle.y
+            const playerSize = statePlayerCircle.size
+            const playerId = statePlayerCircle.playerId
+
+            this.state.removePlayerCircle(String(playerCircleId))
+
+            this.state.createPlayerCircle(playerCircleId, playerId, playerX, playerY, playerSize, (50 + (2 * (playerSize / 50) - 1)), 1, tankName)
+
+            statePlayer.tankName = tankName
         }
     }
 

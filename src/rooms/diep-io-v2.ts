@@ -21,8 +21,6 @@ export class PlayerCircleSchema extends Schema {
     sight = 0
     @type("string")
     tankName = ''
-    @type("number")
-    bulletSize = 1
 }
 
 export class PlayerBulletSchema extends PlayerCircleSchema {
