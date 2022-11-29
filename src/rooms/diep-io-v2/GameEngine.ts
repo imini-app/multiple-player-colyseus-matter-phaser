@@ -187,7 +187,7 @@ export default class GameEngine {
     levelUp(statePlayerCircle) {
         const statePlayer = this.state.players.get(String(statePlayerCircle.playerId))
         const statePlayerScore = statePlayer.score
-        const newLevel = Math.floor(statePlayerScore / 5) - 8
+        const newLevel = Math.floor(statePlayerScore / 10) - 8
         statePlayer.level = newLevel
         this.upgradePlayer(newLevel, statePlayer)
     }
@@ -202,10 +202,13 @@ export default class GameEngine {
             const tankKeys = []
 
             let x = 0
-            for (const tankName of tankStats[currentTank].upgradesTo) {
-                listOfTanksToUpgradeTo.push(tankName)
-                tankKeys.push(x)
-                x++
+            for (const tankName in tankStats) {
+                const tankObject = tankStats[tankName]
+                if (tankObject.upgradesFrom == String(currentTank) && tankObject.level <= currentLevel) {
+                    listOfTanksToUpgradeTo.push(tankName)
+                    tankKeys.push(x)
+                    x++
+                }
             }
 
             for (const tankName of listOfTanksToUpgradeTo) {
@@ -645,9 +648,6 @@ export default class GameEngine {
     processPlayerBullet(playerId, targets) {
         const playerCircles = this.findPlayerCircles(playerId)
         for (const playerCircle of playerCircles) {
-            // const statePlayerCircle = this.state.playerCircles.get(String(playerCircle.id))
-            // if (!statePlayerCircle) return
-            console.log(playerCircle)
             let size = (playerCircle.circleRadius / 4)
             if (size < (this.maxPlayerCircleSize / 7)) size = this.maxPlayerCircleSize / 5
             this.pointCircleToTargetXY(
@@ -683,7 +683,7 @@ export default class GameEngine {
         for (const playerCircle of playerCircles) {
             const statePlayerCircle = this.state.playerCircles.get(String(playerCircle.id))
             if (!statePlayerCircle) return
-            const statePlayer = this.state.playerCircles.get(String(statePlayerCircle.playerId))
+            const statePlayer = this.state.players.get(String(statePlayerCircle.playerId))
             if (!statePlayer) return
 
             const playerCircleId = playerCircle.id
