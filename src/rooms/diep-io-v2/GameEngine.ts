@@ -187,7 +187,7 @@ export default class GameEngine {
     levelUp(statePlayerCircle) {
         const statePlayer = this.state.players.get(String(statePlayerCircle.playerId))
         const statePlayerScore = statePlayer.score
-        const newLevel = Math.floor(statePlayerScore / 10) - 8
+        const newLevel = Math.floor(statePlayerScore / 10) - 80
         statePlayer.level = newLevel
         this.upgradePlayer(newLevel, statePlayer)
     }
