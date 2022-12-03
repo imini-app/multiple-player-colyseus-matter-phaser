@@ -151,10 +151,6 @@ export default class GameEngine {
                     this.generateSquare()
                 }
 
-                if (bodyA.label == "playerCircle" && bodyB.label == "playerCircle") {
-                    this.playerTouchPlayer(bodyA, bodyB)
-
-                }
 
                 if (bodyA.label == "playerBullet" && bodyB.label == "playerBullet") {
                     this.bulletHitBullet(bodyA, bodyB)
@@ -187,7 +183,7 @@ export default class GameEngine {
     levelUp(statePlayerCircle) {
         const statePlayer = this.state.players.get(String(statePlayerCircle.playerId))
         const statePlayerScore = statePlayer.score
-        const newLevel = Math.floor(statePlayerScore / 10) - 80
+        const newLevel = Math.floor(statePlayerScore / 25) - 32
         statePlayer.level = newLevel
         this.upgradePlayer(newLevel, statePlayer)
     }
@@ -299,7 +295,7 @@ export default class GameEngine {
         }
         const scoreFormula = statePlayerCircle.size * 10
         const scoreUp = scoreFormula >= 7500 ? 7500 : scoreFormula
-        const sizeUp = statePlayerCircle.size
+        const sizeUp = statePlayerCircle.size / 10
         this.state.players.get(statePlayerCircle.playerId).score -= scoreUp
         this.state.removePlayerBullet(bullet.id)
         Matter.Composite.remove(this.world, [bullet])
@@ -348,45 +344,9 @@ export default class GameEngine {
             this.circles[playerCircle.id] = playerCircle
 
             Matter.Composite.add(this.world, [playerCircle])
-            this.state.createPlayerCircle(playerCircle.id, statePlayerCircle?.playerId, startX, startY, initialSize, (initialSize + (2 * (initialSize / 50) - 1)), 1, statePlayer.tankName)
+            this.state.createPlayerCircle(playerCircle.id, statePlayerCircle?.playerId, startX, startY, initialSize, (initialSize + (2 * (initialSize / 50) - 1)), 1, "Basic")
             if (statePlayer) statePlayer.score = initialScore
         }
-    }
-
-    playerTouchPlayer(playerA, playerB) {
-        const statePlayerACircle = this.state.playerCircles.get(String(playerA.id))
-
-        const statePlayerBCircle = this.state.playerCircles.get(String(playerB.id))
-
-        let smallerPlayerCircle = playerA
-        let smallerBody = playerA
-
-        const samePlayer = statePlayerACircle?.playerId == statePlayerBCircle?.playerId
-
-        if (!samePlayer) return
-        if (statePlayerACircle.size >= statePlayerBCircle.size) {
-            const currentASize = statePlayerACircle.size
-            if (currentASize < this.screenWidth / this.maxPlayerCircleSize) {
-                statePlayerACircle.size += statePlayerBCircle.size
-                const scaleUp = statePlayerACircle.size / currentASize
-                Matter.Body.scale(playerA, scaleUp, scaleUp)
-            }
-            smallerPlayerCircle = statePlayerBCircle
-            smallerBody = playerB
-        }
-
-        if (statePlayerBCircle.size >= statePlayerACircle.size) {
-            const currentBSize = statePlayerBCircle.size
-            if (currentBSize < this.screenWidth / this.maxPlayerCircleSize) {
-                statePlayerBCircle.size += statePlayerACircle.size
-                const scaleUp = statePlayerBCircle.size / currentBSize
-                Matter.Body.scale(playerB, scaleUp, scaleUp)
-            }
-            smallerPlayerCircle = statePlayerACircle
-            smallerBody = playerA
-        }
-
-        this.resetPlayer(smallerPlayerCircle, smallerBody, samePlayer)
     }
 
     bulletHitOrb(playerBullet, orb) {
@@ -433,7 +393,7 @@ export default class GameEngine {
         const currentScore = statePlayer.score
         const newScore = currentScore + xp
         statePlayer.score = newScore
-        const newSize = currentSize + (xp / 10)
+        const newSize = currentSize + (xp / 100)
         if (newSize < this.screenWidth / this.maxPlayerCircleSize) {
             statePlayerCircle.size = newSize
             const scaleUp = newSize / currentSize
@@ -700,32 +660,5 @@ export default class GameEngine {
         }
     }
 
-    processPlayerSplit(sessionId) {
-        const playerCircles = this.findPlayerCircles(sessionId)
-        let amountOfCircles = playerCircles?.length
-        if (!playerCircles) return
-        for (const circle of playerCircles) {
-            if (amountOfCircles >= 4) return
-            let offset;
-            // 1. change the size in the state to half
-            const statePlayerCircle = this.state.playerCircles.get(String(circle.id))
-            const currentSize = statePlayerCircle.size
-            if (currentSize < 50) continue
-            statePlayerCircle.size = Math.floor(currentSize / 2)
-            // 2. scale the body in the matter to half
-            const scaleDown = statePlayerCircle.size / currentSize
-            Matter.Body.scale(circle, scaleDown, scaleDown)
 
-            // 3. add new circle to the world and state
-            amountOfCircles++
-            offset = statePlayerCircle.size * 2
-            this.addPlayerCircle(
-                sessionId,
-                1, // only one needed
-                statePlayerCircle.size,
-                statePlayerCircle.x + offset,
-                statePlayerCircle.y + offset
-            )
-        }
-    }
 }

@@ -181,11 +181,6 @@ export class GameRoom extends Room {
 
         this.engine = new GameEngine(this.state)
 
-        this.onMessage("message", (client, message) => {
-            const player = this.state.players.get(client.sessionId)
-            this.broadcast("messages", `(${player.name}) ${message}`)
-        });
-
         this.onMessage("move", (client, message) => {
             this.engine.processPlayerAction(client.sessionId, message)
         })
@@ -194,9 +189,6 @@ export class GameRoom extends Room {
             this.engine.processPlayerPointer(client.sessionId, message)
         })
 
-        this.onMessage("split", (client, message) => {
-            this.engine.processPlayerSplit(client.sessionId)
-        })
 
         this.onMessage("shoot", (client, message) => {
             this.engine.processPlayerBullet(client.sessionId, message)
