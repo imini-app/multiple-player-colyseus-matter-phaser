@@ -539,7 +539,7 @@ export default class GameEngine {
                 circleId,
                 size,
                 tankStats[statePlayerCircleTankName].bulletDamage,
-                tankStats[statePlayerCircleTankName].bulletPentration
+                tankStats[statePlayerCircleTankName].bulletPenatration
             )
             Matter.Body.setVelocity(bullet, { x: velocityX, y: velocityY })
             Matter.Composite.add(this.world, [bullet])
