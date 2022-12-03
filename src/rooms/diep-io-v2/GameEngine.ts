@@ -4,7 +4,7 @@ export default class GameEngine {
     world = null
     state = null
     engine = null
-    maxPlayerCircleSize = 34.968
+    maxPlayerCircleSize = 6.8968
     players = {}
     circles = {}
     orbs = {}
