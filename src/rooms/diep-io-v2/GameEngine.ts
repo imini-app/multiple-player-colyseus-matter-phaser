@@ -496,7 +496,7 @@ export default class GameEngine {
 
             this.circles[circle.id] = circle
 
-            this.state.createPlayerCircle(circle.id, playerId, startX + (x * size * 2), startY + (x * size * 2), size, (50 + (2 * (size / 50) - 1)), 1, "Basic")
+            this.state.createPlayerCircle(circle.id, playerId, startX + (x * size * 2), startY + (x * size * 2), size, tankStats["Basic"].maxHealth, 1, "Basic")
             Matter.Composite.add(this.world, [circle])
         }
     }
@@ -577,8 +577,9 @@ export default class GameEngine {
     }
 
     processPlayerAction(sessionId, data) {
-        let vy = data?.y
-        let vx = data?.x
+        let speed = 0
+        let vy = 0
+        let vx = 0
 
         const playerCircles = this.findPlayerCircles(sessionId)
 
@@ -587,16 +588,24 @@ export default class GameEngine {
                 return
             }
 
+            const statePlayerCircle = this.state.playerCircles.get(String(playerCircle.id))
+
+            if (data.type == "positive") {
+                speed = Number(tankStats[statePlayerCircle.tankName].movementSpeed)
+            } else if (data.type == "negative") {
+                speed = -Number(tankStats[statePlayerCircle.tankName].movementSpeed)
+            }
+
             const currentVelocity = playerCircle.velocity
 
-            if (data.x) {
-                vx = data.x
+            if (data.movementType == "x") {
+                vx = speed
             } else {
                 vx = currentVelocity.x
             }
 
-            if (data.y) {
-                vy = data.y
+            if (data.movementType == "y") {
+                vy = speed
             } else {
                 vy = currentVelocity.y
             }
@@ -654,7 +663,7 @@ export default class GameEngine {
 
             this.state.removePlayerCircle(String(playerCircleId))
 
-            this.state.createPlayerCircle(playerCircleId, playerId, playerX, playerY, playerSize, (50 + (2 * (playerSize / 50) - 1)), 1, tankName)
+            this.state.createPlayerCircle(playerCircleId, playerId, playerX, playerY, playerSize, tankStats[tankName].maxHealth, 1, tankName)
 
             statePlayer.tankName = tankName
         }

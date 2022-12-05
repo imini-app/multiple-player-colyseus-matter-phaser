@@ -272,7 +272,7 @@ const tankStats = {
         turrets: 1,
         bullets: 1,
         bulletDamage: 77,
-        bulletPenatration: 77,
+        bulletPenatration: 43,
         bulletSpeed: 77,
         reload: 3,
         healthRegen: 1,
@@ -305,8 +305,8 @@ const tankStats = {
     "Twin-Destroyer": {
         upgradesFrom: "Assassin",
         level: 45,
-        turrets: 2,
-        bullets: 1,
+        turrets: 1,
+        bullets: 2,
         bulletDamage: 33,
         bulletPenatration: 33,
         bulletSpeed: 33,
@@ -676,7 +676,7 @@ const tankStats = {
         bulletSpeed: 19,
         reload: 13,
         healthRegen: 13,
-        maxHealth: 63,
+        maxHealth: 300,
         bodyDamage: 13,
         movementSpeed: 13,
         accuracy: 1,
@@ -768,7 +768,7 @@ const tankStats = {
         sight: 2
     },
     "Diamond-Twin-Flank": {
-        upgradesFrom: "Twin-Flank",
+        upgradesFrom: "Gold-Twin-Flank",
         level: 105,
         turrets: 4,
         bullets: 1,
