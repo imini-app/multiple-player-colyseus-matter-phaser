@@ -9,8 +9,8 @@ export default class GameEngine {
     circles = {}
     orbs = {}
     bullets = {}
-    screenWidth = 1920 / 1.32 * 12
-    screenHeight = 1920 / 1.32 * 12
+    screenWidth = 1920 / 1.32 * 1.2
+    screenHeight = 1920 / 1.32 * 1.2
 
     constructor(roomState) {
         this.engine = Matter.Engine.create()
@@ -50,7 +50,7 @@ export default class GameEngine {
             setTimeout(() => this.generatePentagon(), 1)
         }
 
-        for (let x = 0; x < 2 * this.screenWidth / 1454.54545455; x++) {
+        for (let x = 0; x < 0 * this.screenWidth / 1454.54545455; x++) {
             setTimeout(() => this.generateWall(), 1)
         }
 
@@ -171,6 +171,12 @@ export default class GameEngine {
                 }
 
                 if (bodyA.label == "mapEnd" && bodyB.label == "wall") {
+                    this.state.removeWall(bodyB.id)
+                    Matter.Composite.remove(this.world, [bodyB])
+                    this.generateWall()
+                }
+
+                if (bodyA.label == "playerCircle" && bodyB.label == "playerCircle") {
                     this.state.removeWall(bodyB.id)
                     Matter.Composite.remove(this.world, [bodyB])
                     this.generateWall()
@@ -418,6 +424,68 @@ export default class GameEngine {
         } else {
             return
         }
+    }
+
+    playerHitPlayer(playerA, playerB) {
+        const statePlayerACircle = this.state.playerCircles.get(String(playerA.id))
+        if (!statePlayerACircle) return
+        const statePlayerBCircle = this.state.playerCircles.get(String(playerB.id))
+        if (!statePlayerBCircle) return
+
+        let smallerPlayerCircle = null
+        let smallerBody = null
+
+        const samePlayer = statePlayerACircle?.playerId == statePlayerBCircle?.playerId
+        if (!samePlayer) return
+
+        const playerATankName = statePlayerACircle.tankName
+        const playerBTankName = statePlayerBCircle.tankName
+
+        let playerABodyDamage = tankStats[playerATankName].bodyDamage
+        let playerBBodyDamage = tankStats[playerBTankName].bodyDamage
+
+        const playerAHpLeft = statePlayerACircle.hp - playerBBodyDamage
+        const playerBHpLeft = statePlayerBCircle.hp - playerABodyDamage
+
+        if (playerAHpLeft > 0) {
+            statePlayerACircle.hp = playerAHpLeft
+        } else {
+            const scoreUp = statePlayerACircle.size * 10
+            const sizeUp = statePlayerACircle.size / 10
+
+            this.state.removePlayerCircle(String(playerA.id))
+            Matter.Composite.remove(playerA.id)
+
+            const newSize = statePlayerACircle.size + sizeUp
+            if (newSize < this.screenWidth / this.maxPlayerCircleSize) {
+                const statePlayerB = this.state.players.get(String(statePlayerBCircle.playerId))
+                const scaleUp = newSize / statePlayerBCircle.size
+                statePlayerBCircle.size = newSize
+                statePlayerB.score += scoreUp
+                Matter.Body.scale(playerB, scaleUp, scaleUp)
+            }
+        }
+
+        if (playerBHpLeft > 0) {
+            statePlayerBCircle.hp = playerBHpLeft
+        } else {
+            const scoreUp = statePlayerBCircle.size * 10
+            const sizeUp = statePlayerBCircle.size / 10
+
+            this.state.removePlayerCircle(String(playerB.id))
+            Matter.Composite.remove(playerB.id)
+
+            const newSize = statePlayerBCircle.size + sizeUp
+            if (newSize < this.screenWidth / this.maxPlayerCircleSize) {
+                const statePlayerA = this.state.players.get(String(statePlayerACircle.playerId))
+                const scaleUp = newSize / statePlayerACircle.size
+                statePlayerACircle.size = newSize
+                statePlayerA.score += scoreUp
+                Matter.Body.scale(playerA, scaleUp, scaleUp)
+            }
+        }
+
+        this.resetPlayer(smallerPlayerCircle, smallerBody, samePlayer)
     }
 
     generateSquare() {
