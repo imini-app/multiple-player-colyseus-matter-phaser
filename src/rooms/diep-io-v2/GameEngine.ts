@@ -1,3 +1,4 @@
+import { registerGracefulShutdown } from '@colyseus/core/build/Utils'
 import Matter from 'matter-js'
 import tankStats from './tanks'
 export default class GameEngine {
@@ -177,9 +178,15 @@ export default class GameEngine {
                 }
 
                 if (bodyA.label == "playerCircle" && bodyB.label == "playerCircle") {
-                    this.state.removeWall(bodyB.id)
-                    Matter.Composite.remove(this.world, [bodyB])
-                    this.generateWall()
+                    this.playerHitPlayer(bodyA, bodyB)
+                }
+
+                if (bodyA.label == "playerCircle" && bodyB.label == "orb") {
+                    this.playerHitOrb(bodyA, bodyB)
+                }
+
+                if (bodyB.label == "playerCircle" && bodyA.label == "orb") {
+                    this.playerHitOrb(bodyB, bodyA)
                 }
 
             }
@@ -413,17 +420,78 @@ export default class GameEngine {
 
         this.levelUp(statePlayerCircle)
 
-        if (destroyWhat == 'rectangle') {
-            this.generateSquare()
-        } else if (destroyWhat == 'triangle') {
-            this.generateTriangle()
-        } else if (destroyWhat == 'pentagon') {
-            this.generatePentagon()
-        } else if (destroyWhat == 'alphaPentagon') {
-            this.generateAlphaPentagon()
-        } else {
+        this.getXpFromObjects(destroyWhat)
+    }
+
+    playerHitOrb(player, orb) {
+        let xp = 10
+        let destroyWhat;
+        const stateOrb = this.state.orbs.get(String(orb?.id))
+        if (!stateOrb) return
+        switch (stateOrb.type) {
+            case 'rectangle':
+                xp = 10
+                destroyWhat = 'rectangle'
+                break;
+            case 'triangle':
+                xp = 25
+                destroyWhat = 'triangle'
+                break;
+            case 'pentagon':
+                xp = 130
+                destroyWhat = 'pentagon'
+                break;
+            case 'alphaPentagon':
+                xp = 3000
+                destroyWhat = 'alphaPentagon'
+                break;
+            default:
+                break;
+
+        }
+        const statePlayerCircle = this.state.playerCircles.get(String(player.id))
+        if (!statePlayerCircle) return
+        const playerCircle = player
+        if (!playerCircle) return
+
+        const statePlayer = this.state.players.get(String(statePlayerCircle.playerId))
+
+        const playerTankName = statePlayerCircle.tankName
+        let playerBodyDamage = tankStats[playerTankName].bodyDamage
+
+        const objectAliveHpDifference = stateOrb.hp - playerBodyDamage
+        const playerHpLeft = statePlayerCircle.hp - 1
+
+
+        if (playerHpLeft <= 0) {
+            this.resetPlayer(statePlayerCircle, playerCircle, false)
+            Matter.Composite.remove(this.world, [playerCircle])
             return
         }
+        if (objectAliveHpDifference > 0) {
+            stateOrb.hp = objectAliveHpDifference
+            statePlayerCircle.hp = playerHpLeft
+            return
+        }
+
+
+        const currentSize = statePlayerCircle.size
+        const currentScore = statePlayer.score
+        const newScore = currentScore + xp
+        statePlayer.score = newScore
+        const newSize = currentSize + (xp / 100)
+        if (newSize < this.screenWidth / this.maxPlayerCircleSize) {
+            statePlayerCircle.size = newSize
+            const scaleUp = newSize / currentSize
+            Matter.Body.scale(playerCircle, scaleUp, scaleUp)
+        }
+
+        this.state.removeOrb(orb.id)
+        Matter.Composite.remove(this.world, [orb])
+
+        this.levelUp(statePlayerCircle)
+
+        this.getXpFromObjects(destroyWhat)
     }
 
     playerHitPlayer(playerA, playerB) {
@@ -431,12 +499,6 @@ export default class GameEngine {
         if (!statePlayerACircle) return
         const statePlayerBCircle = this.state.playerCircles.get(String(playerB.id))
         if (!statePlayerBCircle) return
-
-        let smallerPlayerCircle = null
-        let smallerBody = null
-
-        const samePlayer = statePlayerACircle?.playerId == statePlayerBCircle?.playerId
-        if (!samePlayer) return
 
         const playerATankName = statePlayerACircle.tankName
         const playerBTankName = statePlayerBCircle.tankName
@@ -453,10 +515,11 @@ export default class GameEngine {
             const scoreUp = statePlayerACircle.size * 10
             const sizeUp = statePlayerACircle.size / 10
 
-            this.state.removePlayerCircle(String(playerA.id))
-            Matter.Composite.remove(playerA.id)
+            this.resetPlayer(statePlayerACircle, playerA, false)
+            Matter.Composite.remove(Number(playerA.id))
 
-            const newSize = statePlayerACircle.size + sizeUp
+
+            const newSize = statePlayerBCircle.size + sizeUp
             if (newSize < this.screenWidth / this.maxPlayerCircleSize) {
                 const statePlayerB = this.state.players.get(String(statePlayerBCircle.playerId))
                 const scaleUp = newSize / statePlayerBCircle.size
@@ -472,8 +535,8 @@ export default class GameEngine {
             const scoreUp = statePlayerBCircle.size * 10
             const sizeUp = statePlayerBCircle.size / 10
 
-            this.state.removePlayerCircle(String(playerB.id))
-            Matter.Composite.remove(playerB.id)
+            this.resetPlayer(statePlayerBCircle, playerB, false)
+            Matter.Composite.remove(Number(playerB.id))
 
             const newSize = statePlayerBCircle.size + sizeUp
             if (newSize < this.screenWidth / this.maxPlayerCircleSize) {
@@ -482,10 +545,24 @@ export default class GameEngine {
                 statePlayerACircle.size = newSize
                 statePlayerA.score += scoreUp
                 Matter.Body.scale(playerA, scaleUp, scaleUp)
+
             }
         }
 
-        this.resetPlayer(smallerPlayerCircle, smallerBody, samePlayer)
+    }
+
+    getXpFromObjects(destroyWhat) {
+        if (destroyWhat == 'rectangle') {
+            this.generateSquare()
+        } else if (destroyWhat == 'triangle') {
+            this.generateTriangle()
+        } else if (destroyWhat == 'pentagon') {
+            this.generatePentagon()
+        } else if (destroyWhat == 'alphaPentagon') {
+            this.generateAlphaPentagon()
+        } else {
+            return
+        }
     }
 
     generateSquare() {

@@ -417,7 +417,7 @@ const tankStats = {
         healthRegen: 100,
         maxHealth: 25,
         bodyDamage: 25,
-        movementSpeed: 100,
+        movementSpeed: 25,
         accuracy: 1,
         sight: 2
     },
