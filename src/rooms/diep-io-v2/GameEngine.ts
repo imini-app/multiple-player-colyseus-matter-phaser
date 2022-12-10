@@ -50,7 +50,7 @@ export default class GameEngine {
             setTimeout(() => this.generatePentagon(), 1)
         }
 
-        for (let x = 0; x < 0 * this.screenWidth / 1454.54545455; x++) {
+        for (let x = 0; x < 2 * this.screenWidth / 1454.54545455; x++) {
             setTimeout(() => this.generateWall(), 1)
         }
 
@@ -839,6 +839,8 @@ export default class GameEngine {
             this.state.createPlayerCircle(playerCircleId, playerId, playerX, playerY, playerSize, tankStats[tankName].maxHealth, 1, tankName)
 
             statePlayer.tankName = tankName
+            this.manageHp(playerCircleId)
+            this.increasePlayerCircleHp(playerCircleId)
         }
     }
 
