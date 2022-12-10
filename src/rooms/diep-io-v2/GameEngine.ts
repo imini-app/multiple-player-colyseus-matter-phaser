@@ -10,8 +10,8 @@ export default class GameEngine {
     circles = {}
     orbs = {}
     bullets = {}
-    screenWidth = 1920 / 1.32 * 1.2
-    screenHeight = 1920 / 1.32 * 1.2
+    screenWidth = 1920 / 1.32 * 12
+    screenHeight = 1920 / 1.32 * 12
 
     constructor(roomState) {
         this.engine = Matter.Engine.create()
@@ -28,13 +28,13 @@ export default class GameEngine {
 
         let walls = [
             // Top wall
-            Matter.Bodies.rectangle(this.screenWidth / 2, 0, this.screenWidth, 5, { isStatic: true }),
+            Matter.Bodies.rectangle(this.screenWidth / 2, 0, this.screenWidth, 100, { isStatic: true }),
             // Bottom wall
-            Matter.Bodies.rectangle(this.screenWidth / 2, this.screenHeight, this.screenWidth, 5, { isStatic: true, label: 'mapEnd' }),
+            Matter.Bodies.rectangle(this.screenWidth / 2, this.screenHeight, this.screenWidth, 100, { isStatic: true, label: 'mapEnd' }),
             // Right wall
-            Matter.Bodies.rectangle(this.screenWidth, this.screenHeight / 2, 5, this.screenHeight, { isStatic: true, label: 'mapEnd' }),
+            Matter.Bodies.rectangle(this.screenWidth, this.screenHeight / 2, 100, this.screenHeight, { isStatic: true, label: 'mapEnd' }),
             // Left wall
-            Matter.Bodies.rectangle(0, this.screenHeight / 2, 5, this.screenHeight, { isStatic: true, label: 'mapEnd' })
+            Matter.Bodies.rectangle(0, this.screenHeight / 2, 100, this.screenHeight, { isStatic: true, label: 'mapEnd' })
         ]
 
         Matter.Composite.add(this.world, walls)
@@ -359,6 +359,8 @@ export default class GameEngine {
             Matter.Composite.add(this.world, [playerCircle])
             this.state.createPlayerCircle(playerCircle.id, statePlayerCircle?.playerId, startX, startY, initialSize, (initialSize + (2 * (initialSize / 50) - 1)), 1, "Basic")
             if (statePlayer) statePlayer.score = initialScore
+            this.increasePlayerCircleHp(playerCircle.id)
+            this.manageHp(playerCircle.id)
         }
     }
 
@@ -459,8 +461,8 @@ export default class GameEngine {
         const playerTankName = statePlayerCircle.tankName
         let playerBodyDamage = tankStats[playerTankName].bodyDamage
 
-        const objectAliveHpDifference = stateOrb.hp - playerBodyDamage
-        const playerHpLeft = statePlayerCircle.hp - 1
+        const objectAliveHpDifference = stateOrb.hp - (playerBodyDamage * 2)
+        const playerHpLeft = statePlayerCircle.hp - (1 + (0.1 * (xp / 10)))
 
 
         if (playerHpLeft <= 0) {
@@ -643,7 +645,34 @@ export default class GameEngine {
 
             this.state.createPlayerCircle(circle.id, playerId, startX + (x * size * 2), startY + (x * size * 2), size, tankStats["Basic"].maxHealth, 1, "Basic")
             Matter.Composite.add(this.world, [circle])
+            this.increasePlayerCircleHp(circle.id)
+            this.manageHp(circle.id)
         }
+    }
+
+    manageHp(matterId) {
+        const statePlayerCircle = this.state.playerCircles.get(String(matterId))
+        if (!statePlayerCircle) return
+        const fullHealthAmount = tankStats[statePlayerCircle.tankName].maxHealth
+        if (statePlayerCircle.hp > fullHealthAmount) {
+            statePlayerCircle.hp = fullHealthAmount
+        }
+    }
+
+    increasePlayerCircleHp(matterId) {
+        const statePlayerCircle = this.state.playerCircles.get(String(matterId))
+        if (!statePlayerCircle) return
+
+        setInterval(() => {
+            const fullHealthAmount = tankStats[statePlayerCircle.tankName].maxHealth
+            if (statePlayerCircle.hp >= fullHealthAmount) return
+            const healthRegenAmount = tankStats[statePlayerCircle.tankName].healthRegen
+            if (statePlayerCircle.hp + healthRegenAmount > fullHealthAmount) {
+                statePlayerCircle.hp += fullHealthAmount - statePlayerCircle.hp
+            } else {
+                statePlayerCircle.hp += healthRegenAmount
+            }
+        }, 100)
     }
 
     pointCircleToTargetXY(targetX, targetY, circle) {
