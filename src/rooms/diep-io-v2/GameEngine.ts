@@ -1,4 +1,3 @@
-import { registerGracefulShutdown } from '@colyseus/core/build/Utils'
 import Matter from 'matter-js'
 import tankStats from './tanks'
 export default class GameEngine {
