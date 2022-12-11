@@ -102,13 +102,11 @@ export default class GameEngine {
                 }
 
                 if (bodyA.label == "playerBullet" && bodyB.label == "wall") {
-                    this.state.removePlayerBullet(bodyA.id)
-                    Matter.Composite.remove(this.world, [bodyA])
+                    this.destroyBullet(bodyA);
                 }
 
                 if (bodyA.label == "wall" && bodyB.label == "playerBullet") {
-                    this.state.removePlayerBullet(bodyB.id)
-                    Matter.Composite.remove(this.world, [bodyB])
+                    this.destroyBullet(bodyB);
                 }
 
                 if (bodyA.label == "orb" && bodyB.label == "wall") {
@@ -230,6 +228,11 @@ export default class GameEngine {
         }
     }
 
+    destroyBullet(matterBullet) {
+        this.state.removePlayerBullet(matterBullet.id)
+        Matter.Composite.remove(this.world, [matterBullet])
+        delete this.bullets[matterBullet.id]
+    }
 
     bulletHitBullet(bulletA, bulletB) {
         const stateBulletA = this.state.playerBullets.get(String(bulletA.id))
@@ -250,8 +253,7 @@ export default class GameEngine {
             if (healthDifference > 0) {
                 stateBulletA.health = healthDifference
             } else {
-                this.state.removePlayerBullet(bulletA.id)
-                Matter.Composite.remove(this.world, [bulletA])
+                this.destroyBullet(bulletA);
             }
         }
 
@@ -261,8 +263,7 @@ export default class GameEngine {
             if (healthDifference > 0) {
                 stateBulletB.health = healthDifference
             } else {
-                this.state.removePlayerBullet(bulletB.id)
-                Matter.Composite.remove(this.world, [bulletB])
+                this.destroyBullet(bulletB);
             }
         }
 
@@ -275,17 +276,15 @@ export default class GameEngine {
                 stateBulletB.damage = stateBulletB.damage - stateBulletA.damage
                 smallerBody = bulletA
             } else {
-                this.state.removePlayerBullet(bulletA.id)
-                Matter.Composite.remove(this.world, [bulletA])
-                this.state.removePlayerBullet(bulletB.id)
-                Matter.Composite.remove(this.world, [bulletB])
+                this.destroyBullet(bulletA)
+                this.destroyBullet(bulletB)
             }
         }
 
 
         if (!smallerBody) return
-        this.state.removePlayerBullet(smallerBody.id)
-        Matter.Composite.remove(this.world, [smallerBody])
+
+        this.destroyBullet(smallerBody)
     }
 
     bulletHitPlayerCircle(bullet, playerCircle) {
@@ -301,16 +300,14 @@ export default class GameEngine {
         const hpLeft = statePlayerCircle.hp - stateBullet.damage
         if (hpLeft > 0) {
             statePlayerCircle.hp = hpLeft
-            this.state.removePlayerBullet(bullet.id)
-            Matter.Composite.remove(this.world, [bullet])
+            this.destroyBullet(bullet)
             return
         }
         const scoreFormula = statePlayerCircle.size * 10
         const scoreUp = scoreFormula >= 7500 ? 7500 : scoreFormula
         const sizeUp = statePlayerCircle.size / 10
         this.state.players.get(statePlayerCircle.playerId).score -= scoreUp
-        this.state.removePlayerBullet(bullet.id)
-        Matter.Composite.remove(this.world, [bullet])
+        this.destroyBullet(bullet)
         this.resetPlayer(statePlayerCircle, playerCircle, false)
 
         if (!stateBulletCircle) return
@@ -399,8 +396,7 @@ export default class GameEngine {
         const objectAliveHpDifference = stateOrb.hp - stateBullet.damage
         if (objectAliveHpDifference > 0) {
             stateOrb.hp = objectAliveHpDifference
-            this.state.removePlayerBullet(playerBullet.id)
-            Matter.Composite.remove(this.world, [playerBullet])
+            this.destroyBullet(playerBullet)
             return
         }
         const currentSize = statePlayerCircle.size
@@ -414,8 +410,7 @@ export default class GameEngine {
             Matter.Body.scale(playerCircle, scaleUp, scaleUp)
         }
 
-        this.state.removePlayerBullet(playerBullet.id)
-        Matter.Composite.remove(this.world, [playerBullet])
+        this.destroyBullet(playerBullet)
         this.state.removeOrb(orb.id)
         Matter.Composite.remove(this.world, [orb])
 
@@ -718,10 +713,7 @@ export default class GameEngine {
             Matter.Composite.add(this.world, [bullet])
             setTimeout(() => {
                 if (!this.state.playerBullets.get(String(bullet.id))) return
-
-                if (!this.state.playerBullets.get(String(bullet.id)).circleId) this.state.removePlayerBullet(bullet.id); Matter.Composite.remove(this.world, [bullet]);
-                this.state.removePlayerBullet(bullet.id)
-                Matter.Composite.remove(this.world, [bullet]);
+                this.destroyBullet(bullet)
             }, 3000)
         }
     }
