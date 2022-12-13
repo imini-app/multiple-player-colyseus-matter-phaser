@@ -73,16 +73,16 @@ export default class GameEngine {
                 if (!this.state.playerCircles.get(worldId) || !this.circles[worldId]) {
                     continue;
                 }
-                this.state.playerCircles.get(worldId).x = this.circles[worldId].position.x;
-                this.state.playerCircles.get(worldId).y = this.circles[worldId].position.y;
+                this.state.playerCircles.get(worldId).x = Number(this.circles[worldId].position.x.toFixed(0));
+                this.state.playerCircles.get(worldId).y = Number(this.circles[worldId].position.y.toFixed(0));
             }
 
             for (const worldId in this.bullets) {
                 if (!this.state.playerBullets.get(worldId) || !this.bullets[worldId]) {
                     continue;
                 }
-                this.state.playerBullets.get(worldId).x = this.bullets[worldId].position.x;
-                this.state.playerBullets.get(worldId).y = this.bullets[worldId].position.y;
+                this.state.playerBullets.get(worldId).x = Number(this.bullets[worldId].position.x.toFixed(0));
+                this.state.playerBullets.get(worldId).y = Number(this.bullets[worldId].position.y.toFixed(0));
             }
         });
     }
