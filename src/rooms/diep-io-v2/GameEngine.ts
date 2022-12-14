@@ -660,13 +660,13 @@ export default class GameEngine {
         setInterval(() => {
             const fullHealthAmount = tankStats[statePlayerCircle.tankName].maxHealth
             if (statePlayerCircle.hp >= fullHealthAmount) return
-            const healthRegenAmount = tankStats[statePlayerCircle.tankName].healthRegen
+            const healthRegenAmount = tankStats[statePlayerCircle.tankName].healthRegen / 100
             if (statePlayerCircle.hp + healthRegenAmount > fullHealthAmount) {
                 statePlayerCircle.hp += fullHealthAmount - statePlayerCircle.hp
             } else {
                 statePlayerCircle.hp += healthRegenAmount
             }
-        }, 100)
+        }, 20)
     }
 
     pointCircleToTargetXY(targetX, targetY, circle) {

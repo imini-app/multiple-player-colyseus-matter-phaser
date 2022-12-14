@@ -371,6 +371,23 @@ const tankStats = {
         sight: 2
     },
 
+    "Spike+": {
+        upgradesFrom: "Spike",
+        level: 75,
+        turrets: 0,
+        bullets: 0,
+        bulletDamage: 0,
+        bulletPenatration: 0,
+        bulletSpeed: 0,
+        reload: 0,
+        healthRegen: 15,
+        maxHealth: 120,
+        bodyDamage: 70,
+        movementSpeed: 15,
+        accuracy: 0,
+        sight: 2
+    },
+
     "Chaser": {
         upgradesFrom: "Smasher",
         level: 45,
@@ -380,10 +397,27 @@ const tankStats = {
         bulletPenatration: 0,
         bulletSpeed: 0,
         reload: 0,
-        healthRegen: 10,
+        healthRegen: 9,
         maxHealth: 150,
-        bodyDamage: 30,
-        movementSpeed: 17,
+        bodyDamage: 20,
+        movementSpeed: 9,
+        accuracy: 0,
+        sight: 2.5
+    },
+
+    "Chaser+": {
+        upgradesFrom: "Chaser",
+        level: 75,
+        turrets: 0,
+        bullets: 0,
+        bulletDamage: 0,
+        bulletPenatration: 0,
+        bulletSpeed: 0,
+        reload: 0,
+        healthRegen: 13,
+        maxHealth: 200,
+        bodyDamage: 25,
+        movementSpeed: 13,
         accuracy: 0,
         sight: 2.5
     },
@@ -434,7 +468,7 @@ const tankStats = {
         healthRegen: 25,
         maxHealth: 25,
         bodyDamage: 25,
-        movementSpeed: 20,
+        movementSpeed: 23,
         accuracy: 1,
         sight: 2
     },
@@ -451,7 +485,7 @@ const tankStats = {
         healthRegen: 15,
         maxHealth: 70,
         bodyDamage: 10,
-        movementSpeed: 15,
+        movementSpeed: 17,
         accuracy: 1,
         sight: 2,
         description: "The Ramming Destroyer. It's reload is the highest in game but the bullet stats are weak. DPS is really low."
@@ -679,7 +713,7 @@ const tankStats = {
         healthRegen: 11,
         maxHealth: 56,
         bodyDamage: 6,
-        movementSpeed: 11,
+        movementSpeed: 9.5,
         accuracy: 1,
         sight: 2
     },
@@ -696,7 +730,7 @@ const tankStats = {
         healthRegen: 12,
         maxHealth: 62,
         bodyDamage: 12,
-        movementSpeed: 12,
+        movementSpeed: 10,
         accuracy: 1,
         sight: 3
     },
@@ -713,7 +747,7 @@ const tankStats = {
         healthRegen: 13,
         maxHealth: 300,
         bodyDamage: 13,
-        movementSpeed: 13,
+        movementSpeed: 10.5,
         accuracy: 1,
         sight: 3
     },
@@ -730,7 +764,7 @@ const tankStats = {
         healthRegen: 1,
         maxHealth: 3000,
         bodyDamage: 100,
-        movementSpeed: 14,
+        movementSpeed: 10,
         accuracy: 1,
         sight: 3
     },
