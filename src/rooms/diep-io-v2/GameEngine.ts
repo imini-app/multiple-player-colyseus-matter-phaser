@@ -465,8 +465,8 @@ export default class GameEngine {
             return
         }
         if (objectAliveHpDifference > 0) {
-            stateOrb.hp = objectAliveHpDifference
             statePlayerCircle.hp = playerHpLeft
+            stateOrb.hp = objectAliveHpDifference
             return
         }
 
