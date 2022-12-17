@@ -9,8 +9,8 @@ export default class GameEngine {
     circles = {}
     orbs = {}
     bullets = {}
-    screenWidth = 1920 / 1.32 * 12
-    screenHeight = 1920 / 1.32 * 12
+    screenWidth = 1920 / 1.32 * 1.2
+    screenHeight = 1920 / 1.32 * 1.2
 
     constructor(roomState) {
         this.engine = Matter.Engine.create()
@@ -50,11 +50,11 @@ export default class GameEngine {
             setTimeout(() => this.generatePentagon(), 1)
         }
 
-        for (let x = 0; x < 2 * this.screenWidth / 1454.54545455; x++) {
+        for (let x = 0; x < 0 * this.screenWidth / 1454.54545455; x++) {
             setTimeout(() => this.generateWall(), 1)
         }
 
-        for (let x = 0; x < 7; x++) {
+        for (let x = 0; x < 1; x++) {
             setTimeout(() => this.generateAlphaPentagon(), 1)
 
         }
@@ -502,17 +502,16 @@ export default class GameEngine {
         let playerABodyDamage = tankStats[playerATankName].bodyDamage
         let playerBBodyDamage = tankStats[playerBTankName].bodyDamage
 
-        const playerAHpLeft = statePlayerACircle.hp - playerBBodyDamage
-        const playerBHpLeft = statePlayerBCircle.hp - playerABodyDamage
+        const playerAHpLeft = Math.floor(statePlayerACircle.hp - playerBBodyDamage)
+        const playerBHpLeft = Math.floor(statePlayerBCircle.hp - playerABodyDamage)
 
         if (playerAHpLeft > 0) {
             statePlayerACircle.hp = playerAHpLeft
         } else {
             const scoreUp = statePlayerACircle.size * 10
             const sizeUp = statePlayerACircle.size / 10
-
+            Matter.Composite.remove(this.world, [playerA.id])
             this.resetPlayer(statePlayerACircle, playerA, false)
-            Matter.Composite.remove(Number(playerA.id))
 
 
             const newSize = statePlayerBCircle.size + sizeUp
@@ -530,9 +529,8 @@ export default class GameEngine {
         } else {
             const scoreUp = statePlayerBCircle.size * 10
             const sizeUp = statePlayerBCircle.size / 10
-
+            Matter.Composite.remove(this.world, [playerB.id])
             this.resetPlayer(statePlayerBCircle, playerB, false)
-            Matter.Composite.remove(Number(playerB.id))
 
             const newSize = statePlayerBCircle.size + sizeUp
             if (newSize < this.screenWidth / this.maxPlayerCircleSize) {
@@ -660,13 +658,13 @@ export default class GameEngine {
         setInterval(() => {
             const fullHealthAmount = tankStats[statePlayerCircle.tankName].maxHealth
             if (statePlayerCircle.hp >= fullHealthAmount) return
-            const healthRegenAmount = tankStats[statePlayerCircle.tankName].healthRegen / 100
+            const healthRegenAmount = tankStats[statePlayerCircle.tankName].healthRegen / 1000
             if (statePlayerCircle.hp + healthRegenAmount > fullHealthAmount) {
                 statePlayerCircle.hp += fullHealthAmount - statePlayerCircle.hp
             } else {
                 statePlayerCircle.hp += healthRegenAmount
             }
-        }, 20)
+        }, 2)
     }
 
     pointCircleToTargetXY(targetX, targetY, circle) {
