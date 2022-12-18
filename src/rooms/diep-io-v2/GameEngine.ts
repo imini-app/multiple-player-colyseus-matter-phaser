@@ -199,10 +199,9 @@ export default class GameEngine {
     }
 
     upgradePlayer(level, statePlayer) {
-
         const currentTank = statePlayer.tankName
         const currentLevel = statePlayer.level
-        if (level >= 15 || level >= 30 || level >= 45 || level >= 60 || level >= 105 || level >= 135 || level >= 270 || level >= 995) {
+        if (level >= 15) {
 
             const listOfTanksToUpgradeTo = []
             const tankKeys = []
@@ -355,6 +354,7 @@ export default class GameEngine {
             Matter.Composite.add(this.world, [playerCircle])
             this.state.createPlayerCircle(playerCircle.id, statePlayerCircle?.playerId, startX, startY, initialSize, (initialSize + (2 * (initialSize / 50) - 1)), 1, "Basic")
             if (statePlayer) statePlayer.score = initialScore
+            statePlayer.tankName = "Basic"
             this.increasePlayerCircleHp(playerCircle.id)
             this.manageHp(playerCircle.id)
         }
