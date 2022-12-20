@@ -762,8 +762,8 @@ const tankStats = {
         bulletSpeed: 7,
         reload: 1,
         healthRegen: 1,
-        maxHealth: 3000,
-        bodyDamage: 30,
+        maxHealth: 300,
+        bodyDamage: 12,
         movementSpeed: 10,
         accuracy: 1,
         sight: 3
