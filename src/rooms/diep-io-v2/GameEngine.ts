@@ -693,7 +693,7 @@ export default class GameEngine {
             const xDist = targetX - initX;
             const yDist = targetY - initY;
             const spacing = x / 5 - x / 2.5
-            const angle = Math.atan2(yDist, xDist) + spacing + 1
+            const angle = Math.atan2(yDist, xDist) + spacing + (count) * 0.1
             const velocityX = Math.cos(angle) * speed
             const velocityY = Math.sin(angle) * speed
 

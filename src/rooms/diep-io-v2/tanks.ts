@@ -2,7 +2,7 @@ const tankStats = {
     "Basic": {
         upgradesFrom: "Unknown",
         level: 1,
-        turrets: 1,
+        turrets: 11,
         bullets: 1,
         bulletDamage: 5,
         bulletPenatration: 3,
