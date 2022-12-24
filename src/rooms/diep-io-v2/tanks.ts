@@ -354,6 +354,57 @@ const tankStats = {
         sight: 1
     },
 
+    "Smasher+": {
+        upgradesFrom: "Smasher",
+        level: 45,
+        turrets: 0,
+        bullets: 0,
+        bulletDamage: 0,
+        bulletPenatration: 0,
+        bulletSpeed: 0,
+        reload: 0,
+        healthRegen: 10,
+        maxHealth: 100,
+        bodyDamage: 25,
+        movementSpeed: 10,
+        accuracy: 0,
+        sight: 2
+    },
+
+    "Smasher++": {
+        upgradesFrom: "Smasher+",
+        level: 75,
+        turrets: 0,
+        bullets: 0,
+        bulletDamage: 0,
+        bulletPenatration: 0,
+        bulletSpeed: 0,
+        reload: 0,
+        healthRegen: 13,
+        maxHealth: 160,
+        bodyDamage: 25,
+        movementSpeed: 13,
+        accuracy: 0,
+        sight: 3
+    },
+
+    "Smasher+++": {
+        upgradesFrom: "Smasher+",
+        level: 135,
+        turrets: 0,
+        bullets: 0,
+        bulletDamage: 0,
+        bulletPenatration: 0,
+        bulletSpeed: 0,
+        reload: 0,
+        healthRegen: 16,
+        maxHealth: 230,
+        bodyDamage: 35,
+        movementSpeed: 16,
+        accuracy: 0,
+        sight: 4
+    },
+
     "Spike": {
         upgradesFrom: "Smasher",
         level: 45,
@@ -385,7 +436,24 @@ const tankStats = {
         bodyDamage: 70,
         movementSpeed: 15,
         accuracy: 0,
-        sight: 2
+        sight: 2.25
+    },
+
+    "Spike++": {
+        upgradesFrom: "Spike+",
+        level: 135,
+        turrets: 0,
+        bullets: 0,
+        bulletDamage: 0,
+        bulletPenatration: 0,
+        bulletSpeed: 0,
+        reload: 0,
+        healthRegen: 17,
+        maxHealth: 120,
+        bodyDamage: 100,
+        movementSpeed: 17,
+        accuracy: 0,
+        sight: 2.5
     },
 
     "Chaser": {
@@ -415,11 +483,28 @@ const tankStats = {
         bulletSpeed: 0,
         reload: 0,
         healthRegen: 13,
-        maxHealth: 200,
-        bodyDamage: 30,
+        maxHealth: 250,
+        bodyDamage: 20,
         movementSpeed: 13,
         accuracy: 0,
         sight: 2.5
+    },
+
+    "Chaser++": {
+        upgradesFrom: "Chaser+",
+        level: 135,
+        turrets: 0,
+        bullets: 0,
+        bulletDamage: 0,
+        bulletPenatration: 0,
+        bulletSpeed: 0,
+        reload: 0,
+        healthRegen: 15,
+        maxHealth: 350,
+        bodyDamage: 30,
+        movementSpeed: 15,
+        accuracy: 0,
+        sight: 3
     },
 
     "Machine-Gun": {
