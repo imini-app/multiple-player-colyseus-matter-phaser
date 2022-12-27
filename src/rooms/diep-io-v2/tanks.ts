@@ -13,7 +13,22 @@ const tankStats = {
         bodyDamage: 1,
         movementSpeed: 3,
         accuracy: 1,
-        upgradesTo: ["BasicRammer", "BasicDroneUser", "Sniper", "Twin", "Flank-Guard", "Machine-Gun"]
+    },
+
+    "Single": {
+        upgradesFrom: "Basic",
+        level: 45,
+        turrets: 1,
+        bullets: 1,
+        bulletDamage: 15,
+        bulletPenatration: 9,
+        bulletSpeed: 45,
+        reload: 1,
+        healthRegen: 3,
+        maxHealth: 153,
+        bodyDamage: 3,
+        movementSpeed: 9,
+        accuracy: 1,
     },
 
     "StormBasic": {
@@ -188,7 +203,7 @@ const tankStats = {
     //     bulletSpeed: 25,
     //     reload: 14.5,
     //     healthRegen: 5,
-    //     maxHealth: 3000,
+    //     maxHealth: 350,
     //     bodyDamage: 5,
     //     movementSpeed: 5,
     //     accuracy: 1
@@ -196,7 +211,7 @@ const tankStats = {
 
     // "Summoner": {
     //     upgradesFrom: "Overlord",
-    //     level: 135,
+    //     level: 105,
     //     turrets: 4,
     //     bullets: 132,
     //     ammunition: "drones",
@@ -205,7 +220,7 @@ const tankStats = {
     //     bulletSpeed: 20,
     //     reload: 14.5,
     //     healthRegen: 5,
-    //     maxHealth: 3000,
+    //     maxHealth: 350,
     //     bodyDamage: 5,
     //     movementSpeed: 5,
     //     accuracy: 1
@@ -213,7 +228,7 @@ const tankStats = {
 
 
     // "Mothership": {
-    //     upgradesFrom: "Overlord",
+    //     upgradesFrom: "Fallen-Overlord",
     //     level: 135,
     //     turrets: 16,
     //     bullets: 100,
@@ -336,6 +351,119 @@ const tankStats = {
         sight: 3,
         desription: "My own design! Design from Copter.io Dual Gun Sniper. With it's super duper high reload this tank has highest DPS of all the tanks released in this game but it also has the lowest hp of all tanks! Best used at long range or against low DPS tank or even One-Shot-Wonder tank(due to it's high movementSpeed)."
     },
+
+    "BasicRammer+": {
+        upgradesFrom: "BasicRammer",
+        level: 30,
+        turrets: 0,
+        bullets: 0,
+        bulletDamage: 0,
+        bulletPenatration: 0,
+        bulletSpeed: 0,
+        reload: 0,
+        healthRegen: 7,
+        maxHealth: 80,
+        bodyDamage: 12,
+        movementSpeed: 10,
+        accuracy: 0
+    },
+
+    "BasicRammer++": {
+        upgradesFrom: "BasicRammer+",
+        level: 45,
+        turrets: 0,
+        bullets: 0,
+        bulletDamage: 0,
+        bulletPenatration: 0,
+        bulletSpeed: 0,
+        reload: 0,
+        healthRegen: 9,
+        maxHealth: 110,
+        bodyDamage: 14,
+        movementSpeed: 15,
+        accuracy: 0
+    },
+
+    "BasicRammer+++": {
+        upgradesFrom: "BasicRammer++",
+        level: 75,
+        turrets: 0,
+        bullets: 0,
+        bulletDamage: 0,
+        bulletPenatration: 0,
+        bulletSpeed: 0,
+        reload: 0,
+        healthRegen: 13,
+        maxHealth: 180,
+        bodyDamage: 18,
+        movementSpeed: 18,
+        accuracy: 0
+    },
+
+    "BasicRammer++++": {
+        upgradesFrom: "BasicRammer+++",
+        level: 135,
+        turrets: 0,
+        bullets: 0,
+        bulletDamage: 0,
+        bulletPenatration: 0,
+        bulletSpeed: 0,
+        reload: 0,
+        healthRegen: 21,
+        maxHealth: 300,
+        bodyDamage: 26,
+        movementSpeed: 21,
+        accuracy: 0
+    },
+
+    "DiamondRammer": {
+        upgradesFrom: "BasicRammer+++",
+        level: 135,
+        turrets: 0,
+        bullets: 0,
+        bulletDamage: 0,
+        bulletPenatration: 0,
+        bulletSpeed: 0,
+        reload: 0,
+        healthRegen: 5,
+        maxHealth: 500,
+        bodyDamage: 20,
+        movementSpeed: 10,
+        accuracy: 0
+    },
+
+    "SpeedRammer": {
+        upgradesFrom: "BasicRammer+++",
+        level: 135,
+        turrets: 0,
+        bullets: 0,
+        bulletDamage: 0,
+        bulletPenatration: 0,
+        bulletSpeed: 0,
+        reload: 0,
+        healthRegen: 50,
+        maxHealth: 100,
+        bodyDamage: 50,
+        movementSpeed: 23,
+        accuracy: 0
+    },
+
+    "WhamRammer": {
+        upgradesFrom: "BasicRammer+++",
+        level: 135,
+        turrets: 0,
+        bullets: 0,
+        bulletDamage: 0,
+        bulletPenatration: 0,
+        bulletSpeed: 0,
+        reload: 0,
+        healthRegen: 10,
+        maxHealth: 70,
+        bodyDamage: 150,
+        movementSpeed: 15,
+        accuracy: 0
+    },
+
 
     "Smasher": {
         upgradesFrom: "BasicRammer",
@@ -847,8 +975,8 @@ const tankStats = {
         bulletSpeed: 7,
         reload: 1,
         healthRegen: 1,
-        maxHealth: 300,
-        bodyDamage: 12,
+        maxHealth: 350,
+        bodyDamage: 14,
         movementSpeed: 10,
         accuracy: 1,
         sight: 3
