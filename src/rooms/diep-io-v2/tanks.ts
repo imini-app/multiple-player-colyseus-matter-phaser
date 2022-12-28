@@ -352,6 +352,24 @@ const tankStats = {
         desription: "My own design! Design from Copter.io Dual Gun Sniper. With it's super duper high reload this tank has highest DPS of all the tanks released in this game but it also has the lowest hp of all tanks! Best used at long range or against low DPS tank or even One-Shot-Wonder tank(due to it's high movementSpeed)."
     },
 
+    "Twin-Destroyer+": {
+        upgradesFrom: "Twin-Destroyer",
+        level: 45,
+        turrets: 1,
+        bullets: 2,
+        bulletDamage: 66,
+        bulletPenatration: 66,
+        bulletSpeed: 30,
+        reload: 3,
+        healthRegen: 7,
+        maxHealth: 14,
+        bodyDamage: 7,
+        movementSpeed: 17,
+        accuracy: 1,
+        sight: 4,
+        desription: "My own design! Design from Copter.io Dual Gun Sniper. With it's super duper high reload this tank has highest DPS of all the tanks released in this game but it also has the lowest hp of all tanks! Best used at long range or against low DPS tank or even One-Shot-Wonder tank(due to it's high movementSpeed)."
+    },
+
     "BasicRammer+": {
         upgradesFrom: "BasicRammer",
         level: 30,
