@@ -354,7 +354,7 @@ const tankStats = {
 
     "Twin-Destroyer+": {
         upgradesFrom: "Twin-Destroyer",
-        level: 45,
+        level: 90,
         turrets: 1,
         bullets: 2,
         bulletDamage: 66,
@@ -450,7 +450,7 @@ const tankStats = {
         accuracy: 0
     },
 
-    "SpeedRammer": {
+    "SuperSpeedRammer": {
         upgradesFrom: "BasicRammer+++",
         level: 135,
         turrets: 0,
@@ -460,7 +460,7 @@ const tankStats = {
         bulletSpeed: 0,
         reload: 0,
         healthRegen: 50,
-        maxHealth: 100,
+        maxHealth: 50,
         bodyDamage: 50,
         movementSpeed: 23,
         accuracy: 0
@@ -475,9 +475,9 @@ const tankStats = {
         bulletPenatration: 0,
         bulletSpeed: 0,
         reload: 0,
-        healthRegen: 10,
-        maxHealth: 70,
-        bodyDamage: 150,
+        healthRegen: 40,
+        maxHealth: 100,
+        bodyDamage: 100,
         movementSpeed: 15,
         accuracy: 0
     },
@@ -551,6 +551,23 @@ const tankStats = {
         sight: 4
     },
 
+    "God-Smasher": {
+        upgradesFrom: "Smasher++",
+        level: 135,
+        turrets: 0,
+        bullets: 0,
+        bulletDamage: 0,
+        bulletPenatration: 0,
+        bulletSpeed: 0,
+        reload: 0,
+        healthRegen: 20,
+        maxHealth: 180,
+        bodyDamage: 40,
+        movementSpeed: 16,
+        accuracy: 0,
+        sight: 4
+    },
+
     "Spike": {
         upgradesFrom: "Smasher",
         level: 45,
@@ -594,9 +611,9 @@ const tankStats = {
         bulletPenatration: 0,
         bulletSpeed: 0,
         reload: 0,
-        healthRegen: 17,
+        healthRegen: 12,
         maxHealth: 120,
-        bodyDamage: 100,
+        bodyDamage: 120,
         movementSpeed: 17,
         accuracy: 0,
         sight: 2.5
@@ -691,10 +708,10 @@ const tankStats = {
         upgradesFrom: "Machine-Gun",
         level: 45,
         turrets: 1,
-        bullets: 1,
-        bulletDamage: 1,
-        bulletPenatration: 1,
-        bulletSpeed: 1,
+        bullets: 2,
+        bulletDamage: 2,
+        bulletPenatration: 2,
+        bulletSpeed: 2,
         reload: 0.25,
         healthRegen: 30,
         maxHealth: 31,
@@ -702,6 +719,40 @@ const tankStats = {
         movementSpeed: 30,
         accuracy: 1,
         sight: 2
+    },
+
+    "Blitz-Jitz": {
+        upgradesFrom: "Dayeeter",
+        level: 90,
+        turrets: 1,
+        bullets: 4,
+        bulletDamage: 4,
+        bulletPenatration: 4,
+        bulletSpeed: 4,
+        reload: 0.125,
+        healthRegen: 60,
+        maxHealth: 62,
+        bodyDamage: 60,
+        movementSpeed: 40,
+        accuracy: 1,
+        sight: 3
+    },
+
+    "Dream-Speed": {
+        upgradesFrom: "Dayeeter",
+        level: 135,
+        turrets: 1,
+        bullets: 5,
+        bulletDamage: 8,
+        bulletPenatration: 8,
+        bulletSpeed: 8,
+        reload: 0.05125,
+        healthRegen: 30,
+        maxHealth: 30,
+        bodyDamage: 60,
+        movementSpeed: 50,
+        accuracy: 1,
+        sight: 4
     },
 
     "Annihilator": {
