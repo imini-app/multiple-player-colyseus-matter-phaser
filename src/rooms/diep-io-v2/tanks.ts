@@ -127,11 +127,27 @@ const tankStats = {
         accuracy: 1,
     },
 
-    "Dream": {
+    "BasicDream": {
         upgradesFrom: "BasicDream-",
         level: 135,
         turrets: 1,
         bullets: 16,
+        bulletDamage: 120,
+        bulletPenatration: 15,
+        bulletSpeed: 22,
+        reload: 0.5,
+        healthRegen: 14,
+        maxHealth: 58,
+        bodyDamage: 14,
+        movementSpeed: 24,
+        accuracy: 1,
+    },
+
+    "Dream": {
+        upgradesFrom: "BasicDream",
+        level: 150,
+        turrets: 1,
+        bullets: 18,
         bulletDamage: 135,
         bulletPenatration: 45,
         bulletSpeed: 30,
@@ -867,7 +883,7 @@ const tankStats = {
     },
 
     "Dream-Speed": {
-        upgradesFrom: "Dayeeter",
+        upgradesFrom: "Blitz-Jitz",
         level: 135,
         turrets: 1,
         bullets: 5,
