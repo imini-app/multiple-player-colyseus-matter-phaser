@@ -678,42 +678,46 @@ export default class GameEngine {
 
     addPlayerBullet(playerId, targetX, targetY, initX, initY, circleId, size = 25) {
         const statePlayerCircleTankName = this.state.playerCircles.get(String(circleId)).tankName
-        const count = tankStats[statePlayerCircleTankName].bullets
-
+        const count = tankStats[statePlayerCircleTankName].turrets
         for (let x = 0; x < count; x++) {
-            const bullet = Matter.Bodies.circle(
-                initX,
-                initY,
-                size,
-                { label: "playerBullet", friction: 0, isSensor: true, frictionAir: 0 }
-            )
-
-            const speed = tankStats[statePlayerCircleTankName].bulletSpeed
-            // Velocity stuff
             const xDist = targetX - initX;
             const yDist = targetY - initY;
             const spacing = x / 5 - x / 2.5
             const angle = Math.atan2(yDist, xDist) + spacing + (count) * 0.1
-            const velocityX = Math.cos(angle) * speed
-            const velocityY = Math.sin(angle) * speed
+            for (let x = 0; x < tankStats[statePlayerCircleTankName].bullets; x++) {
+                setTimeout(() => {
+                    const bullet = Matter.Bodies.circle(
+                        initX,
+                        initY,
+                        size,
+                        { label: "playerBullet", friction: 0, isSensor: true, frictionAir: 0 }
+                    )
 
-            this.bullets[bullet.id] = bullet
-            this.state.createPlayerBullet(
-                bullet.id,
-                playerId,
-                initX,
-                initY,
-                circleId,
-                size,
-                tankStats[statePlayerCircleTankName].bulletDamage,
-                tankStats[statePlayerCircleTankName].bulletPenatration
-            )
-            Matter.Body.setVelocity(bullet, { x: velocityX, y: velocityY })
-            Matter.Composite.add(this.world, [bullet])
-            setTimeout(() => {
-                if (!this.state.playerBullets.get(String(bullet.id))) return
-                this.destroyBullet(bullet)
-            }, 3000)
+                    const speed = tankStats[statePlayerCircleTankName].bulletSpeed
+                    // Velocity stuff
+                    const velocityX = Math.cos(angle) * speed
+                    const velocityY = Math.sin(angle) * speed
+
+                    this.bullets[bullet.id] = bullet
+                    this.state.createPlayerBullet(
+                        bullet.id,
+                        playerId,
+                        initX,
+                        initY,
+                        circleId,
+                        size,
+                        tankStats[statePlayerCircleTankName].bulletDamage,
+                        tankStats[statePlayerCircleTankName].bulletPenatration
+                    )
+                    Matter.Body.setVelocity(bullet, { x: velocityX, y: velocityY })
+                    Matter.Composite.add(this.world, [bullet])
+                    setTimeout(() => {
+                        if (!this.state.playerBullets.get(String(bullet.id))) return
+                        this.destroyBullet(bullet)
+                    }, 3000)
+                }, x * 250)
+
+            }
         }
     }
     findPlayerCircles(playerId) {
