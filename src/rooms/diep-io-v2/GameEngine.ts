@@ -9,8 +9,8 @@ export default class GameEngine {
     circles = {}
     orbs = {}
     bullets = {}
-    screenWidth = 1920 / 1.32 * 1.2
-    screenHeight = 1920 / 1.32 * 1.2
+    screenWidth = 1920 / 1.32 * 12
+    screenHeight = 1920 / 1.32 * 12
 
     constructor(roomState) {
         this.engine = Matter.Engine.create()
