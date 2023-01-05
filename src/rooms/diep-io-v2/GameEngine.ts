@@ -352,7 +352,7 @@ export default class GameEngine {
             this.circles[playerCircle.id] = playerCircle
 
             Matter.Composite.add(this.world, [playerCircle])
-            this.state.createPlayerCircle(playerCircle.id, statePlayerCircle?.playerId, startX, startY, initialSize, (initialSize + (2 * (initialSize / 50) - 1)), 1, "Basic")
+            this.state.createPlayerCircle(playerCircle.id, statePlayerCircle?.playerId, startX, startY, initialSize, (initialSize + (2 * (initialSize / 50) - 1)), 1, "Basic", false)
             if (statePlayer) statePlayer.score = initialScore
             statePlayer.tankName = "Basic"
             this.increasePlayerCircleHp(playerCircle.id)
@@ -635,7 +635,7 @@ export default class GameEngine {
 
             this.circles[circle.id] = circle
 
-            this.state.createPlayerCircle(circle.id, playerId, startX + (x * size * 2), startY + (x * size * 2), size, tankStats["Basic"].maxHealth, 1, "Basic")
+            this.state.createPlayerCircle(circle.id, playerId, startX + (x * size * 2), startY + (x * size * 2), size, tankStats["Basic"].maxHealth, 1, "Basic", false)
             Matter.Composite.add(this.world, [circle])
             this.increasePlayerCircleHp(circle.id)
             this.manageHp(circle.id)
@@ -831,7 +831,8 @@ export default class GameEngine {
 
             this.state.removePlayerCircle(String(playerCircleId))
 
-            this.state.createPlayerCircle(playerCircleId, playerId, playerX, playerY, playerSize, tankStats[tankName].maxHealth, 1, tankName)
+            this.state.createPlayerCircle(playerCircleId, playerId, playerX, playerY, playerSize, tankStats[tankName].maxHealth, 1, tankName, true)
+
 
             statePlayer.tankName = tankName
             this.manageHp(playerCircleId)

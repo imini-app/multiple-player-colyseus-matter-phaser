@@ -21,6 +21,8 @@ export class PlayerCircleSchema extends Schema {
     sight = 0
     @type("string")
     tankName = ''
+    @type("boolean")
+    upgrading = false
 }
 
 export class PlayerBulletSchema extends PlayerCircleSchema {
@@ -111,11 +113,12 @@ export class StateSchema extends Schema {
         this.players.delete(sessionId);
     }
 
-    createPlayerCircle(worldId: number, playerId: string, x: number, y: number, size: number, hp: number, sight: number, tankName: string) {
+    createPlayerCircle(worldId: number, playerId: string, x: number, y: number, size: number, hp: number, sight: number, tankName: string, upgrading: boolean) {
         const newPlayerCircle = this.createPlayerObject(playerId, x, y, size, PlayerCircleSchema)
         newPlayerCircle.hp = hp
         newPlayerCircle.sight = sight
         newPlayerCircle.tankName = tankName
+        newPlayerCircle.upgrading = upgrading
         this.playerCircles.set(String(worldId), newPlayerCircle)
     }
 
