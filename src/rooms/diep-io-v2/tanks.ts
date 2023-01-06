@@ -955,16 +955,16 @@ const tankStats = {
 
     "Tristroyer": {
         upgradesFrom: "Twestroyer",
-        level: 75,
+        level: 90,
         turrets: 1,
         bullets: 3,
-        bulletDamage: 35,
-        bulletPenatration: 35,
+        bulletDamage: 40,
+        bulletPenatration: 40,
         bulletSpeed: 25,
         reload: 5,
         healthRegen: 10,
         maxHealth: 70,
-        bodyDamage: 10,
+        bodyDamage: 15,
         movementSpeed: 7,
         accuracy: 1,
         sight: 2.5,
@@ -1109,6 +1109,24 @@ const tankStats = {
         accuracy: 1,
         sight: 2,
     },
+
+    "Penta-Shotx2": {
+        upgradesFrom: "Penta-Shot",
+        level: 90,
+        turrets: 5,
+        bullets: 2,
+        bulletDamage: 10,
+        bulletPenatration: 10,
+        bulletSpeed: 28,
+        reload: 1.5,
+        healthRegen: 10,
+        maxHealth: 60,
+        bodyDamage: 15,
+        movementSpeed: 15,
+        accuracy: 1,
+        sight: 3,
+    },
+
 
     "Spread-Shot": {
         upgradesFrom: "Triple-Shot",
