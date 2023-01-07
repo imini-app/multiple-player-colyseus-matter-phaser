@@ -232,43 +232,6 @@ const tankStats = {
         description: "Just Spam! This tank just spams OP bullets with Infinite Life Span."
     },
 
-    "ArenaCloser": {
-        upgradesFrom: "Basic",
-        level: 270,
-        turrets: 1,
-        bullets: 1,
-        bulletDamage: 196,
-        bulletPenatration: Infinity,
-        bulletSpeed: 35,
-        reload: 1,
-        healthRegen: Infinity,
-        maxHealth: 1000000,
-        bodyDamage: Infinity,
-        movementSpeed: 5,
-        accuracy: "Life Span x Infinity",
-        sight: 5,
-        autoFire: true,
-        description: "ArEnA cLoSeR iS oP l BoZo PlUs RaTiO l BoZo<A><B><C><D><E><F><G><H><I><J><K><L><M><N><O><P><Q><R><S><T><U><V><W><X><Y><Z>."
-    },
-
-    "TheGodOfTanks": {
-        upgradesFrom: "Basic",
-        level: 995,
-        turrets: 1,
-        bullets: 1,
-        bulletDamage: Infinity,
-        bulletPenatration: Infinity,
-        bulletSpeed: 100,
-        reload: 0.25,
-        healthRegen: Infinity,
-        maxHealth: Infinity,
-        bodyDamage: Infinity,
-        movementSpeed: 10,
-        accuracy: "Life Span x Infinity",
-        sight: 10,
-        autoFire: true,
-        description: "ArenaCLoser Destrution."
-    },
     "BasicRammer": {
         upgradesFrom: "Basic",
         level: 15,
@@ -478,6 +441,25 @@ const tankStats = {
         desription: "My own design! This tank was inspired by gattling gun but with more bullets from plants vs zombies 2. This tank will shoot 10 medium strenth bullets for each time it's reload time ends. This tank is a bullet spammer and a good choice for newbs when the playing this game. This tank has a unique abilty: Survive for over 5 minutes and you're bullet stats change and become stronger."
     },
 
+
+    "God-Spam-Shooter": {
+        upgradesFrom: "Spam-Shooter",
+        level: 90,
+        turrets: 2,
+        bullets: 10,
+        bulletDamage: 7,
+        bulletPenatration: 7,
+        bulletSpeed: 23,
+        reload: 1,
+        healthRegen: 10,
+        maxHealth: 70,
+        bodyDamage: 10,
+        movementSpeed: 10,
+        accuracy: 1,
+        sight: 1.5,
+        desription: "My own design! This tank was inspired by gattling gun but with more bullets from plants vs zombies 2. This tank will shoot 10 medium strenth bullets for each time it's reload time ends. This tank is a bullet spammer and a good choice for newbs when the playing this game. This tank has a unique abilty: Survive for over 5 minutes and you're bullet stats change and become stronger."
+    },
+
     "Twin-Destroyer": {
         upgradesFrom: "Assassin",
         level: 45,
@@ -496,11 +478,29 @@ const tankStats = {
         desription: "My own design! Design from Copter.io Dual Gun Sniper. With it's super duper high reload this tank has highest DPS of all the tanks released in this game but it also has the lowest hp of all tanks! Best used at long range or against low DPS tank or even One-Shot-Wonder tank(due to it's high movementSpeed)."
     },
 
-    "Twin-Destroyer+": {
+    "Trio-Destroyer": {
         upgradesFrom: "Twin-Destroyer",
         level: 90,
-        turrets: 1,
-        bullets: 2,
+        turrets: 3,
+        bullets: 1,
+        bulletDamage: 33,
+        bulletPenatration: 33,
+        bulletSpeed: 23,
+        reload: 3,
+        healthRegen: 7,
+        maxHealth: 50,
+        bodyDamage: 7,
+        movementSpeed: 15,
+        accuracy: 1,
+        sight: 3,
+        desription: "My own design! Design from Copter.io Dual Gun Sniper. With it's super duper high reload this tank has highest DPS of all the tanks released in this game but it also has the lowest hp of all tanks! Best used at long range or against low DPS tank or even One-Shot-Wonder tank(due to it's high movementSpeed)."
+    },
+
+    "Twin-Destroyerx2": {
+        upgradesFrom: "Twin-Destroyer",
+        level: 90,
+        turrets: 2,
+        bullets: 1,
         bulletDamage: 66,
         bulletPenatration: 66,
         bulletSpeed: 30,
