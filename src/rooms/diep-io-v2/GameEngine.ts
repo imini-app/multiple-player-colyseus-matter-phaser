@@ -532,7 +532,7 @@ export default class GameEngine {
             Matter.Composite.remove(this.world, [playerB.id])
             this.resetPlayer(statePlayerBCircle, playerB, false)
 
-            const newSize = statePlayerBCircle.size + sizeUp
+            const newSize = statePlayerACircle.size + sizeUp
             if (newSize < this.screenWidth / this.maxPlayerCircleSize) {
                 const statePlayerA = this.state.players.get(String(statePlayerACircle.playerId))
                 const scaleUp = newSize / statePlayerACircle.size
