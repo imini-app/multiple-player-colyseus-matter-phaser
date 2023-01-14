@@ -20,6 +20,7 @@ import { GameRoom as GameRoomV1 } from "./rooms/circle-io-v1";
 import { GameRoom as GameRoomV2 } from "./rooms/circle-io-v2";
 import { GameRoom as DiepRoomV1 } from "./rooms/diep-io-v1";
 import { GameRoom as DiepRoomV2 } from "./rooms/diep-io-v2";
+import { GameRoom as DiepRoomV2Hybrid } from "./rooms/diep-io-v2-hybrid";
 
 export default Arena({
     getId: () => "Your Colyseus App",
@@ -53,6 +54,10 @@ export default Arena({
 
         gameServer.define("diep_io_v2", DiepRoomV2)
             .enableRealtimeListing();
+
+        gameServer.define("diep_io_v2-hybrid", DiepRoomV2Hybrid)
+            .enableRealtimeListing();
+
 
         // Register ChatRoom with initial options, as "chat_with_options"
         // onInit(options) will receive client join options + options registered here.

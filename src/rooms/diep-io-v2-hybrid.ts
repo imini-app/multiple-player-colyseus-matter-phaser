@@ -1,8 +1,8 @@
 import { Room } from "colyseus";
 import { Schema, type, MapSchema } from "@colyseus/schema";
-import GameEngine from "./diep-io-v2/GameEngine";
+import GameEngine from "./diep-io-v2-hybrid/GameEngine";
 import Matter from 'matter-js'
-import tankStats from "./diep-io-v2/tanks"
+import tankStats from "./diep-io-v2-hybrid/tanks"
 
 export class PlayerCircleSchema extends Schema {
     @type("number")
@@ -176,7 +176,7 @@ export class StateSchema extends Schema {
 }
 
 export class GameRoom extends Room {
-    maxplayers = 5;
+    maxplayers = 15;
     engine = null;
 
     onCreate() {
