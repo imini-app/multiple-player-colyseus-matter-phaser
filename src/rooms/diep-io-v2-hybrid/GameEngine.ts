@@ -38,15 +38,15 @@ export default class GameEngine {
 
         Matter.Composite.add(this.world, walls)
 
-        for (let x = 0; x < 75 * this.screenWidth / 1454.54545455; x++) {
+        for (let x = 0; x < 150 * this.screenWidth / 1454.54545455; x++) {
             setTimeout(() => this.generateSquare(), 1)
         }
 
-        for (let x = 0; x < 25 * this.screenWidth / 1454.54545455; x++) {
+        for (let x = 0; x < 50 * this.screenWidth / 1454.54545455; x++) {
             setTimeout(() => this.generateTriangle(), 1)
         }
 
-        for (let x = 0; x < 8 * this.screenWidth / 1454.54545455; x++) {
+        for (let x = 0; x < 16 * this.screenWidth / 1454.54545455; x++) {
             setTimeout(() => this.generatePentagon(), 1)
         }
 
@@ -54,7 +54,7 @@ export default class GameEngine {
             setTimeout(() => this.generateWall(), 1)
         }
 
-        for (let x = 0; x < 1; x++) {
+        for (let x = 0; x < 2; x++) {
             setTimeout(() => this.generateAlphaPentagon(), 1)
 
         }

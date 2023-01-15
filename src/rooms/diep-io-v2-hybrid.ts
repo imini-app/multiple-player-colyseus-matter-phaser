@@ -2,7 +2,7 @@ import { Room } from "colyseus";
 import { Schema, type, MapSchema } from "@colyseus/schema";
 import GameEngine from "./diep-io-v2-hybrid/GameEngine";
 import Matter from 'matter-js'
-import tankStats from "./diep-io-v2-hybrid/tanks"
+import tankStats from "./diep-io-v2/tanks"
 
 export class PlayerCircleSchema extends Schema {
     @type("number")
