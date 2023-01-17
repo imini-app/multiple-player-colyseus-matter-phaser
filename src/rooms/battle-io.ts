@@ -187,7 +187,16 @@ export class GameRoom extends Room {
         this.setState(new State())
         this.gameEngine = new GameEngine(this.state)
         this.onMessage("playermovement", (client, message) => {
-            this.gameEngine.processPlayerAction(client.sessionId, message)
+            this.gameEngine.processPlayerMovement(client.sessionId, message)
+        })
+
+        this.onMessage("pointermovement", (client, message) => {
+            this.gameEngine.processPlayerPointerMovement(client.sessionId, message)
+        })
+
+
+        this.onMessage("weaponattack", (client, message) => {
+            this.gameEngine.processPlayerWeapon(client.sessionId, message)
         })
     }
 
