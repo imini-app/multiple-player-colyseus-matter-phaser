@@ -41,6 +41,8 @@ export class AIEnemy extends BaseObject {
 export class AIWeapon extends BaseObject {
     @type("number")
     damage = 0
+    @type("string")
+    enemyId = ""
 }
 
 
@@ -89,10 +91,10 @@ export class State extends Schema {
         y: number,
         hp: number
     ) {
-        const newPlayerCircle = this.createBaseObject(x, y, Player)
-        newPlayerCircle.hp = hp
-        newPlayerCircle.playerId = playerId
-        this.players.set(String(worldId), newPlayerCircle)
+        const newPlayer = this.createBaseObject(x, y, Player)
+        newPlayer.hp = hp
+        newPlayer.playerId = playerId
+        this.players.set(String(worldId), newPlayer)
     }
 
     removePlayer(
@@ -108,10 +110,10 @@ export class State extends Schema {
         y: number,
         hp: number
     ) {
-        const newPlayerCircle = this.createBaseObject(x, y, Player)
-        newPlayerCircle.hp = hp
-        newPlayerCircle.id = id
-        this.enemys.set(String(worldId), newPlayerCircle)
+        const newAIEnemy = this.createBaseObject(x, y, Player)
+        newAIEnemy.hp = hp
+        newAIEnemy.id = id
+        this.enemys.set(String(worldId), newAIEnemy)
     }
 
     removeAIEnemy(
@@ -120,22 +122,41 @@ export class State extends Schema {
         this.enemys.delete(String(worldId))
     }
 
-    createPlayerBullet(
+    createPlayerWeapon(
         worldId: number,
         playerId: string,
         x: number,
         y: number,
         damage: number,
     ) {
-        const newPlayerBullet = this.createBaseObject(x, y, PlayerWeapon)
-        newPlayerBullet.playerId = playerId
-        newPlayerBullet.damage = damage
-        this.playerWeapons.set(String(worldId), newPlayerBullet)
+        const newPlayerWeapon = this.createBaseObject(x, y, PlayerWeapon)
+        newPlayerWeapon.playerId = playerId
+        newPlayerWeapon.damage = damage
+        this.playerWeapons.set(String(worldId), newPlayerWeapon)
     }
 
     removePlayerBullet(
         worldId: number
     ) {
         this.playerWeapons.delete(String(worldId))
+    }
+
+    createAIEnemyBullet(
+        worldId: number,
+        enemyId: string,
+        x: number,
+        y: number,
+        damage: number,
+    ) {
+        const newAIEnemyBullet = this.createBaseObject(x, y, PlayerWeapon)
+        newAIEnemyBullet.enemyId = enemyId
+        newAIEnemyBullet.damage = damage
+        this.enemyWeapons.set(String(worldId), newAIEnemyBullet)
+    }
+
+    removeAIEnemyBullet(
+        worldId: number
+    ) {
+        this.enemyWeapons.delete(String(worldId))
     }
 }
