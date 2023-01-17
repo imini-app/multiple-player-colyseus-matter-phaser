@@ -46,7 +46,7 @@ export class AIWeapon extends BaseObject {
 }
 
 
-export class Wall extends Schema {
+export class Barricade extends Schema {
     @type("number")
     x = 0
     @type("number")
@@ -70,8 +70,8 @@ export class State extends Schema {
     @type({ map: AIWeapon })
     enemyWeapons = new MapSchema<AIWeapon>();
 
-    @type({ map: Wall })
-    walls = new MapSchema<Wall>();
+    @type({ map: Barricade })
+    barricades = new MapSchema<Barricade>();
 
     createBaseObject(
         x: number,
@@ -158,5 +158,47 @@ export class State extends Schema {
         worldId: number
     ) {
         this.enemyWeapons.delete(String(worldId))
+    }
+
+    createBarricade(
+        worldId: number,
+        x: number,
+        y: number,
+        width: number,
+        height: number
+    ) {
+        const newWall = this.createBaseObject(x, y, Barricade);
+        newWall.width = width
+        newWall.height = height
+        this.barricades.set(String(worldId), newWall);
+    }
+    removeWall(
+        worldId: number
+    ) {
+        this.barricades.delete(String(worldId));
+    }
+}
+
+export class GameRoom extends Room {
+    maxplayers = 20;
+    gameEngine = null;
+
+    onCreate() {
+        this.setState(new State())
+        this.gameEngine = new GameEngine(this.state)
+        this.onMessage("playermovement", (client, message) => {
+            this.gameEngine.processPlayerAction(client.sessionId, message)
+        })
+    }
+
+    update(delTime) {
+        Matter.Engine.update(this.gameEngine.engine, delTime)
+    }
+
+    onJoin(client, playerOptions) {
+        this.gameEngine.addPlayer(client.sessionId, playerOptions?.name)
+    }
+    onLeave(client) {
+        this.gameEngine.removePlayer(client.sessionId)
     }
 }
