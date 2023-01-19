@@ -36,6 +36,8 @@ export class AIEnemy extends BaseObject {
     hp = 0
     @type("string")
     id = ""
+    @type("string")
+    score = 0
 }
 
 export class AIWeapon extends BaseObject {
@@ -89,11 +91,15 @@ export class State extends Schema {
         playerId: string,
         x: number,
         y: number,
-        hp: number
+        hp: number,
+        score: number,
+        name: string
     ) {
         const newPlayer = this.createBaseObject(x, y, Player)
         newPlayer.hp = hp
         newPlayer.playerId = playerId
+        newPlayer.score = score
+        newPlayer.name = name
         this.players.set(String(worldId), newPlayer)
     }
 
@@ -108,11 +114,13 @@ export class State extends Schema {
         id: string,
         x: number,
         y: number,
-        hp: number
+        hp: number,
+        score: number
     ) {
         const newAIEnemy = this.createBaseObject(x, y, Player)
         newAIEnemy.hp = hp
         newAIEnemy.id = id
+        newAIEnemy.score = score
         this.enemys.set(String(worldId), newAIEnemy)
     }
 

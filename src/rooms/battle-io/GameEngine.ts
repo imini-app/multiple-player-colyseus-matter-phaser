@@ -1,10 +1,12 @@
 import Matter from 'matter-js'
+import random from "../../../../phaser-examples/src/games/-useful-stuff-/math/randomMinimumMaximum"
 export default class GameEngine {
     world = null
     state = null
     engine = null
     mapWidth = 1920 / 1.32 * 3.6
     mapHeight = 1920 / 1.32 * 3.6
+    players = {}
 
     constructor(roomState) {
         this.engine = Matter.Engine.create()
@@ -47,7 +49,24 @@ export default class GameEngine {
         })
     }
 
-    processPlayerMovement(sessionId, moveData) {
+    addPlayer(sessionId, name) {
+        const initialScore = 0
+        const x = random(100, this.mapWidth - 100)
+        const y = random(100, this.mapHeight - 100)
+        const size = 35
+        const player = Matter.Bodies.circle(
+            x,
+            y,
+            size,
+            { label: "player" }
+        )
+
+        this.players[player.id] = player
+        this.state.createPlayer(player.id, sessionId, x, y, 100, initialScore, name)
+        Matter.Composite.add(this.world, [player])
+    }
+
+    processPlayerMovement(sessionId, movementData) {
         // TODO: Add logic
     }
 }

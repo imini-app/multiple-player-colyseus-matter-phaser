@@ -620,10 +620,10 @@ export default class GameEngine {
     addPlayerCircle(playerId, count = 1, size = 50, initX = 0, initY = 0) {
         let startX = initX == 0 ? Math.random() * this.screenWidth : initX
         let startY = initY == 0 ? Math.random() * this.screenHeight : initY
-        if (startX > this.screenWidth - 2.5) startX = this.screenWidth - 20
-        if (startY > this.screenHeight - 2.5) startY = this.screenHeight - 20
-        if (startX < 2.5) startX = 20
-        if (startY < 2.5) startY = 20
+        if (startX > this.screenWidth - 50) startX = this.screenWidth - 55
+        if (startY > this.screenHeight - 50) startY = this.screenHeight - 55
+        if (startX < 50) startX = 55
+        if (startY < 50) startY = 55
 
         for (let x = 0; x < count; x++) {
             const circle = Matter.Bodies.circle(
