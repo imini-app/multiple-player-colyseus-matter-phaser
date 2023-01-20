@@ -61,9 +61,15 @@ export default class GameEngine {
             { label: "player" }
         )
 
-        this.players[player.id] = player
-        this.state.createPlayer(player.id, sessionId, x, y, 100, initialScore, name)
+        this.players[sessionId] = player
+        this.state.createPlayer(sessionId, x, y, 100, initialScore, name)
         Matter.Composite.add(this.world, [player])
+    }
+
+    removePlayer(sessionId) {
+        const player = this.players[sessionId]
+        this.state.removePlayer(sessionId)
+        Matter.Composite.remove(this.world, [player])
     }
 
     processPlayerMovement(sessionId, movementData) {

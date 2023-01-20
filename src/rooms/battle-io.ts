@@ -87,8 +87,7 @@ export class State extends Schema {
     }
 
     createPlayer(
-        worldId: number,
-        playerId: string,
+        sessionId: string,
         x: number,
         y: number,
         hp: number,
@@ -97,21 +96,19 @@ export class State extends Schema {
     ) {
         const newPlayer = this.createBaseObject(x, y, Player)
         newPlayer.hp = hp
-        newPlayer.playerId = playerId
         newPlayer.score = score
         newPlayer.name = name
-        this.players.set(String(worldId), newPlayer)
+        this.players.set(sessionId, newPlayer)
     }
 
     removePlayer(
-        worldId: number
+        sessionId: string
     ) {
-        this.players.delete(String(worldId))
+        this.players.delete(sessionId)
     }
 
     createAIEnemy(
-        worldId: number,
-        id: string,
+        sessionId: string,
         x: number,
         y: number,
         hp: number,
@@ -119,15 +116,14 @@ export class State extends Schema {
     ) {
         const newAIEnemy = this.createBaseObject(x, y, Player)
         newAIEnemy.hp = hp
-        newAIEnemy.id = id
         newAIEnemy.score = score
-        this.enemys.set(String(worldId), newAIEnemy)
+        this.enemys.set(sessionId, newAIEnemy)
     }
 
     removeAIEnemy(
-        worldId: number
+        sessionId: string
     ) {
-        this.enemys.delete(String(worldId))
+        this.enemys.delete(sessionId)
     }
 
     createPlayerWeapon(
