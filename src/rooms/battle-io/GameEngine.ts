@@ -73,6 +73,30 @@ export default class GameEngine {
     }
 
     processPlayerMovement(sessionId, movementData) {
-        // TODO: Add logic
+        const dataVelocityX = movementData?.x
+        const dataVelocityY = movementData?.y
+        let velocityX = 0
+        let velocityY = 0
+
+        const player = this.players[sessionId]
+        if (!player) {
+            return
+        }
+
+        const currentPlayerVelocity = player.velocity
+
+        if (dataVelocityX) {
+            velocityX = dataVelocityX
+        } else {
+            velocityX = currentPlayerVelocity.x
+        }
+
+        if (dataVelocityY) {
+            velocityY = dataVelocityY
+        } else {
+            velocityY = currentPlayerVelocity.y
+        }
+
+        Matter.Body.setVelocity(player, { x: velocityX, y: velocityY })
     }
 }
