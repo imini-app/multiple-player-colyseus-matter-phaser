@@ -7,6 +7,22 @@ export default class GameEngine {
     mapWidth = 1920 / 1.32 * 3.6
     mapHeight = 1920 / 1.32 * 3.6
     players = {}
+    teams = {
+        blue: {
+            players: 0,
+            kills: 0,
+            score: 0,
+        },
+        red: {
+            players: 0,
+            kills: 0,
+            score: 0
+        },
+
+        AI: {
+            objects: 0
+        }
+    }
 
     constructor(roomState) {
         this.engine = Matter.Engine.create()
@@ -54,6 +70,15 @@ export default class GameEngine {
         const x = random(100, this.mapWidth - 100)
         const y = random(100, this.mapHeight - 100)
         const size = 35
+
+        let team = ""
+        const blueTeam = this.teams.blue
+        const redTeam = this.teams.red
+        const blueTeamScore = blueTeam.score + (blueTeam.kills * 10)
+        const redTeamScore = redTeam.score + (redTeam.kills * 10)
+
+        this.selectTeamBlueVsRed(blueTeamScore, redTeamScore, blueTeam, redTeam)
+
         const player = Matter.Bodies.circle(
             x,
             y,
@@ -62,7 +87,7 @@ export default class GameEngine {
         )
 
         this.players[sessionId] = player
-        this.state.createPlayer(sessionId, x, y, 100, initialScore, name)
+        this.state.createPlayer(sessionId, x, y, 100, initialScore, name, team)
         Matter.Composite.add(this.world, [player])
     }
 
@@ -70,6 +95,34 @@ export default class GameEngine {
         const player = this.players[sessionId]
         this.state.removePlayer(sessionId)
         Matter.Composite.remove(this.world, [player])
+    }
+
+    selectTeamBlueVsRed(teamBlueScore, teamRedScore, blueTeam, redTeam) {
+        let team = ""
+        const blueTeamScore = teamBlueScore
+        const redTeamScore = teamRedScore
+        if (blueTeamScore < redTeamScore) {
+            team = "blue"
+        } else if (redTeamScore < blueTeamScore) {
+            team = "red"
+        } else if (blueTeamScore == redTeamScore) {
+            const blueTeamPlayers = blueTeam.players
+            const redTeamPlayers = redTeam.players
+            if (blueTeamPlayers < redTeamPlayers) {
+                team = "blue"
+            } else if (redTeamPlayers < blueTeamPlayers) {
+                team = "red"
+            } else if (blueTeamPlayers == redTeamPlayers) {
+                const randomNumber = random(1, 2)
+                if (randomNumber == 1) {
+                    team = "blue"
+                } else if (randomNumber == 2) {
+                    team = "red"
+                }
+            }
+        }
+
+        return team
     }
 
     processPlayerMovement(sessionId, movementData) {

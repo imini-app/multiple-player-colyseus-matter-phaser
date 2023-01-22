@@ -22,6 +22,10 @@ export class Player extends BaseObject {
     hp = 0
     @type("number")
     tier = 0
+    @type("number")
+    kills = 0
+    @type("string")
+    team = ""
 }
 
 export class PlayerWeapon extends BaseObject {
@@ -29,6 +33,8 @@ export class PlayerWeapon extends BaseObject {
     playerId = ''
     @type("number")
     damage = 0
+    @type("string")
+    team = ""
 }
 
 export class AIEnemy extends BaseObject {
@@ -92,12 +98,14 @@ export class State extends Schema {
         y: number,
         hp: number,
         score: number,
-        name: string
+        name: string,
+        team: string
     ) {
         const newPlayer = this.createBaseObject(x, y, Player)
         newPlayer.hp = hp
         newPlayer.score = score
         newPlayer.name = name
+        newPlayer.team = team
         this.players.set(sessionId, newPlayer)
     }
 
