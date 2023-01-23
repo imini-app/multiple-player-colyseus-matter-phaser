@@ -71,13 +71,12 @@ export default class GameEngine {
         const y = random(100, this.mapHeight - 100)
         const size = 35
 
-        let team = ""
         const blueTeam = this.teams.blue
         const redTeam = this.teams.red
         const blueTeamScore = blueTeam.score + (blueTeam.kills * 10)
         const redTeamScore = redTeam.score + (redTeam.kills * 10)
 
-        this.selectTeamBlueVsRed(blueTeamScore, redTeamScore, blueTeam, redTeam)
+        const team = this.selectTeam(blueTeamScore, redTeamScore, blueTeam, redTeam, "blue", "red")
 
         const player = Matter.Bodies.circle(
             x,
@@ -87,37 +86,38 @@ export default class GameEngine {
         )
 
         this.players[sessionId] = player
+        this.teams[team].players += 1
         this.state.createPlayer(sessionId, x, y, 100, initialScore, name, team)
         Matter.Composite.add(this.world, [player])
     }
 
     removePlayer(sessionId) {
         const player = this.players[sessionId]
-        this.state.removePlayer(sessionId)
+        const statePlayer = this.state.players.get(String(sessionId))
+        this.teams[statePlayer.team].players -= 1
+        this.state.removePlayer(String(sessionId))
         Matter.Composite.remove(this.world, [player])
     }
 
-    selectTeamBlueVsRed(teamBlueScore, teamRedScore, blueTeam, redTeam) {
+    selectTeam(teamOneScore, teamTwoScore, teamOne, teamTwo, teamOneName, teamTwoName) {
         let team = ""
-        const blueTeamScore = teamBlueScore
-        const redTeamScore = teamRedScore
-        if (blueTeamScore < redTeamScore) {
-            team = "blue"
-        } else if (redTeamScore < blueTeamScore) {
-            team = "red"
-        } else if (blueTeamScore == redTeamScore) {
-            const blueTeamPlayers = blueTeam.players
-            const redTeamPlayers = redTeam.players
-            if (blueTeamPlayers < redTeamPlayers) {
-                team = "blue"
-            } else if (redTeamPlayers < blueTeamPlayers) {
-                team = "red"
-            } else if (blueTeamPlayers == redTeamPlayers) {
+        if (teamOneScore < teamTwoScore) {
+            team = teamOneName
+        } else if (teamTwoScore < teamOneScore) {
+            team = teamTwoName
+        } else if (teamOneScore == teamTwoScore) {
+            const teamOnePlayers = teamOne.players
+            const teamTwoPlayers = teamTwo.players
+            if (teamOnePlayers < teamTwoPlayers) {
+                team = teamOneName
+            } else if (teamTwoPlayers < teamOnePlayers) {
+                team = teamTwoName
+            } else if (teamOnePlayers == teamTwoPlayers) {
                 const randomNumber = random(1, 2)
                 if (randomNumber == 1) {
-                    team = "blue"
+                    team = teamOneName
                 } else if (randomNumber == 2) {
-                    team = "red"
+                    team = teamTwoName
                 }
             }
         }
