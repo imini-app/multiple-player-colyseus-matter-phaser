@@ -20,7 +20,9 @@ export default class GameEngine {
         },
 
         AI: {
-            objects: 0
+            players: 0,
+            kills: 0,
+            score: 0
         }
     }
 
@@ -97,6 +99,27 @@ export default class GameEngine {
         this.teams[statePlayer.team].players -= 1
         this.state.removePlayer(String(sessionId))
         Matter.Composite.remove(this.world, [player])
+    }
+
+    addEnemyAI(sessionId) {
+        const initialScore = 0
+        const x = random(100, this.mapWidth - 100)
+        const y = random(100, this.mapHeight - 100)
+        const size = 35
+
+        const team = "AI"
+
+        const enemy = Matter.Bodies.circle(
+            x,
+            y,
+            size,
+            { label: "AI" }
+        )
+
+        this.players[sessionId] = enemy
+        this.teams[team].players += 1
+        this.state.createPlayer(sessionId, x, y, 100, initialScore, name, team)
+        Matter.Composite.add(this.world, [enemy])
     }
 
     selectTeam(teamOneScore, teamTwoScore, teamOne, teamTwo, teamOneName, teamTwoName) {
