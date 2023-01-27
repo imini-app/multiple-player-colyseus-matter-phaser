@@ -7,6 +7,7 @@ export default class GameEngine {
     mapWidth = 1920 / 1.32 * 3.6
     mapHeight = 1920 / 1.32 * 3.6
     players = {}
+    AIEnemys = {}
     teams = {
         blue: {
             players: 0,
@@ -116,10 +117,21 @@ export default class GameEngine {
             { label: "AI" }
         )
 
-        this.players[sessionId] = enemy
+        this.AIEnemys[sessionId] = enemy
         this.teams[team].players += 1
-        this.state.createPlayer(sessionId, x, y, 100, initialScore, name, team)
+        this.state.createAIEnemy(sessionId, x, y, 100, initialScore)
         Matter.Composite.add(this.world, [enemy])
+    }
+
+    generateBarricade() {
+        const x = random(350, this.mapWidth - 350)
+        const y = random(350, this.mapHeight - 350)
+        const width = random(150, 250)
+        const height = random(150, 250)
+
+        const barricade = Matter.Bodies.rectangle(x, y, width, height, { isStatic: true, label: "barricade" })
+        this.state.createBarricade(barricade.id, x, y, width, height)
+        Matter.Composite.add(this.world, [barricade])
     }
 
     selectTeam(teamOneScore, teamTwoScore, teamOne, teamTwo, teamOneName, teamTwoName) {
