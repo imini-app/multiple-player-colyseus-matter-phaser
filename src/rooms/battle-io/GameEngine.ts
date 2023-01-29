@@ -79,7 +79,17 @@ export default class GameEngine {
         const blueTeamScore = blueTeam.score + (blueTeam.kills * 10)
         const redTeamScore = redTeam.score + (redTeam.kills * 10)
 
-        const team = this.selectTeam(blueTeamScore, redTeamScore, blueTeam, redTeam, "blue", "red")
+        const team = this.selectTeam(2, {
+            "blue": {
+                score: blueTeamScore,
+                team: blueTeam
+            },
+
+            "red": {
+                score: redTeamScore,
+                team: redTeam
+            }
+        })
 
         const player = Matter.Bodies.circle(
             x,
@@ -134,32 +144,16 @@ export default class GameEngine {
         Matter.Composite.add(this.world, [barricade])
     }
 
-    selectTeam(teamOneScore, teamTwoScore, teamOne, teamTwo, teamOneName, teamTwoName) {
+    selectTeam(amountOfTeams, teamObjects) {
         let team = ""
-        if (teamOneScore < teamTwoScore) {
-            team = teamOneName
-        } else if (teamTwoScore < teamOneScore) {
-            team = teamTwoName
-        } else if (teamOneScore == teamTwoScore) {
-            const teamOnePlayers = teamOne.players
-            const teamTwoPlayers = teamTwo.players
-            if (teamOnePlayers < teamTwoPlayers) {
-                team = teamOneName
-            } else if (teamTwoPlayers < teamOnePlayers) {
-                team = teamTwoName
-            } else if (teamOnePlayers == teamTwoPlayers) {
-                const randomNumber = random(1, 2)
-                if (randomNumber == 1) {
-                    team = teamOneName
-                } else if (randomNumber == 2) {
-                    team = teamTwoName
-                }
-            }
+
+        for (let x = 0; x < amountOfTeams; x++) {
+
         }
+
 
         return team
     }
-
     processPlayerMovement(sessionId, movementData) {
         const dataVelocityX = movementData?.x
         const dataVelocityY = movementData?.y
