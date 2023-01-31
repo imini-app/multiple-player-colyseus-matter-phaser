@@ -79,17 +79,19 @@ export default class GameEngine {
         const blueTeamScore = blueTeam.score + (blueTeam.kills * 10)
         const redTeamScore = redTeam.score + (redTeam.kills * 10)
 
-        const team = this.selectTeam(2, {
-            "blue": {
+        const team = this.selectTeam(2, [
+            {
+                name: "blue",
                 score: blueTeamScore,
                 team: blueTeam
             },
 
-            "red": {
+            {
+                name: "red",
                 score: redTeamScore,
                 team: redTeam
             }
-        })
+        ])
 
         const player = Matter.Bodies.circle(
             x,
@@ -146,11 +148,20 @@ export default class GameEngine {
 
     selectTeam(amountOfTeams, teamObjects) {
         let team = ""
-
+        const teams = {}
         for (let x = 0; x < amountOfTeams; x++) {
+            const team = {
+                teamName: null,
+                teamScore: null,
+                teamPlayerAmount: 0,
+            }
 
+            team.teamName = teamObjects[x].name
+            team.teamScore = teamObjects[x].score
+            team.teamPlayerAmount = teamObjects[x].team.players
+
+            teams[team.teamName] = team
         }
-
 
         return team
     }
