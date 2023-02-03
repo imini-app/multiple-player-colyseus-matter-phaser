@@ -160,7 +160,7 @@ export default class GameEngine {
             team.teamScore = teamObjects[x].score
             team.teamPlayerAmount = teamObjects[x].team.players
 
-            teams[team.teamName] = team
+            teams.push(team)
         }
 
         let lowestScore = 0
@@ -173,11 +173,12 @@ export default class GameEngine {
             }
 
             if (lowestScore == team.score) {
-                equalScoreTeams[team.teamName] = team
+                equalScoreTeams.push(team)
             }
         }
 
         let leastPlayers = 21
+        const equalAmountPlayersTeams = []
 
         if (equalScoreTeams.length > 1) {
             for (const team of equalScoreTeams) {
@@ -187,10 +188,14 @@ export default class GameEngine {
                 }
 
                 if (leastPlayers == team.teamPlayerAmount) {
-
+                    equalAmountPlayersTeams.push(team)
                 }
 
             }
+        }
+
+        if (equalAmountPlayersTeams.length > 1) {
+            newTeamName = equalAmountPlayersTeams[random(0, equalAmountPlayersTeams.length - 1)].teamName
         }
 
 
