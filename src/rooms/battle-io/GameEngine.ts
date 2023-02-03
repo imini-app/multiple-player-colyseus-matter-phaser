@@ -147,7 +147,7 @@ export default class GameEngine {
     }
 
     selectTeam(amountOfTeams, teamObjects) {
-        let team = ""
+        let newTeamName = ""
         const teams = []
         for (let x = 0; x < amountOfTeams; x++) {
             const team = {
@@ -163,20 +163,34 @@ export default class GameEngine {
             teams[team.teamName] = team
         }
 
-        let highestScore = 0
+        let lowestScore = 0
         const equalScoreTeams = []
 
         for (const team of teams) {
-            if (highestScore < team.score) {
-                highestScore = team.score
+            if (lowestScore > team.score) {
+                lowestScore = team.score
+                newTeamName = team.teamName
             }
 
-            if (highestScore == team.score) {
+            if (lowestScore == team.score) {
                 equalScoreTeams[team.teamName] = team
             }
         }
 
-        return team
+        let leastPlayers = 21
+
+        if (equalScoreTeams.length > 1) {
+            for (const team of equalScoreTeams) {
+                if (leastPlayers > team.teamPlayerAmount) {
+                    leastPlayers = team.teamPlayerAmount
+                    newTeamName = team.teamName
+                }
+
+            }
+        }
+
+
+        return newTeamName
     }
     processPlayerMovement(sessionId, movementData) {
         const dataVelocityX = movementData?.x
