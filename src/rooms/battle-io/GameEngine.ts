@@ -148,7 +148,7 @@ export default class GameEngine {
 
     selectTeam(amountOfTeams, teamObjects) {
         let team = ""
-        const teams = {}
+        const teams = []
         for (let x = 0; x < amountOfTeams; x++) {
             const team = {
                 teamName: null,
@@ -161,6 +161,19 @@ export default class GameEngine {
             team.teamPlayerAmount = teamObjects[x].team.players
 
             teams[team.teamName] = team
+        }
+
+        let highestScore = 0
+        const equalScoreTeams = []
+
+        for (const team of teams) {
+            if (highestScore < team.score) {
+                highestScore = team.score
+            }
+
+            if (highestScore == team.score) {
+                equalScoreTeams[team.teamName] = team
+            }
         }
 
         return team
