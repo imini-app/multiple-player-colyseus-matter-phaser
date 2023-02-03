@@ -186,6 +186,10 @@ export default class GameEngine {
                     newTeamName = team.teamName
                 }
 
+                if (leastPlayers == team.teamPlayerAmount) {
+
+                }
+
             }
         }
 
