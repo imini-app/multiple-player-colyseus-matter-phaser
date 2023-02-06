@@ -49,6 +49,8 @@ export default class GameEngine {
             Matter.Bodies.rectangle(0, this.mapHeight / 2, 50, this.mapHeight, { isStatic: true, label: 'boundary' })
         ]
 
+        // Set Timer:
+
         Matter.Composite.add(this.world, boundarys)
     }
 
@@ -227,5 +229,13 @@ export default class GameEngine {
         }
 
         Matter.Body.setVelocity(player, { x: velocityX, y: velocityY })
+    }
+
+    setTimer() {
+        setTimeout(() => { this.gameover() }
+            , 1800)
+    }
+    gameover() {
+
     }
 }
