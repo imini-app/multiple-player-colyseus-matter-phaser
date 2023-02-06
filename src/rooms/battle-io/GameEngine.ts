@@ -236,6 +236,19 @@ export default class GameEngine {
             , 1800)
     }
     gameover() {
+        // AI
+        const AITeam = this.teams.AI
+
+        // Blue team
+        const blueTeam = this.teams.blue
+        const blueTeamsScore = ((blueTeam.score + (blueTeam.kills * 100)) - (blueTeam.players * 100))
+        const finalBlueTeamScore = blueTeamsScore * (AITeam.players / 25 + 1)
+
+        // Red team
+        const redTeam = this.teams.red
+        const redTeamsScore = ((redTeam.score + (redTeam.kills * 100)) - (redTeam.players * 100))
+        const finalRedTeamScore = redTeamsScore * (AITeam.players / 25 + 1)
 
     }
+
 }
