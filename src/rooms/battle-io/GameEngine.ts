@@ -231,11 +231,21 @@ export default class GameEngine {
         Matter.Body.setVelocity(player, { x: velocityX, y: velocityY })
     }
 
-    setTimer() {
-        setTimeout(() => { this.gameover() }
-            , 1800)
+    setTimer(seconds) {
+        const time = seconds * 1000
+        setTimeout(() => {
+            this.gameover()
+        }, time)
+
     }
     gameover() {
+        const winningTeamObject = {
+            teamName: "",
+            teamScore: 0,
+            teamKills: 0,
+            playerAmount: 0
+        }
+
         // AI
         const AITeam = this.teams.AI
 
@@ -248,6 +258,14 @@ export default class GameEngine {
         const redTeam = this.teams.red
         const redTeamsScore = ((redTeam.score + (redTeam.kills * 100)) - (redTeam.players * 100))
         const finalRedTeamScore = redTeamsScore * (AITeam.players / 25 + 1)
+
+        if (blueTeamsScore > redTeamsScore) {
+
+        } else if (redTeamsScore > blueTeamsScore) {
+
+        } else {
+
+        }
 
     }
 
