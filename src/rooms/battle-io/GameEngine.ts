@@ -50,6 +50,7 @@ export default class GameEngine {
         ]
 
         // Set Timer:
+        this.setTimer(3600)
 
         Matter.Composite.add(this.world, boundarys)
     }
@@ -260,11 +261,17 @@ export default class GameEngine {
         const finalRedTeamScore = redTeamsScore * (AITeam.players / 25 + 1)
 
         if (blueTeamsScore > redTeamsScore) {
-
+            winningTeamObject.teamName = "Blue Team"
+            winningTeamObject.teamScore = finalBlueTeamScore
+            winningTeamObject.teamKills = blueTeam.kills
+            winningTeamObject.playerAmount = blueTeam.players
         } else if (redTeamsScore > blueTeamsScore) {
-
+            winningTeamObject.teamName = "Red Team"
+            winningTeamObject.teamScore = finalRedTeamScore
+            winningTeamObject.teamKills = redTeam.kills
+            winningTeamObject.playerAmount = redTeam.players
         } else {
-
+            this.setTimer(300)
         }
 
     }
