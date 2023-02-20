@@ -260,18 +260,34 @@ export default class GameEngine {
         const redTeamsScore = ((redTeam.score + (redTeam.kills * 100)) - (redTeam.players * 100))
         const finalRedTeamScore = redTeamsScore * (AITeam.players / 25 + 1)
 
+        let continueMethod = true
+
         if (blueTeamsScore > redTeamsScore) {
             winningTeamObject.teamName = "Blue Team"
             winningTeamObject.teamScore = finalBlueTeamScore
             winningTeamObject.teamKills = blueTeam.kills
             winningTeamObject.playerAmount = blueTeam.players
+            continueMethod = true
         } else if (redTeamsScore > blueTeamsScore) {
             winningTeamObject.teamName = "Red Team"
             winningTeamObject.teamScore = finalRedTeamScore
             winningTeamObject.teamKills = redTeam.kills
             winningTeamObject.playerAmount = redTeam.players
+            continueMethod = true
         } else {
             this.setTimer(300)
+            continueMethod = false
+        }
+
+        if (!continueMethod) {
+            return
+        }
+        const AITeamFinalScore = ((AITeam.score + (AITeam.kills * 100)) - (AITeam.players * 100)) * (winningTeamObject.playerAmount / 25 + 1)
+        if (AITeamFinalScore > winningTeamObject.teamScore) {
+            winningTeamObject.teamName = "AI Team"
+            winningTeamObject.teamScore = AITeamFinalScore
+            winningTeamObject.teamKills = AITeam.kills
+            winningTeamObject.playerAmount = AITeam.players
         }
 
     }
