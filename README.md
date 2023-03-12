@@ -1,4 +1,4 @@
-## How to run
+## How to run this repo
 
 ```
 git clone https://github.com/imini-app/multiple-player-colyseus-matter-phaser
@@ -11,4 +11,4 @@ Open [http://localhost:2567](http://localhost:2567) in your browser.
 
 ## License
 
-MIT
+### MIT
