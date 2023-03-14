@@ -15,7 +15,8 @@ Run the repo in your browser:
 ```
 npm run start
 ```
-Use this below to open the repo in your browser:
+
+Use this link below to open the repo in your browser:
 Open [http://localhost:2567](http://localhost:2567) in your browser.
 
 ### License: MIT License
