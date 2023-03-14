@@ -21,6 +21,7 @@ import { GameRoom as GameRoomV2 } from "./rooms/circle-io-v2";
 import { GameRoom as DiepRoomV1 } from "./rooms/diep-io-v1";
 import { GameRoom as DiepRoomV2 } from "./rooms/diep-io-v2";
 import { GameRoom as DiepRoomV2Hybrid } from "./rooms/diep-io-v2-hybrid";
+import { GameRoom as BattleIoRo }
 
 export default Arena({
     getId: () => "Your Colyseus App",
@@ -87,7 +88,7 @@ export default Arena({
         gameServer.define("matterjsplatform", MatterjsPlatformRoom).filterBy(['gamePIN']);
 
         gameServer.onShutdown(function () {
-            console.log(`game server is going down.`);
+            console.log(`server is shutting down.`);
         });
 
 
