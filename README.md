@@ -1,4 +1,4 @@
-## How to run this repo
+## How to run multiple-player-colyseus-matter-phaser(this repo) 
 
 ```
 git clone https://github.com/imini-app/multiple-player-colyseus-matter-phaser
