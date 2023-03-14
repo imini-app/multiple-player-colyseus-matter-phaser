@@ -9,6 +9,5 @@ npm run start
 
 Open [http://localhost:2567](http://localhost:2567) in your browser.
 
-## License
+### License: MIT License
 
-### MIT
