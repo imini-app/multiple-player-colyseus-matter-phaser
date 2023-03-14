@@ -5,10 +5,14 @@ First, clone this repo from GitHub:
 git clone https://github.com/imini-app/multiple-player-colyseus-matter-phaser
 ```
 
-Next, open the repo 
+Next, open the repo and install the repo
 ```
 cd multiple-player-colyseus-matter-phaser
 npm install
+```
+
+Run the repo in your bro
+```
 npm run start
 ```
 
