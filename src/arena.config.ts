@@ -33,31 +33,23 @@ export default Arena({
         gameServer.define("lobby", LobbyRoom);
 
         // Define "relay" room
-        gameServer.define("relay", RelayRoom, { maxClients: 4 })
-            .enableRealtimeListing();
+        gameServer.define("relay", RelayRoom, { maxClients: 4 }).enableRealtimeListing();
 
         // Define "chat" room
-        gameServer.define("chat", ChatRoom)
-            .enableRealtimeListing();
+        gameServer.define("chat", ChatRoom).enableRealtimeListing();
 
-        gameServer.define("updatedChat", UpdatedChatRoom)
-            .enableRealtimeListing();
+        gameServer.define("updatedChat", UpdatedChatRoom).enableRealtimeListing();
 
-        gameServer.define("circle_io_v1", GameRoomV1)
-            .enableRealtimeListing();
+        gameServer.define("circle_io_v1", GameRoomV1).enableRealtimeListing();
 
-        gameServer.define("circle_io_v2", GameRoomV2)
-            .enableRealtimeListing();
+        gameServer.define("circle_io_v2", GameRoomV2).enableRealtimeListing();
 
 
-        gameServer.define("diep_io_v1", DiepRoomV1)
-            .enableRealtimeListing();
+        gameServer.define("diep_io_v1", DiepRoomV1).enableRealtimeListing();
 
-        gameServer.define("diep_io_v2", DiepRoomV2)
-            .enableRealtimeListing();
+        gameServer.define("diep_io_v2", DiepRoomV2).enableRealtimeListing();
 
-        gameServer.define("diep_io_v2-hybrid", DiepRoomV2Hybrid)
-            .enableRealtimeListing();
+        gameServer.define("diep_io_v2-hybrid", DiepRoomV2Hybrid).enableRealtimeListing();
 
         gameServer.define("battle_io", BattleRoom).enableRealtimeListing
 
@@ -69,16 +61,13 @@ export default Arena({
         });
 
         // Define "state_handler" room
-        gameServer.define("state_handler", StateHandlerRoom)
-            .enableRealtimeListing();
+        gameServer.define("state_handler", StateHandlerRoom).enableRealtimeListing();
 
         // Define "auth" room
-        gameServer.define("auth", AuthRoom)
-            .enableRealtimeListing();
+        gameServer.define("auth", AuthRoom).enableRealtimeListing();
 
         // Define "reconnection" room
-        gameServer.define("reconnection", ReconnectionRoom)
-            .enableRealtimeListing();
+        gameServer.define("reconnection", ReconnectionRoom).enableRealtimeListing();
 
         // Define "custom_lobby" room
         gameServer.define("custom_lobby", CustomLobbyRoom);
@@ -90,7 +79,7 @@ export default Arena({
         gameServer.define("matterjsplatform", MatterjsPlatformRoom).filterBy(['gamePIN']);
 
         gameServer.onShutdown(function () {
-            console.log(`server is shutting down.`);
+            console.log(`game server is shutting down.`);
         });
 
 
