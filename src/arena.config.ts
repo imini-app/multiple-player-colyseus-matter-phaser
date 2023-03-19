@@ -82,7 +82,6 @@ export default Arena({
             console.log(`game server is shutting down.`);
         });
 
-
     },
 
     initializeExpress: (app) => {
