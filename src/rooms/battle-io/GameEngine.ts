@@ -138,6 +138,32 @@ export default class GameEngine {
         Matter.Composite.add(this.world, [enemy])
     }
 
+    specialAttackXStrike(fightingStyle, weapon, mastery, time) {
+        //
+        // Just realised that this stuff should be on server side.
+        //
+        // What can I do?
+        //
+        // Should take me time to figure out what to do.
+        //
+        // More than ten minutes.
+        //
+    }
+
+    startTimerXMove(fightingStyle, weapon, mastery, eventHappens) {
+        let time;
+
+        const timeInterval = setInterval(() => {
+            time += 0.1
+        }, 100)
+
+        if (eventHappens) {
+            clearInterval(timeInterval)
+            this.specialAttackXStrike(fightingStyle, weapon, mastery, time)
+        }
+
+    }
+
     generateBarricade() {
         const x = random(350, this.mapWidth - 350)
         const y = random(350, this.mapHeight - 350)
