@@ -139,15 +139,7 @@ export default class GameEngine {
     }
 
     specialAttackXStrike(fightingStyle, weapon, mastery, time) {
-        //
-        // Just realised that this stuff should be on server side.
-        //
-        // What can I do?
-        //
-        // Should take me time to figure out what to do.
-        //
-        // More than ten minutes.
-        //
+
     }
 
     startTimerXMove(fightingStyle, weapon, mastery, eventHappens) {
