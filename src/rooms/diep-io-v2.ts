@@ -195,6 +195,10 @@ export class GameRoom extends Room {
         this.onMessage("specialAttackX", (client, message) => {
             this.engine.processPlayerXAttack(client.sessionId, message)
         })
+
+        this.onMessage("specialAttackZ", (client, message) => {
+            this.engine.processPlayerZAttack(client.sessionId, message)
+        })
         this.setSimulationInterval((deltaTime) => this.update(deltaTime));
     }
 
