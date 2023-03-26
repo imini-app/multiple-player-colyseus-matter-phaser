@@ -257,6 +257,19 @@ export default class GameEngine {
         }, time)
 
     }
+
+    processPlayerXAttack(sessionId, playerData) {
+        if (!playerData) {
+            return
+        }
+
+        const dataFightingStyle = playerData?.fightingStyle
+        const dataWeapon = playerData?.weapon
+        const dataMastery = playerData?.mastery
+        const dataEvent = playerData?.event
+    }
+
+
     gameover() {
         const winningTeamObject = {
             teamName: "",
