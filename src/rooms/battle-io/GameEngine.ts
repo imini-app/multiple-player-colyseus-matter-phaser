@@ -142,19 +142,7 @@ export default class GameEngine {
 
     }
 
-    startTimerXMove(fightingStyle, weapon, mastery, eventHappens) {
-        let time;
 
-        const timeInterval = setInterval(() => {
-            time += 0.1
-        }, 100)
-
-        if (eventHappens) {
-            clearInterval(timeInterval)
-            this.specialAttackXStrike(fightingStyle, weapon, mastery, time)
-        }
-
-    }
 
     generateBarricade() {
         const x = random(350, this.mapWidth - 350)
