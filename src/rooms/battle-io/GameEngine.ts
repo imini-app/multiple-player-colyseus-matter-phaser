@@ -142,8 +142,6 @@ export default class GameEngine {
 
     }
 
-    //moved timer
-
     generateBarricade() {
         const x = random(350, this.mapWidth - 350)
         const y = random(350, this.mapHeight - 350)
