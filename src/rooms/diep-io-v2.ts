@@ -192,16 +192,17 @@ export class GameRoom extends Room {
             this.engine.processPlayerPointer(client.sessionId, message)
         })
 
-        this.onMessage("specialAttackX", (client, message) => {
-            this.engine.processPlayerXAttack(client.sessionId, message)
+
+
+        this.onMessage("shoot", (client, message) => {
+            this.engine.processPlayerBullet(client.sessionId, message)
         })
 
-        this.onMessage("specialAttackZ", (client, message) => {
-            this.engine.processPlayerZAttack(client.sessionId, message)
+        this.onMessage("upgrade", (client, message) => {
+            this.engine.processPlayerUpgrade(client.sessionId, message)
         })
         this.setSimulationInterval((deltaTime) => this.update(deltaTime));
     }
-
     update(deltaTime) {
         Matter.Engine.update(this.engine.engine, deltaTime)
     }
