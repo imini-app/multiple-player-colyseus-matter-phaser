@@ -255,6 +255,17 @@ export default class GameEngine {
         const dataEvent = playerData?.event
     }
 
+    processPlayerZAttack(sessionId, playerData) {
+        if (!playerData) {
+            return
+        }
+
+        const dataFightingStyle = playerData?.fightingStyle
+        const dataWeapon = playerData?.weapon
+        const dataMastery = playerData?.mastery
+        const dataEvent = playerData?.event
+    }
+
 
     gameover() {
         const winningTeamObject = {
