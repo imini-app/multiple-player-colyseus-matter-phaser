@@ -61,6 +61,7 @@ export default class GameEngine {
 
     setupUpdate() {
         Matter.Events.on(this.engine, "afterUpdate", () => {
+            // TODO: Add the update events stuff
 
         })
     }
