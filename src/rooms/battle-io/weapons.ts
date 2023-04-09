@@ -1,10 +1,15 @@
 const weaponStats = {
     "Double Iron Katana": {
-        ZMasteryUnlock: 1,
+        Damage: 15,
+        Knockback: 10,
+        ReloadSpeed: 0.3,
+        WeaponRange: 8,
+        XMasteryDamage: 50,
+        XMasteryReload: 5,
         XMasteryUnlock: 20,
-        damage: 15,
-        reloadSpeed: 0.3,
-        weaponRange: 8,
-        knockback: 10
+        ZMasteryDamage: 30,
+        ZMasteryReload: 2,
+        ZMasteryUnlock: 1,
+        Affect: null
     },
 }
