@@ -27,5 +27,20 @@ const weaponStats = {
         ZMasteryReload: 2,
         ZMasteryUnlock: 1,
         Affect: null
-    }
+    },
+
+    "Light Bow": {
+        Catergory: "Range",
+        Damage: 20,
+        Knockback: 2,
+        ReloadSpeed: 0.4,
+        Speed: 50,
+        XMasteryDamage: 50,
+        XMasteryReload: 3,
+        XMasteryUnlock: 30,
+        ZMasteryDamage: 20,
+        ZMasteryReload: 1,
+        ZMasteryUnlock: 1,
+        Affect: "Light"
+    },
 }
