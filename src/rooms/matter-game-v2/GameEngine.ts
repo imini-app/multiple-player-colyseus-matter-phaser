@@ -39,7 +39,7 @@ export class GameEngine {
 
         Matter.Composite.add(this.world, walls)
 
-        for (let x = 0; x < 300 * this.screenWidth / 1454.54545455; x++) {
+        for (let x = 0; x < 400 * this.screenWidth / 1454.54545455; x++) {
             setTimeout(() => this.generateOrb(), 5)
         }
         this.setupUpdateEvents()
