@@ -6,9 +6,9 @@ const weaponStats = {
         ReloadSpeed: 0.3,
         WeaponRange: 8,
         XMasteryDamage: 77,
-        XMasteryReload: 3.7,
+        XMasteryReload: 0.7,
         XMasteryUnlock: 77,
-        ZMasteryDamage: 37,
+        ZMasteryDamage: 47,
         ZMasteryReload: 1.7,
         ZMasteryUnlock: 7,
         Affect: null
@@ -44,3 +44,5 @@ const weaponStats = {
         Affect: "Light"
     },
 }
+
+export default weaponStats

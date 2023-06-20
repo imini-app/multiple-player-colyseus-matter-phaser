@@ -1,7 +1,6 @@
 import Matter from 'matter-js'
 import random from "../../../../phaser-examples/src/games/-useful-stuff-/math/randomMinimumMaximum"
-
-//TODO: Make file with all the stats for stuff
+import weaponStats from "./weapons"
 
 
 export default class GameEngine {
@@ -249,7 +248,7 @@ export default class GameEngine {
 
     }
 
-    processPlayerXAttack(sessionId, playerData) {
+    processPlayerAttack(sessionId, playerData) {
         if (!playerData) {
             return
         }
@@ -257,7 +256,41 @@ export default class GameEngine {
         const dataFightingStyle = playerData?.fightingStyle
         const dataWeapon = playerData?.weapon
         const dataMastery = playerData?.mastery
-        const dataEvent = playerData?.event
+        const dataTime = playerData?.time
+        const dataType = playerData?.moveType
+        let moveDamage
+
+        const currentWeaponStats = weaponStats[dataWeapon]
+
+        if (dataType == "X") {
+            if (currentWeaponStats.XMasteryUnlock == dataMastery) {
+                if (dataTime.time <= 0.5) {
+                    moveDamage = currentWeaponStats.XMasteryDamage / 0.6
+                }
+                if (dataTime.time <= 1 && dataTime.time > 0.5) {
+                    moveDamage = currentWeaponStats.XMasteryDamage / 0.75
+                }
+
+                if (dataTime.time <= 1.5 && dataTime.time > 1) {
+                    moveDamage = currentWeaponStats.XMasteryDamage / 0.90
+                }
+
+                if (dataTime.time > 1.5) {
+                    moveDamage = currentWeaponStats.XMasteryDamage
+                }
+            } else {
+                console.log("Mastery To Low, Try Again")
+            }
+        }
+
+        if (dataType == "Z") {
+            if (currentWeaponStats.ZMasteryUnlock == dataMastery) {
+                moveDamage == currentWeaponStats.ZMasteryDamage
+            } else {
+                console.log("Mastery To Low, Try Again")
+            }
+        }
+        // TODO: Inflict Damage on target
     }
 
     processPlayerZAttack(sessionId, playerData) {
@@ -270,6 +303,7 @@ export default class GameEngine {
         const dataMastery = playerData?.mastery
         const dataEvent = playerData?.event
     }
+
 
 
     gameover() {
