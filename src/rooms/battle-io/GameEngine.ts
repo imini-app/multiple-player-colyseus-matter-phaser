@@ -142,10 +142,6 @@ export default class GameEngine {
         Matter.Composite.add(this.world, [enemy])
     }
 
-    specialAttackXStrike(fightingStyle, weapon, mastery, time) {
-
-    }
-
     generateBarricade() {
         const x = random(350, this.mapWidth - 350)
         const y = random(350, this.mapHeight - 350)
@@ -290,18 +286,22 @@ export default class GameEngine {
                 console.log("Mastery To Low, Try Again")
             }
         }
-        // TODO: Inflict Damage on target
-    }
 
-    processPlayerZAttack(sessionId, playerData) {
-        if (!playerData) {
-            return
+        const player = this.players[sessionId]
+        let nearestPlayer = {
+            positionScore: Infinity
+        }
+        for (const key in this.players) {
+            if (key == sessionId) continue
+            const otherPlayer = this.players[key]
+            const positionScore = Math.abs(player.x - otherPlayer.x) + Math.abs(player.y - otherPlayer.y)
+            if (positionScore < nearestPlayer.positionScore) {
+                nearestPlayer = otherPlayer
+                nearestPlayer.positionScore = positionScore
+            }
         }
 
-        const dataFightingStyle = playerData?.fightingStyle
-        const dataWeapon = playerData?.weapon
-        const dataMastery = playerData?.mastery
-        const dataEvent = playerData?.event
+        // TODO: Inflict Damage on target
     }
 
 
