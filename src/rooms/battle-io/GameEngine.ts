@@ -301,6 +301,12 @@ export default class GameEngine {
             }
         }
 
+        if (dataType == "X") {
+            setTimeout({
+
+            })
+        }
+
         // TODO: Inflict Damage on target
     }
 
