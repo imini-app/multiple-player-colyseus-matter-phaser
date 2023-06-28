@@ -3,6 +3,7 @@ import random from "../../../../phaser-examples/src/games/-useful-stuff-/math/ra
 import weaponStats from "./weapons"
 
 
+
 export default class GameEngine {
     world = null
     state = null
@@ -111,6 +112,11 @@ export default class GameEngine {
         this.teams[team].players += 1
         this.state.createPlayer(sessionId, x, y, 100, initialScore, name, team)
         Matter.Composite.add(this.world, [player])
+    }
+
+    addWeapon(playerSessionId, weapon) {
+        const currentWeaponStats = weaponStats[String(weapon)]
+
     }
 
     removePlayer(sessionId) {
@@ -289,8 +295,11 @@ export default class GameEngine {
 
         const player = this.players[sessionId]
         let nearestPlayer = {
-            positionScore: Infinity
+            positionScore: Infinity,
+            health: 100
         }
+
+
         for (const key in this.players) {
             if (key == sessionId) continue
             const otherPlayer = this.players[key]
@@ -302,9 +311,10 @@ export default class GameEngine {
         }
 
         if (dataType == "X") {
-            setTimeout({
+            setTimeout(() => {
+                nearestPlayer.health -= moveDamage
+            }, Number(nearestPlayer.positionScore * 10))
 
-            })
         }
 
         // TODO: Inflict Damage on target
