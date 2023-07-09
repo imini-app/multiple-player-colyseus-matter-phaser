@@ -2,8 +2,6 @@ import Matter from 'matter-js'
 import random from "../../../../phaser-examples/src/games/-useful-stuff-/math/randomMinimumMaximum"
 import weaponStats from "./weapons"
 
-
-
 export default class GameEngine {
     world = null
     state = null
@@ -11,6 +9,7 @@ export default class GameEngine {
     mapWidth = 1920 / 1.32 * 3.6
     mapHeight = 1920 / 1.32 * 3.6
     players = {}
+    arenaClosers = {}
     AIEnemys = {}
     teams = {
         blue: {
@@ -34,9 +33,7 @@ export default class GameEngine {
     constructor(roomState) {
         this.engine = Matter.Engine.create()
         this.world = this.engine.world
-
         this.state = roomState
-
         this.engine.gravity.y = 0
         this.setup()
     }
@@ -303,7 +300,7 @@ export default class GameEngine {
         for (const key in this.players) {
             if (key == sessionId) continue
             const otherPlayer = this.players[key]
-            const positionScore = Math.abs(player.x - otherPlayer.x) + Math.abs(player.y - otherPlayer.y)
+            const positionScore = Math.abs(player.x - otherPlayer.x + player.y - otherPlayer.y)
             if (positionScore < nearestPlayer.positionScore) {
                 nearestPlayer = otherPlayer
                 nearestPlayer.positionScore = positionScore
@@ -320,7 +317,11 @@ export default class GameEngine {
         // TODO: Inflict Damage on target
     }
 
-
+    summonArenaClosers() {
+        for (const key in this.players) {
+            c
+        }
+    }
 
     gameover() {
         const winningTeamObject = {
@@ -371,6 +372,7 @@ export default class GameEngine {
             winningTeamObject.teamScore = AITeamFinalScore
             winningTeamObject.teamKills = AITeam.kills
             winningTeamObject.playerAmount = AITeam.players
+            this.state.summonArenaClosers()
         }
 
     }

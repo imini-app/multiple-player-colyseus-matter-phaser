@@ -50,7 +50,7 @@ export default class GameEngine {
             setTimeout(() => this.generatePentagon(), 1)
         }
 
-        for (let x = 0; x < 8 * this.screenWidth / 1454.54545455; x++) {
+        for (let x = 0; x < 3 * this.screenWidth / 1454.54545455; x++) {
             setTimeout(() => this.generateWall(), 1)
         }
 
@@ -617,7 +617,7 @@ export default class GameEngine {
         setTimeout(() => this.addPlayerCircle(sessionId, 1), 1000)
     }
 
-    addPlayerCircle(playerId, count = 1, size = 50, initX = 0, initY = 0) {
+    addPlayerCircle(playerId, count = 1, size = 30, initX = 0, initY = 0) {
         let startX = initX == 0 ? Math.random() * this.screenWidth : initX
         let startY = initY == 0 ? Math.random() * this.screenHeight : initY
         if (startX > this.screenWidth - 2.5) startX = this.screenWidth - 20

@@ -9,8 +9,8 @@ export default class GameEngine {
     circles = {}
     orbs = {}
     bullets = {}
-    screenWidth = 1920 / 1.32 * 3.6
-    screenHeight = 1920 / 1.32 * 3.6
+    screenWidth = 1920 / 1.32 * 12
+    screenHeight = 1920 / 1.32 * 12
 
     constructor(roomState) {
         this.engine = Matter.Engine.create()
@@ -38,23 +38,23 @@ export default class GameEngine {
 
         Matter.Composite.add(this.world, walls)
 
-        for (let x = 0; x < 150 * this.screenWidth / 1454.54545455; x++) {
+        for (let x = 0; x < 200 * this.screenWidth / 1454.54545455; x++) {
             setTimeout(() => this.generateSquare(), 1)
         }
 
-        for (let x = 0; x < 50 * this.screenWidth / 1454.54545455; x++) {
+        for (let x = 0; x < 77 * this.screenWidth / 1454.54545455; x++) {
             setTimeout(() => this.generateTriangle(), 1)
         }
 
-        for (let x = 0; x < 16 * this.screenWidth / 1454.54545455; x++) {
+        for (let x = 0; x < 33 * this.screenWidth / 1454.54545455; x++) {
             setTimeout(() => this.generatePentagon(), 1)
         }
 
-        for (let x = 0; x < 0 * this.screenWidth / 1454.54545455; x++) {
+        for (let x = 0; x < 1 * this.screenWidth / 1454.54545455; x++) {
             setTimeout(() => this.generateWall(), 1)
         }
 
-        for (let x = 0; x < 2; x++) {
+        for (let x = 0; x < 7; x++) {
             setTimeout(() => this.generateAlphaPentagon(), 1)
 
         }

@@ -28,6 +28,18 @@ export class Player extends BaseObject {
     team = ""
 }
 
+export class ArenaCloser extends BaseObject {
+    @type("number")
+    score = 0
+    @type("number")
+    kills = 0
+}
+
+export class CloserWeapon extends BaseObject {
+    @type("number")
+    damage = 0
+}
+
 export class PlayerWeapon extends BaseObject {
     @type("string")
     playerId = ''
