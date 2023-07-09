@@ -54,7 +54,7 @@ export default class GameEngine {
             setTimeout(() => this.generateWall(), 1)
         }
 
-        for (let x = 0; x < 100; x++) {
+        for (let x = 0; x < 7; x++) {
             setTimeout(() => this.generateAlphaPentagon(), 1)
 
         }
