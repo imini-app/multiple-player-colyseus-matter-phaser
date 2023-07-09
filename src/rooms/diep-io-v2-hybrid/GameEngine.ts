@@ -54,7 +54,7 @@ export default class GameEngine {
             setTimeout(() => this.generateWall(), 1)
         }
 
-        for (let x = 0; x < 7; x++) {
+        for (let x = 0; x < 100; x++) {
             setTimeout(() => this.generateAlphaPentagon(), 1)
 
         }
@@ -88,7 +88,7 @@ export default class GameEngine {
     }
 
     collision() {
-        Matter.Events.on(this.engine, "collisionStart", (event) => {
+        Matter.Events.on(this.engine, "collisionActive", (event) => {
             const pairs = event.pairs;
             for (const pair of pairs) {
                 let bodyA = pair.bodyA

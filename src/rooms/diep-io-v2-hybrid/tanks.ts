@@ -4,16 +4,18 @@ const tankStats = {
         level: 1,
         turrets: 1,
         bullets: 1,
-        bulletDamage: 3,
+        bulletDamage: 1000,
         bulletPenatration: 3,
         bulletSpeed: 15,
-        reload: 7,
+        reload: 1,
         healthRegen: 1,
-        maxHealth: 51,
-        bodyDamage: 1,
+        maxHealth: 5000,
+        bodyDamage: 10,
         movementSpeed: 3,
         accuracy: 1,
+        sight: 100
     },
+
 
     "BasicDream-------": {
         upgradesFrom: "Basic",
