@@ -88,7 +88,7 @@ export default class GameEngine {
     }
 
     collision() {
-        Matter.Events.on(this.engine, "collisionStart", (event) => {
+        Matter.Events.on(this.engine, "collisionActive", (event) => {
             const pairs = event.pairs;
             for (const pair of pairs) {
                 let bodyA = pair.bodyA
@@ -352,9 +352,9 @@ export default class GameEngine {
             this.circles[playerCircle.id] = playerCircle
 
             Matter.Composite.add(this.world, [playerCircle])
-            this.state.createPlayerCircle(playerCircle.id, statePlayerCircle?.playerId, startX, startY, initialSize, (initialSize + (2 * (initialSize / 50) - 1)), 1, "Basic", false)
+            this.state.createPlayerCircle(playerCircle.id, statePlayerCircle?.playerId, startX, startY, initialSize, (initialSize + (2 * (initialSize / 50) - 1)), 1, "Tank", false)
             if (statePlayer) statePlayer.score = initialScore
-            statePlayer.tankName = "Basic"
+            statePlayer.tankName = "Tank"
             this.increasePlayerCircleHp(playerCircle.id)
             this.manageHp(playerCircle.id)
         }
@@ -612,7 +612,7 @@ export default class GameEngine {
     }
     addPlayer(sessionId, name) {
         const initialScore = 800
-        this.state.createPlayer(sessionId, name, initialScore, "Basic")
+        this.state.createPlayer(sessionId, name, initialScore, "Tank")
 
         setTimeout(() => this.addPlayerCircle(sessionId, 1), 1000)
     }
@@ -635,7 +635,7 @@ export default class GameEngine {
 
             this.circles[circle.id] = circle
 
-            this.state.createPlayerCircle(circle.id, playerId, startX + (x * size * 2), startY + (x * size * 2), size, tankStats["Basic"].maxHealth, 1, "Basic", false)
+            this.state.createPlayerCircle(circle.id, playerId, startX + (x * size * 2), startY + (x * size * 2), size, tankStats["Tank"].maxHealth, 1, "Tank", false)
             Matter.Composite.add(this.world, [circle])
             this.increasePlayerCircleHp(circle.id)
             this.manageHp(circle.id)
@@ -645,7 +645,7 @@ export default class GameEngine {
     manageHp(matterId) {
         const statePlayerCircle = this.state.playerCircles.get(String(matterId))
         if (!statePlayerCircle) return
-        const fullHealthAmount = tankStats[statePlayerCircle.tankName].maxHealth
+        const fullHealthAmount = tankStats[statePlayerCircle.tankName]?.maxHealth
         if (statePlayerCircle.hp > fullHealthAmount) {
             statePlayerCircle.hp = fullHealthAmount
         }
