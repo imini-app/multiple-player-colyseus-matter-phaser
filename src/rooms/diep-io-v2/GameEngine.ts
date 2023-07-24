@@ -1,5 +1,6 @@
 import Matter from 'matter-js'
 import tankStats from './tanks'
+import random from '../../../../phaser-examples/src/games/-useful-stuff-/math/randomMinimumMaximum'
 export default class GameEngine {
     world = null
     state = null
@@ -680,10 +681,16 @@ export default class GameEngine {
         const statePlayerCircleTankName = this.state.playerCircles.get(String(circleId)).tankName
         const count = tankStats[statePlayerCircleTankName].turrets
         for (let x = 0; x < count; x++) {
+            let additionalAngle = 0
+            const statePlayerCircleAccuracy = tankStats[statePlayerCircleTankName].accuracy
+            if (statePlayerCircleAccuracy) {
+                additionalAngle = random(-1 * statePlayerCircleAccuracy, 1 * statePlayerCircleAccuracy)
+            }
             const xDist = targetX - initX;
             const yDist = targetY - initY;
             const spacing = x / 5 - x / 2.5
-            const angle = Math.atan2(yDist, xDist) + spacing + (count) * 0.1
+            console.log(additionalAngle)
+            const angle = Math.atan2(yDist, xDist) + spacing + (count) * 0.1 + additionalAngle
             for (let x = 0; x < tankStats[statePlayerCircleTankName].bullets; x++) {
                 setTimeout(() => {
                     const bullet = Matter.Bodies.circle(

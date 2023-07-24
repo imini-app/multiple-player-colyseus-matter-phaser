@@ -4,14 +4,60 @@ const tankStats = {
         level: 1,
         turrets: 1,
         bullets: 3,
-        bulletDamage: 777,
-        bulletPenatration: 777,
-        bulletSpeed: 37,
+        bulletDamage: 115,
+        bulletPenatration: 115,
+        bulletSpeed: 15,
         reload: 1,
         healthRegen: 5,
         maxHealth: 50,
         bodyDamage: 5,
-        movementSpeed: 5
+        movementSpeed: 5,
+    },
+
+
+    "Single": {
+        upgradesFrom: "Tank",
+        level: 45,
+        turrets: 1,
+        bullets: 1,
+        bulletDamage: 77,
+        bulletPenatration: 77,
+        bulletSpeed: 37,
+        reload: 0.5,
+        healthRegen: 10,
+        maxHealth: 100,
+        bodyDamage: 10,
+        movementSpeed: 7,
+    },
+
+    "Mayhem": {
+        upgradesFrom: "Single",
+        level: 60,
+        turrets: 1,
+        bullets: 50,
+        bulletDamage: 77,
+        bulletPenatration: 77,
+        bulletSpeed: 37,
+        reload: 10,
+        healthRegen: 10,
+        maxHealth: 120,
+        bodyDamage: 10,
+        movementSpeed: 7,
+    },
+
+    "Ratatatata": {
+        upgradesFrom: "Mayhem",
+        level: 75,
+        turrets: 1,
+        bullets: 37,
+        bulletDamage: 77,
+        bulletPenatration: 77,
+        bulletSpeed: 77,
+        reload: 1,
+        healthRegen: 77,
+        maxHealth: 777,
+        bodyDamage: 77,
+        movementSpeed: 7,
     },
 
     "Twin": {
@@ -26,7 +72,7 @@ const tankStats = {
         healthRegen: 9,
         maxHealth: 54,
         bodyDamage: 9,
-        movementSpeed: 9
+        movementSpeed: 9,
     },
 
     "Sniper": {
@@ -41,14 +87,14 @@ const tankStats = {
         healthRegen: 9,
         maxHealth: 54,
         bodyDamage: 9,
-        movementSpeed: 9
+        movementSpeed: 9,
     },
 
     "Machine-Gun": {
         upgradesFrom: "Tank",
         level: 15,
         turrets: 1,
-        bullets: 1,
+        bullets: 2,
         bulletDamage: 2,
         bulletPenatration: 9,
         bulletSpeed: 19,
@@ -56,7 +102,8 @@ const tankStats = {
         healthRegen: 9,
         maxHealth: 54,
         bodyDamage: 9,
-        movementSpeed: 9
+        movementSpeed: 9,
+        accuracy: 0.20000
     },
 
     "Flank-Guard": {
@@ -71,7 +118,7 @@ const tankStats = {
         healthRegen: 9,
         maxHealth: 54,
         bodyDamage: 9,
-        movementSpeed: 9
+        movementSpeed: 9,
     },
 
     "Smasher": {
@@ -86,7 +133,7 @@ const tankStats = {
         healthRegen: 9,
         maxHealth: 54,
         bodyDamage: 10,
-        movementSpeed: 9
+        movementSpeed: 9,
     },
 
     "Ball": {
@@ -101,7 +148,8 @@ const tankStats = {
         healthRegen: 777,
         maxHealth: 777,
         bodyDamage: 777,
-        movementSpeed: 17
+        movementSpeed: 17,
+        accuracy: 8
     },
 }
 
