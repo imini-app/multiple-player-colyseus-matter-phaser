@@ -88,7 +88,7 @@ export default class GameEngine {
     }
 
     collision() {
-        Matter.Events.on(this.engine, "collisionActive", (event) => {
+        Matter.Events.on(this.engine, "collisionStart", (event) => {
             const pairs = event.pairs;
             for (const pair of pairs) {
                 let bodyA = pair.bodyA
@@ -683,7 +683,7 @@ export default class GameEngine {
             const xDist = targetX - initX;
             const yDist = targetY - initY;
             const spacing = x / 5 - x / 2.5
-            const angle = Math.atan2(yDist, xDist) + spacing + (count) * 0.1
+            const angle = Math.atan2(yDist, xDist) + spacing
             for (let x = 0; x < tankStats[statePlayerCircleTankName].bullets; x++) {
                 setTimeout(() => {
                     const bullet = Matter.Bodies.circle(
