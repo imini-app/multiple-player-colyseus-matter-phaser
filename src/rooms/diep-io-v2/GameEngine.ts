@@ -684,13 +684,14 @@ export default class GameEngine {
             let additionalAngle = 0
             const statePlayerCircleAccuracy = tankStats[statePlayerCircleTankName].accuracy
             if (statePlayerCircleAccuracy) {
-                additionalAngle = random(-1 * statePlayerCircleAccuracy, 1 * statePlayerCircleAccuracy)
+                additionalAngle = random(-1 * statePlayerCircleAccuracy, 1 * statePlayerCircleAccuracy, false)
             }
             const xDist = targetX - initX;
             const yDist = targetY - initY;
             const spacing = x / 5 - x / 2.5
+            // + spacing + (count) * 0.1 + additionalAngle
             console.log(additionalAngle)
-            const angle = Math.atan2(yDist, xDist) + spacing + (count) * 0.1 + additionalAngle
+            const angle = Math.atan2(yDist, xDist) + spacing + additionalAngle
             for (let x = 0; x < tankStats[statePlayerCircleTankName].bullets; x++) {
                 setTimeout(() => {
                     const bullet = Matter.Bodies.circle(
